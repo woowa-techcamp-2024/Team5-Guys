@@ -32,10 +32,9 @@ dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    // MySQL Connector J
+    // MySQL Connector
     runtimeOnly 'com.mysql:mysql-connector-j'
-
-    // SprintBoot Test
+    // SpringBoot Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
