@@ -1,9 +1,11 @@
 
-![bg](https://github.com/user-attachments/assets/251084f6-1705-45d9-858f-045e0d21eefe)
+![](https://github.com/user-attachments/assets/251084f6-1705-45d9-858f-045e0d21eefe)
 
 ## ✍🏻 프로젝트 개요
 
 LogBat 프로젝트는 클라이언트와 서버의 로그를 실시간으로 통합 관리하고, 예외 로그에 대한 알림 기능을 제공하여 오류를 신속히 파악할 수 있도록 돕습니다. 다양한 포맷의 로그를 동적으로 처리하며, 사용자에게 직관적인 GUI를 통해 로그 필터링 및 모니터링 기능을 제공합니다. 높은 TPS를 처리할 수 있는 성능을 목표로 합니다.
+
+![](https://github.com/user-attachments/assets/ad19e3e5-a6d5-4466-ac86-fec125e1f54b)
 
 ## ⚙️ 핵심 기능
 
