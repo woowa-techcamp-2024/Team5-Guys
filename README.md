@@ -1,4 +1,5 @@
 
+![bg](https://github.com/user-attachments/assets/251084f6-1705-45d9-858f-045e0d21eefe)
 
 ## ✍🏻 프로젝트 개요
 
