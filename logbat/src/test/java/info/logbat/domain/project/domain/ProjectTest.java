@@ -21,7 +21,7 @@ class ProjectTest {
         @DisplayName("이름이 잘못된 경우 예외를 던진다.")
         @ParameterizedTest
         @MethodSource("exceptionValues")
-        void testFromMethodFailWhenNameValueNotVerified(String name) {
+        void throwsExceptionForInvalidName(String name) {
             // Act & Assert
             assertThatThrownBy(() -> Project.from(name))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -44,7 +44,8 @@ class ProjectTest {
         private static Stream<Arguments> exceptionValues() {
             return Stream.of(
                 Arguments.of(""),
-                Arguments.of((String) null)
+                Arguments.of((String) null),
+                Arguments.of("   ")
             );
         }
 
