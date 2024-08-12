@@ -10,6 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+@DisplayName("로그 Level enum 테스트")
 class LevelTest {
 
   @DisplayName("빈 문자열의 로그 레벨 문자열을 enum으로 변환하면 예외가 발생한다.")
