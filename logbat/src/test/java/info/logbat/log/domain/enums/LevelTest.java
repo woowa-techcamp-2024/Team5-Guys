@@ -37,6 +37,40 @@ class LevelTest {
         .hasMessage("level은 null이거나 빈 문자열일 수 없습니다.");
   }
 
+  @DisplayName("로그 레벨 문자열이 앞 뒤에 공백을 포함하더라도 enum으로 변환할 수 있다.")
+  @Test
+  void createLevelWithBlankSpace() {
+    // given
+    String 공백_포함_로그_레벨 = "  INFO  ";
+
+    // when
+    Level 로그_레벨 = Level.from(공백_포함_로그_레벨);
+
+    // then
+    assertThat(로그_레벨).isEqualTo(Level.INFO);
+  }
+
+  @DisplayName("올바르지 않은 로그 레벨 문자열을 enum으로 변환하면 예외가 발생한다.")
+  @ParameterizedTest(name = "{index}. 잘못된 입력값: {0}")
+  @MethodSource("invalidLogLevelProvider")
+  void createLevelWithInvalidLevel(String 잘못된_로그_레벨) {
+    // when & then
+    assertThatThrownBy(() -> Level.from(잘못된_로그_레벨))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("level이 올바르지 않습니다.");
+  }
+
+  private static Stream<Arguments> invalidLogLevelProvider() {
+    return Stream.of(
+        Arguments.of("infos"),
+        Arguments.of("infor"),
+        Arguments.of("eror"),
+        Arguments.of("errr"),
+        Arguments.of("err"),
+        Arguments.of("errorr"))
+        ;
+  }
+
   @DisplayName("다양한 형식의 로그 레벨 문자열을 enum으로 변환할 수 있다.")
   @ParameterizedTest(name = "{index}. 입력값: {0}, 기대값: {1} enum")
   @MethodSource("logLevelProvider")
