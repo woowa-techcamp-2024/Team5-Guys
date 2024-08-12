@@ -7,7 +7,11 @@ public class LogData {
 
   private final String value;
 
-  public LogData(String data) {
+  public static LogData from(String data) {
+    return new LogData(data);
+  }
+
+  private LogData(String data) {
     validateData(data);
     this.value = data;
   }

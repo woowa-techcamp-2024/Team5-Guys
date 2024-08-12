@@ -13,15 +13,15 @@ class LogDataTest {
   @Test
   void createLogData() {
     // given
-    String 로그_데이터 = "테스트_로그_데이터";
+    String 로그_데이터_문자열 = "테스트_로그_데이터";
 
     // when
-    LogData logData = new LogData(로그_데이터);
+    LogData 로그_데이터 = LogData.from(로그_데이터_문자열);
 
     // then
-    assertThat(logData)
+    assertThat(로그_데이터)
         .extracting("value")
-        .isEqualTo(로그_데이터);
+        .isEqualTo(로그_데이터_문자열);
   }
 
   @DisplayName("빈 문자열로 LogData를 만들면 예외가 발생한다.")
@@ -31,7 +31,7 @@ class LogDataTest {
     String 빈_로그_데이터 = "";
 
     // when & then
-    assertThatThrownBy(() -> new LogData(빈_로그_데이터))
+    assertThatThrownBy(() -> LogData.from(빈_로그_데이터))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("log data는 null이거나 빈 문자열일 수 없습니다.");
   }
@@ -43,7 +43,7 @@ class LogDataTest {
     String null_로그_데이터 = null;
 
     // when & then
-    assertThatThrownBy(() -> new LogData(null_로그_데이터))
+    assertThatThrownBy(() -> LogData.from(null_로그_데이터))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("log data는 null이거나 빈 문자열일 수 없습니다.");
   }

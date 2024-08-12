@@ -24,7 +24,7 @@ public class Log {
     validateApplicationId(applicationId);
     this.applicationId = applicationId;
     this.level = Level.from(level);
-    this.logData = new LogData(logData);
+    this.logData = LogData.from(logData);
     validateTimestamp(timestamp);
     this.timestamp = timestamp;
   }
