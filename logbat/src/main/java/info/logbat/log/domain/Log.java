@@ -1,5 +1,7 @@
 package info.logbat.log.domain;
 
+import info.logbat.log.domain.enums.Level;
+import info.logbat.log.domain.values.LogData;
 import java.time.LocalDateTime;
 import lombok.Getter;
 

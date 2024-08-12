@@ -1,4 +1,4 @@
-package info.logbat.log.domain;
+package info.logbat.log.domain.enums;
 
 public enum Level {
   ERROR,
