@@ -32,6 +32,8 @@ dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    // SpringBoot Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.3.1'
     // MySQL Connector
     runtimeOnly 'com.mysql:mysql-connector-j'
     // SpringBoot Test
