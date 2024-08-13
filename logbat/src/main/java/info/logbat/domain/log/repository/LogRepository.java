@@ -32,11 +32,9 @@ public class LogRepository {
       return ps;
     }, keyHolder);
 
-    if (keyHolder.getKey() == null) {
-      throw new IllegalStateException("로그 저장에 실패했습니다.");
-    }
-
-    return keyHolder.getKey().longValue();
+    return Optional.ofNullable(keyHolder.getKey())
+        .map(Number::longValue)
+        .orElseThrow(() -> new IllegalStateException("로그 저장에 실패했습니다."));
   }
 
   public Optional<Log> findById(Long logId) {
