@@ -70,4 +70,8 @@ class LogBat {
     }
 }
 
+if (typeof window !== 'undefined') {
+    (window as any).LogBat = LogBat;
+}
+
 export default LogBat;
