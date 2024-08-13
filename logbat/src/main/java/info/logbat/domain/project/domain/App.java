@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -22,7 +23,9 @@ import org.hibernate.annotations.SoftDelete;
 
 @Entity
 @Getter
-@Table(name = "entities")
+@Table(name = "entities", indexes = {
+    @Index(name = "idx_app_token", columnList = "token")
+})
 @SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class App {
