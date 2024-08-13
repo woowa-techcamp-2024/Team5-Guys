@@ -8,11 +8,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +23,9 @@ import org.hibernate.annotations.SoftDelete;
 
 @Entity
 @Getter
-@Table(name = "entities")
+@Table(name = "entities", indexes = {
+    @Index(name = "idx_app_token", columnList = "token")
+})
 @SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class App {
@@ -38,13 +42,18 @@ public class App {
     @Column(name = "app_type", nullable = false)
     private AppType appType;
 
+    @Column(name = "token", nullable = false, unique = true)
+    private UUID token;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+
     private App(Project project, AppType appType) {
         this.project = Objects.requireNonNull(project, "프로젝트는 필수입니다.");
         this.appType = Objects.requireNonNull(appType, "앱 타입은 필수입니다.");
+        this.token = UUID.randomUUID();
     }
 
     public static App of(Project project, AppType appType) {
