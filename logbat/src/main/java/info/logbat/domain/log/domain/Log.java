@@ -1,8 +1,7 @@
 package info.logbat.domain.log.domain;
 
-import info.logbat.domain.log.domain.values.LogData;
 import info.logbat.domain.log.domain.enums.Level;
-
+import info.logbat.domain.log.domain.values.LogData;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
@@ -14,6 +13,10 @@ public class Log {
   private final Level level;
   private final LogData logData;
   private final LocalDateTime timestamp;
+
+  public static Log of(Long applicationId, String level, String logData, LocalDateTime timestamp) {
+    return new Log(applicationId, level, logData, timestamp);
+  }
 
   public Log(Long applicationId, String level, String logData, LocalDateTime timestamp) {
     this(null, applicationId, level, logData, timestamp);
