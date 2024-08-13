@@ -45,7 +45,8 @@ class ProjectTest {
             return Stream.of(
                 Arguments.of(""),
                 Arguments.of((String) null),
-                Arguments.of("   ")
+                Arguments.of("   "),
+                Arguments.of("한글33자이상이면예외가발생해야할것같은데진짜발생하는지확인하기위한테스트값입니다.")
             );
         }
 
