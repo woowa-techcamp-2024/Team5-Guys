@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -40,12 +41,16 @@ public class LogRepository {
   public Optional<Log> findById(Long logId) {
     String sql = "SELECT * FROM logs WHERE log_id = ?";
 
-    return Optional.ofNullable(
-        jdbcTemplate.queryForObject(
-            sql,
-            LOG_ROW_MAPPER,
-            logId
-        ));
+    try {
+      return Optional.ofNullable(
+          jdbcTemplate.queryForObject(
+              sql,
+              LOG_ROW_MAPPER,
+              logId
+          ));
+    } catch (EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
   }
 
   private static final RowMapper<Log> LOG_ROW_MAPPER = (rs, rowNum) -> new Log(
