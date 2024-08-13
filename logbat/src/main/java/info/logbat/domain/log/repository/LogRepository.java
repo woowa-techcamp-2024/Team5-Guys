@@ -42,18 +42,19 @@ public class LogRepository {
   public Optional<Log> findById(Long logId) {
     String sql = "SELECT * FROM logs WHERE log_id = ?";
 
-    Log log = jdbcTemplate.queryForObject(sql, logRowMapper(), logId);
-
-    return Optional.ofNullable(log);
+    return Optional.ofNullable(
+        jdbcTemplate.queryForObject(
+            sql,
+            LOG_ROW_MAPPER,
+            logId
+        ));
   }
 
-  private RowMapper<Log> logRowMapper() {
-    return (rs, rowNum) -> new Log(
-        rs.getLong("log_id"),
-        rs.getLong("application_id"),
-        rs.getString("level"),
-        rs.getString("log_data"),
-        rs.getTimestamp("timestamp").toLocalDateTime()
-    );
-  }
+  private static final RowMapper<Log> LOG_ROW_MAPPER = (rs, rowNum) -> new Log(
+      rs.getLong("log_id"),
+      rs.getLong("application_id"),
+      rs.getString("level"),
+      rs.getString("log_data"),
+      rs.getTimestamp("timestamp").toLocalDateTime()
+  );
 }
