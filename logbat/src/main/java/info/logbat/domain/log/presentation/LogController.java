@@ -23,7 +23,10 @@ public class LogController {
 
   @PostMapping
   public ResponseEntity<Void> saveLog(
-      @RequestHeader("app_id") @NotNull @Positive Long applicationId,
+      @RequestHeader("app_id")
+      @NotNull(message = "Application ID가 비어있습니다.")
+      @Positive(message = "Application ID는 양수여야 합니다.") Long applicationId,
+
       @Valid @RequestBody CreateLogRequest request
   ) {
 
