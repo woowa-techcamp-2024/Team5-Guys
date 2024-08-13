@@ -1,6 +1,6 @@
 class LogBat {
     private static appId: string = '';
-    private static apiEndpoint: string = 'https://api.logbat.info/log';
+    private static apiEndpoint: string = 'https://api.logbat.info/logs';
     private static originalConsole: { log: typeof console.log; error: typeof console.error };
     private static isInitialized: boolean = false;
 
@@ -68,6 +68,10 @@ class LogBat {
             this.error(...args).catch(err => this.originalConsole.error('Error in LogBat error:', err));
         };
     }
+}
+
+if (typeof window !== 'undefined') {
+    (window as any).LogBat = LogBat;
 }
 
 export default LogBat;

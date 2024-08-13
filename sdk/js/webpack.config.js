@@ -20,9 +20,13 @@ module.exports = (env, argv) => {
         output: {
             filename: isProduction ? 'sdk.min.js' : 'sdk.js',
             path: path.resolve(__dirname, 'dist'),
-            library: 'LogBat',
-            libraryTarget: 'umd',
-            globalObject: 'this'
+            library: {
+                name: 'LogBat',
+                type: 'umd',
+                export: 'default'
+            },
+            globalObject: 'this',
+            umdNamedDefine: true
         },
         devtool: isProduction ? 'source-map' : 'eval-source-map',
         mode: isProduction ? 'production' : 'development',
