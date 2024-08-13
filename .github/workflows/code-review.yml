@@ -1,9 +1,5 @@
 name: Code Review
 
-permissions:
-  contents: read
-  pull-requests: write
-
 on:
   pull_request:
     types: [opened, reopened, synchronize]
@@ -11,15 +7,16 @@ on:
       - dev
 
 jobs:
-  test:
+  run_code_review:
     runs-on: ubuntu-latest
     steps:
-      - uses: LuizyHub/ChatGPT-CodeReview@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Code Review GPT
+        uses: LuizyHub/code-review-gpt@main
+        with:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          LANGUAGE: Korean
-          OPENAI_API_ENDPOINT: https://api.openai.com/v1
-          DEBUG: true
-          MODEL: gpt-4o-mini
-          MAX_PATCH_LENGTH: 10000
+          MODEL: 'gpt-4o'
+          GITHUB_TOKEN: ${{ github.token }}
