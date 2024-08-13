@@ -41,7 +41,7 @@ class LogBat {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'app_id': this.appId
+                    'app-id': this.appId
                 },
                 body: JSON.stringify(logData),
             });
