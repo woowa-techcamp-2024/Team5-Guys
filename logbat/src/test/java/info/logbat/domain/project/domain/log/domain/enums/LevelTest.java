@@ -1,4 +1,4 @@
-package info.logbat.log.domain.enums;
+package info.logbat.domain.project.domain.log.domain.enums;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import info.logbat.domain.log.domain.enums.Level;
 
 @DisplayName("로그 Level enum 테스트")
 class LevelTest {
