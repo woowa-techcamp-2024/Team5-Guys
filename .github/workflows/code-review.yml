@@ -18,5 +18,5 @@ jobs:
         uses: LuizyHub/code-review-gpt@main
         with:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          MODEL: 'gpt-4o'
+          MODEL: 'gpt-4o-mini'
           GITHUB_TOKEN: ${{ github.token }}
