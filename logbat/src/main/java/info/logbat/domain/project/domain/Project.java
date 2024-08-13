@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -18,7 +19,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Entity
 @Getter
 @SoftDelete
-@Table(name = "projects")
+@Table(name = "projects", indexes = {
+    @Index(name = "idx_project_name", columnList = "name")
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Project {
 
