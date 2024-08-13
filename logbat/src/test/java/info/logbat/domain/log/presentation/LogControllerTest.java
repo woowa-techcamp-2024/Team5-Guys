@@ -36,7 +36,7 @@ class LogControllerTest extends ControllerTestSupport {
     // when
     ResultActions perform = mockMvc.perform(post("/logs")
         .contentType(MediaType.APPLICATION_JSON)
-        .header("app_id", 어플리케이션_ID)
+        .header("app-id", 어플리케이션_ID)
         .content(objectMapper.writeValueAsString(요청_DTO)));
 
     // then
@@ -77,7 +77,7 @@ class LogControllerTest extends ControllerTestSupport {
     // when
     ResultActions perform = mockMvc.perform(post("/logs")
         .contentType(MediaType.APPLICATION_JSON)
-        .header("app_id", appId)
+        .header("app-id", appId)
         .content(objectMapper.writeValueAsString(요청_DTO)));
 
     // then
