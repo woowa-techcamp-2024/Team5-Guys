@@ -136,7 +136,38 @@ class ProjectServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("프로젝트를 찾을 수 없습니다.");
         }
-        
+
+    }
+
+    @Nested
+    @DisplayName("프로젝트를 삭제할 때")
+    class whenDeleteProject {
+
+        private final Project expectedProject = spy(Project.from(expectedProjectName));
+
+        @Test
+        @DisplayName("프로젝트를 삭제할 수 있다.")
+        void canDeleteProject() {
+            // Arrange
+            given(projectRepository.findById(expectedProjectId)).willReturn(
+                Optional.of(expectedProject));
+            // Act
+            Long actualResult = projectService.deleteProject(expectedProjectId);
+            // Assert
+            assertThat(actualResult).isEqualTo(expectedProjectId);
+        }
+
+        @Test
+        @DisplayName("프로젝트가 존재하지 않는다면 IllegalArgumentException을 던진다.")
+        void cannotDeleteProject() {
+            // Arrange
+            Long expectedWrongProjectId = 2L;
+            given(projectRepository.findById(expectedWrongProjectId)).willReturn(Optional.empty());
+            // Act & Assert
+            assertThatThrownBy(() -> projectService.deleteProject(expectedWrongProjectId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("프로젝트를 찾을 수 없습니다.");
+        }
     }
 
 }

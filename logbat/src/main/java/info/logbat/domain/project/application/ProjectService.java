@@ -26,9 +26,19 @@ public class ProjectService {
     }
 
     public ProjectCommonResponse updateProjectValues(ProjectUpdateRequest request) {
-        Project project = projectRepository.findById(request.id())
-            .orElseThrow(() -> new IllegalArgumentException("프로젝트를 찾을 수 없습니다."));
+        Project project = getProject(request.id());
         project.updateName(request.name());
         return ProjectCommonResponse.from(project);
+    }
+
+    public Long deleteProject(Long id) {
+        Project project = getProject(id);
+        projectRepository.delete(project);
+        return id;
+    }
+
+    private Project getProject(Long id) {
+        return projectRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("프로젝트를 찾을 수 없습니다."));
     }
 }
