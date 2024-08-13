@@ -2,6 +2,7 @@ package info.logbat.domain.project.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import info.logbat.domain.project.domain.enums.AppType;
 import java.util.stream.Stream;
@@ -29,10 +30,13 @@ class AppTest {
             // Act
             App actualResult = App.of(EXPECTED_PROJECT, expectedAppType);
             // Assert
-            assertThat(actualResult)
-                .isNotNull()
-                .extracting("project", "appType")
-                .containsExactly(EXPECTED_PROJECT, expectedAppType);
+            assertAll(
+                () -> assertThat(actualResult)
+                    .isNotNull()
+                    .extracting("project", "appType")
+                    .containsExactly(EXPECTED_PROJECT, expectedAppType),
+                () -> assertThat(actualResult.getToken()).isNotNull()
+            );
         }
 
         @ParameterizedTest
