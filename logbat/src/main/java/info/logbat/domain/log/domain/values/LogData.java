@@ -1,4 +1,4 @@
-package info.logbat.log.domain.values;
+package info.logbat.domain.log.domain.values;
 
 import lombok.Getter;
 
