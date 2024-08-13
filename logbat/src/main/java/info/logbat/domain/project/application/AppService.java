@@ -9,8 +9,10 @@ import info.logbat.domain.project.repository.ProjectJpaRepository;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AppService {
 
@@ -24,6 +26,7 @@ public class AppService {
         return AppCommonResponse.from(appRepository.save(App.of(project, appType)));
     }
 
+    @Transactional(readOnly = true)
     public AppCommonResponse getAppByToken(String token) {
         UUID tokenUUID = UUID.fromString(token);
         App app = appRepository.findByToken(tokenUUID)
@@ -31,6 +34,7 @@ public class AppService {
         return AppCommonResponse.from(app);
     }
 
+    @Transactional(readOnly = true)
     public AppCommonResponse getAppById(Long id) {
         App app = appRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException(APP_NOT_FOUND_MESSAGE));
