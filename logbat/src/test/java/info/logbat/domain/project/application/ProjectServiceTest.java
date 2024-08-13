@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.spy;
 
 import info.logbat.domain.project.domain.Project;
+import info.logbat.domain.project.presentation.payload.request.ProjectUpdateRequest;
 import info.logbat.domain.project.presentation.payload.response.ProjectCommonResponse;
 import info.logbat.domain.project.repository.ProjectJpaRepository;
 import java.time.LocalDateTime;
@@ -91,6 +92,51 @@ class ProjectServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("프로젝트를 찾을 수 없습니다.");
         }
+    }
+
+    @Nested
+    @DisplayName("프로젝트를 수정할 때")
+    class whenUpdateProject {
+
+        private final Project expectedProject = spy(Project.from(expectedProjectName));
+        private final String expectedUpdatedProjectName = "수정된 프로젝트 이름";
+
+        @Test
+        @DisplayName("프로젝트 이름을 수정할 수 있다.")
+        void canUpdateProjectValues() {
+            // Arrange
+            LocalDateTime expectedUpdatedAt = LocalDateTime.now();
+            ProjectUpdateRequest request = new ProjectUpdateRequest(expectedProjectId,
+                expectedUpdatedProjectName);
+            given(projectRepository.findById(expectedProjectId)).willReturn(
+                Optional.of(expectedProject));
+            given(expectedProject.getId()).willReturn(expectedProjectId);
+            given(expectedProject.getCreatedAt()).willReturn(expectedCreatedAt);
+            given(expectedProject.getUpdatedAt()).willReturn(expectedUpdatedAt);
+            // Act
+            ProjectCommonResponse actualResult = projectService.updateProjectValues(request);
+            // Assert
+            assertThat(actualResult)
+                .extracting("id", "name", "createdAt", "updatedAt")
+                .containsExactly(expectedProjectId, expectedUpdatedProjectName, expectedCreatedAt,
+                    expectedUpdatedAt);
+        }
+
+
+        @Test
+        @DisplayName("프로젝트가 존재하지 않는다면 IllegalArgumentException을 던진다.")
+        void cannotUpdateProjectValues() {
+            // Arrange
+            Long expectedWrongProjectId = 2L;
+            ProjectUpdateRequest request = new ProjectUpdateRequest(expectedWrongProjectId,
+                expectedUpdatedProjectName);
+            given(projectRepository.findById(expectedWrongProjectId)).willReturn(Optional.empty());
+            // Act & Assert
+            assertThatThrownBy(() -> projectService.updateProjectValues(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("프로젝트를 찾을 수 없습니다.");
+        }
+        
     }
 
 }
