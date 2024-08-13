@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import info.logbat.domain.common.ControllerTestSupport;
-import info.logbat.domain.project.application.ProjectService;
 import info.logbat.domain.project.presentation.payload.response.ProjectCommonResponse;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
@@ -19,15 +18,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ProjectController는")
 class ProjectControllerTest extends ControllerTestSupport {
-
-    @MockBean
-    private ProjectService projectService;
 
     private final Long expectedId = 1L;
     private final String expectedName = "projectName";
