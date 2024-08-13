@@ -1,7 +1,6 @@
 package info.logbat.domain.project.application;
 
 import info.logbat.domain.project.domain.Project;
-import info.logbat.domain.project.presentation.payload.request.ProjectUpdateRequest;
 import info.logbat.domain.project.presentation.payload.response.ProjectCommonResponse;
 import info.logbat.domain.project.repository.ProjectJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +26,9 @@ public class ProjectService {
         return ProjectCommonResponse.from(project);
     }
 
-    public ProjectCommonResponse updateProjectValues(ProjectUpdateRequest request) {
-        Project project = getProject(request.id());
-        project.updateName(request.name());
+    public ProjectCommonResponse updateProjectValues(Long id, String name) {
+        Project project = getProject(id);
+        project.updateName(name);
         return ProjectCommonResponse.from(project);
     }
 

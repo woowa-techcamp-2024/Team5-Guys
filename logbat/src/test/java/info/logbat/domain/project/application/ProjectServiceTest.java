@@ -8,7 +8,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.spy;
 
 import info.logbat.domain.project.domain.Project;
-import info.logbat.domain.project.presentation.payload.request.ProjectUpdateRequest;
 import info.logbat.domain.project.presentation.payload.response.ProjectCommonResponse;
 import info.logbat.domain.project.repository.ProjectJpaRepository;
 import java.time.LocalDateTime;
@@ -106,15 +105,14 @@ class ProjectServiceTest {
         void canUpdateProjectValues() {
             // Arrange
             LocalDateTime expectedUpdatedAt = LocalDateTime.now();
-            ProjectUpdateRequest request = new ProjectUpdateRequest(expectedProjectId,
-                expectedUpdatedProjectName);
             given(projectRepository.findById(expectedProjectId)).willReturn(
                 Optional.of(expectedProject));
             given(expectedProject.getId()).willReturn(expectedProjectId);
             given(expectedProject.getCreatedAt()).willReturn(expectedCreatedAt);
             given(expectedProject.getUpdatedAt()).willReturn(expectedUpdatedAt);
             // Act
-            ProjectCommonResponse actualResult = projectService.updateProjectValues(request);
+            ProjectCommonResponse actualResult = projectService.updateProjectValues(
+                expectedProjectId, expectedUpdatedProjectName);
             // Assert
             assertThat(actualResult)
                 .extracting("id", "name", "createdAt", "updatedAt")
@@ -128,11 +126,10 @@ class ProjectServiceTest {
         void cannotUpdateProjectValues() {
             // Arrange
             Long expectedWrongProjectId = 2L;
-            ProjectUpdateRequest request = new ProjectUpdateRequest(expectedWrongProjectId,
-                expectedUpdatedProjectName);
             given(projectRepository.findById(expectedWrongProjectId)).willReturn(Optional.empty());
             // Act & Assert
-            assertThatThrownBy(() -> projectService.updateProjectValues(request))
+            assertThatThrownBy(() -> projectService.updateProjectValues(expectedWrongProjectId,
+                expectedUpdatedProjectName))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("프로젝트를 찾을 수 없습니다.");
         }
