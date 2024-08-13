@@ -32,8 +32,8 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<ApiCommonResponse<ProjectCommonResponse>> create(
         @RequestBody ProjectCreateRequest request) {
-        ApiCommonResponse<ProjectCommonResponse> response = ApiCommonResponse.createSuccessResponse(
-            projectService.createProject(request.name()));
+        ApiCommonResponse<ProjectCommonResponse> response = ApiCommonResponse.createApiResponse(
+            HttpStatus.CREATED, "Success", projectService.createProject(request.name()));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
