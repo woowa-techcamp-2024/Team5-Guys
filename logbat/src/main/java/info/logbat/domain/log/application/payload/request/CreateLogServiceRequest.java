@@ -13,9 +13,9 @@ public record CreateLogServiceRequest(
   public static CreateLogServiceRequest of(Long applicationId, CreateLogRequest request) {
     return new CreateLogServiceRequest(
         applicationId,
-        request.getLogLevel(),
-        request.getLogData(),
-        request.getTimestamp()
+        request.logLevel(),
+        request.logData(),
+        request.timestamp()
     );
   }
 }
