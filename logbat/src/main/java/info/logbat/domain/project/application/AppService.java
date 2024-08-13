@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AppService {
 
+    private static final String APP_NOT_FOUND_MESSAGE = "앱을 찾을 수 없습니다.";
+
     private final AppJpaRepository appRepository;
     private final ProjectJpaRepository projectRepository;
 
@@ -25,14 +27,21 @@ public class AppService {
     public AppCommonResponse getAppByToken(String token) {
         UUID tokenUUID = UUID.fromString(token);
         App app = appRepository.findByToken(tokenUUID)
-            .orElseThrow(() -> new IllegalArgumentException("앱을 찾을 수 없습니다."));
+            .orElseThrow(() -> new IllegalArgumentException(APP_NOT_FOUND_MESSAGE));
         return AppCommonResponse.from(app);
     }
 
     public AppCommonResponse getAppById(Long id) {
         App app = appRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("앱을 찾을 수 없습니다."));
+            .orElseThrow(() -> new IllegalArgumentException(APP_NOT_FOUND_MESSAGE));
         return AppCommonResponse.from(app);
+    }
+
+    public Long deleteApp(Long projectId, Long appId) {
+        App app = appRepository.findByProject_IdAndId(projectId, appId)
+            .orElseThrow(() -> new IllegalArgumentException(APP_NOT_FOUND_MESSAGE));
+        appRepository.delete(app);
+        return app.getId();
     }
 
     private Project getProject(Long id) {

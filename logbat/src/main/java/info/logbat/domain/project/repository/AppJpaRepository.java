@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface AppJpaRepository extends JpaRepository<App, Long> {
 
     Optional<App> findByToken(@NonNull UUID token);
+
+    Optional<App> findByProject_IdAndId(@NonNull Long id, @NonNull Long id1);
 }

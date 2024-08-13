@@ -145,4 +145,34 @@ class AppServiceTest {
         }
     }
 
+    @Nested
+    @DisplayName("App을 삭제할 때")
+    class whenDeleteApp {
+
+        @Test
+        @DisplayName("프로젝트와 앱 ID로 삭제할 수 있다.")
+        void canDeleteAppByProjectIdAndAppId() {
+            // Arrange
+            given(appRepository.findByProject_IdAndId(expectedProjectId, expectedAppId)).willReturn(
+                Optional.of(expectedApp));
+            given(expectedApp.getId()).willReturn(expectedAppId);
+            // Act
+            Long actualResult = appService.deleteApp(expectedProjectId, expectedAppId);
+            // Assert
+            assertThat(actualResult).isEqualTo(expectedAppId);
+        }
+
+        @Test
+        @DisplayName("앱을 찾을 수 없으면 예외를 던진다.")
+        void willThrowExceptionWhenAppNotFound() {
+            // Arrange
+            given(appRepository.findByProject_IdAndId(expectedProjectId, expectedAppId)).willReturn(
+                Optional.empty());
+            // Act & Assert
+            assertThatThrownBy(() -> appService.deleteApp(expectedProjectId, expectedAppId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("앱을 찾을 수 없습니다.");
+        }
+    }
+
 }
