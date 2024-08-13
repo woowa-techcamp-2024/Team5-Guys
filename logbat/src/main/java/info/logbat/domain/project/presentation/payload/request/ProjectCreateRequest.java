@@ -1,5 +1,5 @@
 package info.logbat.domain.project.presentation.payload.request;
 
-public record ProjectUpdateRequest(String name) {
+public record ProjectCreateRequest(String name) {
 
 }
