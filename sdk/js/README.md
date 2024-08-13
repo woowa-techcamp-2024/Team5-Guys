@@ -23,10 +23,11 @@ CDN을 통해 직접 스크립트를 포함할 수 있습니다:
 
 LogBat SDK를 사용하기 전에 먼저 초기화해야 합니다:
 
-```javascript
-import LogBat from 'logbat-sdk';
-
+```html
+<script src="https://sdk.logbat.info/sdk.js"></script>
+<script>
 LogBat.init({ appId: 'YOUR_APP_ID' });
+</script>
 ```
 
 ### 로그 전송
