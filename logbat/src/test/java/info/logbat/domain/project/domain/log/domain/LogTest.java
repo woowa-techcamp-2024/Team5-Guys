@@ -1,9 +1,10 @@
-package info.logbat.log.domain;
+package info.logbat.domain.project.domain.log.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import info.logbat.log.domain.enums.Level;
+import info.logbat.domain.log.domain.Log;
+import info.logbat.domain.log.domain.enums.Level;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
