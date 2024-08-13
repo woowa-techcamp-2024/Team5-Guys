@@ -40,7 +40,6 @@ class ProjectTest {
                 .hasFieldOrPropertyWithValue("name", expectedProjectName);
         }
 
-
         private static Stream<Arguments> exceptionValues() {
             return Stream.of(
                 Arguments.of(""),
@@ -51,4 +50,45 @@ class ProjectTest {
         }
 
     }
+
+    @DisplayName("수정시")
+    @Nested
+    class whenUpdated {
+
+        @DisplayName("이름이 잘못된 경우 예외를 던진다.")
+        @ParameterizedTest
+        @MethodSource("exceptionValues")
+        void throwsExceptionForInvalidName(String name) {
+            // Arrange
+            Project project = Project.from("이름");
+            // Act & Assert
+            assertThatThrownBy(() -> project.updateName(name))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("잘못된 이름 요청입니다.");
+        }
+
+        @Test
+        @DisplayName("정상적으로 수정된다.")
+        void testUpdateNameMethodSuccess() {
+            // Arrange
+            Project project = Project.from("이름");
+            String expectedProjectName = "수정된 이름";
+            // Act
+            project.updateName(expectedProjectName);
+            // Assert
+            assertThat(project)
+                .hasFieldOrPropertyWithValue("name", expectedProjectName);
+        }
+
+        private static Stream<Arguments> exceptionValues() {
+            return Stream.of(
+                Arguments.of(""),
+                Arguments.of((String) null),
+                Arguments.of("   "),
+                Arguments.of("한글33자이상이면예외가발생해야할것같은데진짜발생하는지확인하기위한테스트값입니다.")
+            );
+        }
+    }
+
+
 }
