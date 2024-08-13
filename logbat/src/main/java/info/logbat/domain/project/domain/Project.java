@@ -45,10 +45,19 @@ public class Project {
     }
 
     public static Project from(String name) {
+        validateName(name);
+        return new Project(name);
+    }
+
+    public void updateName(String name) {
+        validateName(name);
+        this.name = name;
+    }
+
+    private static void validateName(String name) {
         if (name == null || name.isBlank() || name.getBytes(StandardCharsets.UTF_8).length > 100) {
             throw new IllegalArgumentException("잘못된 이름 요청입니다.");
         }
-        return new Project(name);
     }
 
 }
