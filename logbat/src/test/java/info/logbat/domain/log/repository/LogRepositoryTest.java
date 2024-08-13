@@ -61,4 +61,16 @@ class LogRepositoryTest {
             LocalDateTime.of(2021, 1, 1, 0, 0, 0));
   }
 
+  @DisplayName("없는 Log를 조회하면 빈 Optional을 반환한다.")
+  @Test
+  void findNonexistentLog() {
+    // given
+    long 없는_로그_ID = 1L;
+
+    // when
+    Optional<Log> 저장된_로그 = logRepository.findById(없는_로그_ID);
+
+    // then
+    assertThat(저장된_로그).isEmpty();
+  }
 }
