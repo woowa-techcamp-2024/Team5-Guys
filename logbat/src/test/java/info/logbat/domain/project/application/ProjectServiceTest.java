@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.spy;
 
 import info.logbat.domain.project.domain.Project;
-import info.logbat.domain.project.presentation.payload.response.ProjectCreateResponse;
+import info.logbat.domain.project.presentation.payload.response.ProjectCommonResponse;
 import info.logbat.domain.project.repository.ProjectJpaRepository;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +38,7 @@ class ProjectServiceTest {
         given(expectedProject.getId()).willReturn(expectedProjectId);
         given(expectedProject.getCreatedAt()).willReturn(expectedCreatedAt);
         // Act
-        ProjectCreateResponse actualResult = projectService.createProject(expectedProjectName);
+        ProjectCommonResponse actualResult = projectService.createProject(expectedProjectName);
         // Assert
         assertThat(actualResult)
             .extracting("id", "name", "createdAt")
