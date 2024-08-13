@@ -1,31 +1,33 @@
-interface LogBatConfig {
-    appId: string;
-}
-
-interface Console {
-    log: (...data: any[]) => void;
-    error: (...data: any[]) => void;
-}
-
 class LogBat {
     private static appId: string = '';
     private static apiEndpoint: string = 'https://api.logbat.info/log';
-    private static originalConsole: Console;
+    private static originalConsole: { log: typeof console.log; error: typeof console.error };
+    private static isInitialized: boolean = false;
 
-    public static init(config: LogBatConfig): void {
+    public static init(config: { appId: string }): void {
+        if (this.isInitialized) {
+            console.warn('LogBat SDK is already initialized. Ignoring repeated initialization.');
+            return;
+        }
+
         this.appId = config.appId;
         this.overrideConsoleMethods();
+        this.isInitialized = true;
     }
 
-    public static log(...args: any[]): void {
-        this.sendLog('info', args);
+    public static async log(...args: any[]): Promise<void> {
+        const promise = this.sendLog('info', args);
+        this.originalConsole.log(...args);
+        await promise;
     }
 
-    public static error(...args: any[]): void {
-        this.sendLog('error', args);
+    public static async error(...args: any[]): Promise<void> {
+        const promise = this.sendLog('error', args);
+        this.originalConsole.error(...args);
+        await promise;
     }
 
-    private static sendLog(level: string, args: any[]): void {
+    private static async sendLog(level: string, args: any[]): Promise<void> {
         const logData = {
             level: level,
             created_at: new Date().toISOString(),
@@ -34,14 +36,22 @@ class LogBat {
             ).join(' ')
         };
 
-        fetch(this.apiEndpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'app_id': this.appId
-            },
-            body: JSON.stringify(logData),
-        }).catch(err => this.originalConsole.error('Failed to send log:', err));
+        try {
+            const response = await fetch(this.apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'app_id': this.appId
+                },
+                body: JSON.stringify(logData),
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        } catch (err) {
+            this.originalConsole.error('Failed to send log:', err);
+            throw err;
+        }
     }
 
     private static overrideConsoleMethods(): void {
@@ -51,13 +61,11 @@ class LogBat {
         };
 
         console.log = (...args: any[]): void => {
-            this.sendLog('info', args);
-            this.originalConsole.log.apply(console, args);
+            this.log(...args).catch(err => this.originalConsole.error('Error in LogBat log:', err));
         };
 
         console.error = (...args: any[]): void => {
-            this.sendLog('error', args);
-            this.originalConsole.error.apply(console, args);
+            this.error(...args).catch(err => this.originalConsole.error('Error in LogBat error:', err));
         };
     }
 }
