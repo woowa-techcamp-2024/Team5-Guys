@@ -15,6 +15,7 @@ import info.logbat.domain.project.presentation.payload.response.AppCommonRespons
 import info.logbat.domain.project.repository.AppJpaRepository;
 import info.logbat.domain.project.repository.ProjectJpaRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
@@ -118,6 +119,19 @@ class AppServiceTest {
             assertThat(actualResult)
                 .extracting("id")
                 .isEqualTo(expectedAppId);
+        }
+
+        @Test
+        @DisplayName("Project Id로 Apps를 조회할 수 있다.")
+        void canGetAppsByProjectId() {
+            // Arrange
+            given(appRepository.findByProject_Id(expectedProjectId)).willReturn(
+                List.of(expectedApp));
+            given(expectedApp.getId()).willReturn(expectedAppId);
+            // Act
+            List<AppCommonResponse> actualResult = appService.getAppsByProjectId(expectedProjectId);
+            // Assert
+            assertThat(actualResult).hasSize(1);
         }
 
         @Test

@@ -6,6 +6,7 @@ import info.logbat.domain.project.domain.enums.AppType;
 import info.logbat.domain.project.presentation.payload.response.AppCommonResponse;
 import info.logbat.domain.project.repository.AppJpaRepository;
 import info.logbat.domain.project.repository.ProjectJpaRepository;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,12 @@ public class AppService {
         App app = appRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException(APP_NOT_FOUND_MESSAGE));
         return AppCommonResponse.from(app);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AppCommonResponse> getAppsByProjectId(Long projectId) {
+        List<App> apps = appRepository.findByProject_Id(projectId);
+        return apps.stream().map(AppCommonResponse::from).toList();
     }
 
     public Long deleteApp(Long projectId, Long appId) {
