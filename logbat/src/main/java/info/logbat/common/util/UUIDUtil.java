@@ -2,8 +2,11 @@ package info.logbat.common.util;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-public abstract class UUIDUtil {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class UUIDUtil {
 
   private static final int UUID_BYTE_LENGTH = 16;
 
