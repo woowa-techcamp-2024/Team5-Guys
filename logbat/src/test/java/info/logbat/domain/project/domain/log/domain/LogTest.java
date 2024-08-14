@@ -31,7 +31,7 @@ class LogTest {
 
       // then
       assertThat(log)
-          .extracting("logId", "applicationId", "level", "logData.value", "timestamp")
+          .extracting("logId", "applicationId", "level", "data.value", "timestamp")
           .containsExactly(null, 1L, Level.INFO, 로그_데이터, 로그_타임스탬프);
     }
 
@@ -85,7 +85,7 @@ class LogTest {
 
       // then
       assertThat(log)
-          .extracting("logId", "applicationId", "level", "logData.value", "timestamp")
+          .extracting("logId", "applicationId", "level", "data.value", "timestamp")
           .containsExactly(로그_ID, 1L, Level.INFO, 로그_데이터, 로그_타임스탬프);
     }
 

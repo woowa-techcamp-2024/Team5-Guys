@@ -28,7 +28,7 @@ public class LogRepository {
       PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
       ps.setLong(1, log.getApplicationId());
       ps.setString(2, log.getLevel().name());
-      ps.setString(3, log.getLogData().getValue());
+      ps.setString(3, log.getData().getValue());
       ps.setTimestamp(4, Timestamp.valueOf(log.getTimestamp()));
       return ps;
     }, keyHolder);

@@ -56,7 +56,7 @@ class LogRepositoryTest {
     // then
     assertThat(저장된_로그).isPresent()
         .get()
-        .extracting("logId", "applicationId", "level", "logData.value", "timestamp")
+        .extracting("logId", "applicationId", "level", "data.value", "timestamp")
         .containsExactly(로그_ID, 1L, Level.INFO, "테스트_로그_데이터",
             LocalDateTime.of(2021, 1, 1, 0, 0, 0));
   }

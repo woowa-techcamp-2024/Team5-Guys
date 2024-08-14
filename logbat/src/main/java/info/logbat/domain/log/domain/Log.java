@@ -11,24 +11,24 @@ public class Log {
   private final Long logId;
   private final Long applicationId;
   private final Level level;
-  private final LogData logData;
+  private final LogData data;
   private final LocalDateTime timestamp;
 
   public static Log of(Long applicationId, String level, String logData, LocalDateTime timestamp) {
     return new Log(applicationId, level, logData, timestamp);
   }
 
-  public Log(Long applicationId, String level, String logData, LocalDateTime timestamp) {
-    this(null, applicationId, level, logData, timestamp);
+  public Log(Long applicationId, String level, String data, LocalDateTime timestamp) {
+    this(null, applicationId, level, data, timestamp);
   }
 
-  public Log(Long logId, Long applicationId, String level, String logData,
+  public Log(Long logId, Long applicationId, String level, String data,
       LocalDateTime timestamp) {
     this.logId = logId;
     validateApplicationId(applicationId);
     this.applicationId = applicationId;
     this.level = Level.from(level);
-    this.logData = LogData.from(logData);
+    this.data = LogData.from(data);
     validateTimestamp(timestamp);
     this.timestamp = timestamp;
   }

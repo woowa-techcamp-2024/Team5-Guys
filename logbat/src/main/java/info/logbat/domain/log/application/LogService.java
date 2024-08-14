@@ -15,12 +15,12 @@ public class LogService {
 
   public long saveLog(CreateLogServiceRequest request) {
     Long appId = request.applicationId();
-    String logLevel = request.logLevel();
-    String logData = request.logData();
+    String level = request.level();
+    String data = request.data();
     LocalDateTime timestamp = request.timestamp();
     // TODO Log 저장 전 Application ID 체크 로직 추가 필요
 
-    Log log = Log.of(appId, logLevel, logData, timestamp);
+    Log log = Log.of(appId, level, data, timestamp);
 
     return logRepository.save(log);
   }

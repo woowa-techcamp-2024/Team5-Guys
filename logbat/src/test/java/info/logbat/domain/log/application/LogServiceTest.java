@@ -46,7 +46,7 @@ class LogServiceTest {
 
     assertThat(찾은_로그).isPresent()
         .get()
-        .extracting("logId", "applicationId", "level", "logData.value", "timestamp")
+        .extracting("logId", "applicationId", "level", "data.value", "timestamp")
         .contains(저장된_ID, 1L, Level.INFO, "테스트_로그_데이터", 타임스탬프);
   }
 
