@@ -2,7 +2,7 @@ name: cicd pipeline
 
 on:
   push:
-    branches: [ "test/cicd-pipeline" ]
+    branches: [ "dev" ]
 
 env:
   DOCKER_IMAGE_TAG: logbat/logbat:latest
