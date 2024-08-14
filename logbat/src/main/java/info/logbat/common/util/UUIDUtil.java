@@ -12,16 +12,16 @@ public final class UUIDUtil {
 
   public static byte[] uuidStringToBytes(String uuidStr) {
     UUID uuid = UUID.fromString(uuidStr);
-    ByteBuffer bb = ByteBuffer.wrap(new byte[UUID_BYTE_LENGTH]);
-    bb.putLong(uuid.getMostSignificantBits());
-    bb.putLong(uuid.getLeastSignificantBits());
-    return bb.array();
+    ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[UUID_BYTE_LENGTH]);
+    byteBuffer.putLong(uuid.getMostSignificantBits());
+    byteBuffer.putLong(uuid.getLeastSignificantBits());
+    return byteBuffer.array();
   }
 
   public static String bytesToUuidString(byte[] bytes) {
-    ByteBuffer bb = ByteBuffer.wrap(bytes);
-    long high = bb.getLong();
-    long low = bb.getLong();
+    ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
+    long high = byteBuffer.getLong();
+    long low = byteBuffer.getLong();
     UUID uuid = new UUID(high, low);
     return uuid.toString();
   }
