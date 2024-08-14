@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LogbatViewApplication {
+public class LogBatViewApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(LogbatViewApplication.class, args);
+		SpringApplication.run(LogBatViewApplication.class, args);
 	}
 
 }
