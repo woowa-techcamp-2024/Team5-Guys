@@ -3,6 +3,7 @@ package info.logbat.domain.project.presentation;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -24,25 +25,25 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 @DisplayName("AppController는")
 class AppControllerTest extends ControllerTestSupport {
 
+    private final AppCommonResponse expectedAppCommonResponse = mock(AppCommonResponse.class);
+    private final Long expectedId = 1L;
+    private final Long expectedProjectId = 1L;
+    private final AppType expectedAppType = AppType.JAVA;
+    private final UUID expectedToken = UUID.randomUUID();
+    private final LocalDateTime expectedCreatedAt = LocalDateTime.now();
+
+    @BeforeEach
+    void init() {
+        given(expectedAppCommonResponse.id()).willReturn(expectedId);
+        given(expectedAppCommonResponse.projectId()).willReturn(expectedProjectId);
+        given(expectedAppCommonResponse.appType()).willReturn(expectedAppType.name());
+        given(expectedAppCommonResponse.token()).willReturn(expectedToken.toString());
+        given(expectedAppCommonResponse.createdAt()).willReturn(expectedCreatedAt);
+    }
+
     @Nested
     @DisplayName("GET에 대해")
     class describeGetApps {
-
-        private final AppCommonResponse expectedAppCommonResponse = mock(AppCommonResponse.class);
-        private final Long expectedId = 1L;
-        private final Long expectedProjectId = 1L;
-        private final AppType expectedAppType = AppType.JAVA;
-        private final UUID expectedToken = UUID.randomUUID();
-        private final LocalDateTime expectedCreatedAt = LocalDateTime.now();
-
-        @BeforeEach
-        void init() {
-            given(expectedAppCommonResponse.id()).willReturn(expectedId);
-            given(expectedAppCommonResponse.projectId()).willReturn(expectedProjectId);
-            given(expectedAppCommonResponse.appType()).willReturn(expectedAppType.name());
-            given(expectedAppCommonResponse.token()).willReturn(expectedToken.toString());
-            given(expectedAppCommonResponse.createdAt()).willReturn(expectedCreatedAt);
-        }
 
         @Test
         @DisplayName("/v1/projects/apps/{projectId} 요청시 프로젝트 ID로 앱 목록을 조회할 수 있다.")
@@ -72,6 +73,38 @@ class AppControllerTest extends ControllerTestSupport {
             MockHttpServletRequestBuilder get = get("/v1/projects/apps/info/{id}", expectedId);
             // Act & Assert
             mockMvc.perform(get)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(200))
+                .andExpect(jsonPath("$.message").value("Success"))
+                .andExpect(jsonPath("$.data.id").value(expectedId))
+                .andExpect(jsonPath("$.data.projectId").value(expectedProjectId))
+                .andExpect(jsonPath("$.data.appType").value(expectedAppType.name()))
+                .andExpect(jsonPath("$.data.token").value(expectedToken.toString()))
+                .andExpect(jsonPath("$.data.createdAt").value(expectedCreatedAt.toString()));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("POST에 대해")
+    class describePostApp {
+
+        @Test
+        @DisplayName("/v1/projects/apps 요청시 앱을 생성할 수 있다.")
+        void willCreateApp() throws Exception {
+            // Arrange
+            given(appService.createApp(expectedProjectId, expectedAppType.name()))
+                .willReturn(expectedAppCommonResponse);
+            MockHttpServletRequestBuilder post = post("/v1/projects/apps")
+                .contentType("application/json")
+                .content("""
+                    {
+                        "projectId": 1,
+                        "appType": "JAVA"
+                    }
+                    """);
+            // Act & Assert
+            mockMvc.perform(post)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.statusCode").value(200))
                 .andExpect(jsonPath("$.message").value("Success"))
