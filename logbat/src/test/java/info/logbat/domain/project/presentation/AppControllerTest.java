@@ -2,6 +2,7 @@ package info.logbat.domain.project.presentation;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -113,6 +114,27 @@ class AppControllerTest extends ControllerTestSupport {
                 .andExpect(jsonPath("$.data.appType").value(expectedAppType.name()))
                 .andExpect(jsonPath("$.data.token").value(expectedToken.toString()))
                 .andExpect(jsonPath("$.data.createdAt").value(expectedCreatedAt.toString()));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("DELETE에 대해")
+    class describeDeleteApp {
+
+        @Test
+        @DisplayName("/v1/projects/apps/{projectId}/{appId} 요청시 프로젝트 ID와 앱 ID로 앱을 삭제할 수 있다.")
+        void willDeleteApp() throws Exception {
+            // Arrange
+            given(appService.deleteApp(expectedProjectId, expectedId)).willReturn(expectedId);
+            MockHttpServletRequestBuilder delete = delete("/v1/projects/apps/{projectId}/{appId}",
+                expectedProjectId, expectedId);
+            // Act & Assert
+            mockMvc.perform(delete)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(200))
+                .andExpect(jsonPath("$.message").value("Success"))
+                .andExpect(jsonPath("$.data").value(expectedId));
         }
 
     }

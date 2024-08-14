@@ -6,6 +6,7 @@ import info.logbat.domain.project.presentation.payload.request.AppCreateRequest;
 import info.logbat.domain.project.presentation.payload.response.AppCommonResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,12 @@ public class AppController {
         @RequestBody AppCreateRequest appCreateRequest) {
         return ApiCommonResponse.createSuccessResponse(
             appService.createApp(appCreateRequest.projectId(), appCreateRequest.appType()));
+    }
+
+    @DeleteMapping("/{projectId}/{appId}")
+    public ApiCommonResponse<Long> deleteApp(@PathVariable Long projectId,
+        @PathVariable Long appId) {
+        return ApiCommonResponse.createSuccessResponse(appService.deleteApp(projectId, appId));
     }
 
 }
