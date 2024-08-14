@@ -1,6 +1,7 @@
 package info.logbat.common.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -18,9 +19,11 @@ public class UUIDUtilTest {
     // when
     byte[] bytes = UUIDUtil.uuidStringToBytes(uuidStr);
 
-    assertThat(bytes).isNotNull();
-    assertThat(bytes.length).isEqualTo(16);
-    assertThat(bytes).isEqualTo(expectedBytes);
+    assertAll(
+        () -> assertThat(bytes).isNotNull(),
+        () -> assertThat(bytes.length).isEqualTo(16),
+        () -> assertThat(bytes).isEqualTo(expectedBytes)
+    );
   }
 
   @ParameterizedTest
