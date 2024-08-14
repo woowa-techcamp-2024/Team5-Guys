@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+@DisplayName("UUIDUtil에서 ")
 public class UUIDUtilTest {
 
   @ParameterizedTest
