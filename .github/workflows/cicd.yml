@@ -1,0 +1,78 @@
+name: cicd pipeline
+
+on:
+  push:
+    branches: [ "test/cicd-pipeline" ]
+
+env:
+  DOCKER_IMAGE_TAG: logbat/logbat:latest
+  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+  DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+  BASTION_HOST_IP: ${{ secrets.BASTION_HOST_IP }}
+  BACKEND_HOST_IP: ${{ secrets.BACKEND_HOST_IP }} 
+  
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17 
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+
+      - name: Cleanup application.yml
+        run: |
+          cd logbat
+          rm -f src/main/resources/application.yml
+
+      - name: Create application-dev.yml from GitHub Secret
+        run: |
+          cd logbat
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+
+      - name: Build with Gradle
+        env:
+          ORG_GRADLE_OPTS: "-Duser.timezone=Asia/Seoul"
+        run: |
+          cd logbat
+          ./gradlew clean bootJar -x test
+
+      - name: Login to Docker Hub
+        run: echo ${{ env.DOCKER_HUB_PASSWORD }} | docker login -u ${{ env.DOCKER_HUB_USERNAME }} --password-stdin
+
+      - name: Build Docker Image
+        run: |
+          cd logbat
+          docker build -t ${{ env.DOCKER_IMAGE_TAG }} .
+
+      - name: Push Docker Image to Docker Hub
+        run: docker push ${{ env.DOCKER_IMAGE_TAG }}
+
+  deploy:
+    name: Deploy to EC2
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start SSH Agent and Add Bastion Key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.BASTION_SSH_SECRET_KEY }}
+
+      - name: Add Target Server Key to SSH Agent
+        run: echo "${{ secrets.PRIVATE_SSH_SECRET_KEY }}" | ssh-add -
+
+      - name: Connect to Bastion and Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -A ubuntu@${{ secrets.BASTION_HOST_IP }} \
+            "ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.BACKEND_HOST_IP }} 'bash /home/ubuntu/deploy.sh'"
+
