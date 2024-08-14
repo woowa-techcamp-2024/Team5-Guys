@@ -22,8 +22,9 @@ public class AppService {
     private final AppJpaRepository appRepository;
     private final ProjectJpaRepository projectRepository;
 
-    public AppCommonResponse createApp(Long projectId, AppType appType) {
+    public AppCommonResponse createApp(Long projectId, String appTypeStr) {
         Project project = getProject(projectId);
+        AppType appType = AppType.from(appTypeStr);
         return AppCommonResponse.from(appRepository.save(App.of(project, appType)));
     }
 
