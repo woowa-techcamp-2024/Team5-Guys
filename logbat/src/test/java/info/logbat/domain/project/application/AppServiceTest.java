@@ -15,6 +15,7 @@ import info.logbat.domain.project.presentation.payload.response.AppCommonRespons
 import info.logbat.domain.project.repository.AppJpaRepository;
 import info.logbat.domain.project.repository.ProjectJpaRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +47,8 @@ class AppServiceTest {
     @DisplayName("새로운 App을 생성할 때")
     class whenCreateNewApp {
 
+        private final String expectedAppType = AppType.JAVA.name();
+
         @Test
         @DisplayName("프로젝트가 존재하지 않으면 IllegalArgumentException을 던진다.")
         void willThrowExceptionWhenProjectNotFound() {
@@ -53,9 +56,22 @@ class AppServiceTest {
             Long notExistProjectId = 2L;
             given(projectRepository.findById(notExistProjectId)).willReturn(Optional.empty());
             // Act & Assert
-            assertThatThrownBy(() -> appService.createApp(notExistProjectId, AppType.JAVA))
+            assertThatThrownBy(() -> appService.createApp(notExistProjectId, expectedAppType))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("프로젝트를 찾을 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("AppType이 잘못된 경우 IllegalArgumentException을 던진다.")
+        void willThrowExceptionWhenAppTypeIsInvalid() {
+            // Arrange
+            String invalidAppType = "INVALID";
+            given(projectRepository.findById(expectedProjectId)).willReturn(
+                Optional.of(expectedProject));
+            // Act & Assert
+            assertThatThrownBy(() -> appService.createApp(expectedProjectId, invalidAppType))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("잘못된 앱 타입 요청입니다.");
         }
 
         @Test
@@ -70,12 +86,13 @@ class AppServiceTest {
             given(expectedApp.getId()).willReturn(expectedAppId);
             given(expectedApp.getCreatedAt()).willReturn(expectedCreatedAt);
             // Act
-            AppCommonResponse actualResult = appService.createApp(expectedProjectId, AppType.JAVA);
+            AppCommonResponse actualResult = appService.createApp(expectedProjectId,
+                expectedAppType);
             // Assert
             assertAll(
                 () -> assertThat(actualResult)
                     .extracting("id", "projectId", "appType", "createdAt")
-                    .containsExactly(expectedAppId, expectedProjectId, AppType.JAVA.name(),
+                    .containsExactly(expectedAppId, expectedProjectId, expectedAppType,
                         expectedCreatedAt),
                 () -> assertThat(actualResult.token()).isNotNull()
             );
@@ -118,6 +135,19 @@ class AppServiceTest {
             assertThat(actualResult)
                 .extracting("id")
                 .isEqualTo(expectedAppId);
+        }
+
+        @Test
+        @DisplayName("Project Id로 Apps를 조회할 수 있다.")
+        void canGetAppsByProjectId() {
+            // Arrange
+            given(appRepository.findByProject_Id(expectedProjectId)).willReturn(
+                List.of(expectedApp));
+            given(expectedApp.getId()).willReturn(expectedAppId);
+            // Act
+            List<AppCommonResponse> actualResult = appService.getAppsByProjectId(expectedProjectId);
+            // Assert
+            assertThat(actualResult).hasSize(1);
         }
 
         @Test
