@@ -4,15 +4,15 @@ import info.logbat.domain.log.presentation.payload.request.CreateLogRequest;
 import java.time.LocalDateTime;
 
 public record CreateLogServiceRequest(
-    Long applicationId,
+    String appKey,
     String level,
     String data,
     LocalDateTime timestamp
 ) {
 
-  public static CreateLogServiceRequest of(Long applicationId, CreateLogRequest request) {
+  public static CreateLogServiceRequest of(String appKey, CreateLogRequest request) {
     return new CreateLogServiceRequest(
-        applicationId,
+        appKey,
         request.level(),
         request.data(),
         request.timestamp()
