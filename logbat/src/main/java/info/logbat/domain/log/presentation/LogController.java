@@ -6,6 +6,7 @@ import info.logbat.domain.log.presentation.payload.request.CreateLogRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,7 @@ public class LogController {
 
     logService.saveLog(CreateLogServiceRequest.of(appKey, request));
 
-    return ResponseEntity.ok()
+    return ResponseEntity.status(HttpStatus.CREATED)
         .build();
   }
 
