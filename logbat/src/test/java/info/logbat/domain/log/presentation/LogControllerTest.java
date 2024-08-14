@@ -42,7 +42,7 @@ class LogControllerTest extends ControllerTestSupport {
         .content(objectMapper.writeValueAsString(요청_DTO)));
 
     // then
-    perform.andExpect(status().isOk());
+    perform.andExpect(status().isCreated());
   }
 
   @DisplayName("[POST] 어플리케이션_ID가 없으면 400 에러를 반환한다.")
