@@ -1,5 +1,6 @@
 package info.logbat.domain.log.repository;
 
+import info.logbat.common.util.UUIDUtil;
 import info.logbat.domain.log.domain.Log;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -20,15 +21,15 @@ public class LogRepository {
   private final JdbcTemplate jdbcTemplate;
 
   public long save(Log log) {
-    String sql = "INSERT INTO logs (application_id, level, log_data, timestamp) VALUES (?, ?, ?, ?)";
+    String sql = "INSERT INTO logs (app_key, level, data, timestamp) VALUES (?, ?, ?, ?)";
 
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
     jdbcTemplate.update(connection -> {
       PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-      ps.setLong(1, log.getApplicationId());
+      ps.setBytes(1, UUIDUtil.uuidStringToBytes(log.getAppKey()));
       ps.setString(2, log.getLevel().name());
-      ps.setString(3, log.getLogData().getValue());
+      ps.setString(3, log.getData().getValue());
       ps.setTimestamp(4, Timestamp.valueOf(log.getTimestamp()));
       return ps;
     }, keyHolder);
@@ -55,9 +56,9 @@ public class LogRepository {
 
   private static final RowMapper<Log> LOG_ROW_MAPPER = (rs, rowNum) -> new Log(
       rs.getLong("log_id"),
-      rs.getLong("application_id"),
+      UUIDUtil.bytesToUuidString(rs.getBytes("app_key")),
       rs.getString("level"),
-      rs.getString("log_data"),
+      rs.getString("data"),
       rs.getTimestamp("timestamp").toLocalDateTime()
   );
 }
