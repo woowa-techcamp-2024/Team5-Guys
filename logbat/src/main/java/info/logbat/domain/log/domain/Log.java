@@ -9,33 +9,33 @@ import lombok.Getter;
 public class Log {
 
   private final Long logId;
-  private final Long applicationId;
+  private final String appKey;
   private final Level level;
-  private final LogData logData;
+  private final LogData data;
   private final LocalDateTime timestamp;
 
-  public static Log of(Long applicationId, String level, String logData, LocalDateTime timestamp) {
-    return new Log(applicationId, level, logData, timestamp);
+  public static Log of(String appKey, String level, String logData, LocalDateTime timestamp) {
+    return new Log(appKey, level, logData, timestamp);
   }
 
-  public Log(Long applicationId, String level, String logData, LocalDateTime timestamp) {
-    this(null, applicationId, level, logData, timestamp);
+  public Log(String appKey, String level, String data, LocalDateTime timestamp) {
+    this(null, appKey, level, data, timestamp);
   }
 
-  public Log(Long logId, Long applicationId, String level, String logData,
+  public Log(Long logId, String appKey, String level, String data,
       LocalDateTime timestamp) {
     this.logId = logId;
-    validateApplicationId(applicationId);
-    this.applicationId = applicationId;
+    validateAppKey(appKey);
+    this.appKey = appKey;
     this.level = Level.from(level);
-    this.logData = LogData.from(logData);
+    this.data = LogData.from(data);
     validateTimestamp(timestamp);
     this.timestamp = timestamp;
   }
 
-  private void validateApplicationId(Long applicationId) {
-    if (applicationId == null) {
-      throw new IllegalArgumentException("applicationId는 null이 될 수 없습니다.");
+  private void validateAppKey(String appKey) {
+    if (appKey == null || appKey.isBlank()) {
+      throw new IllegalArgumentException("appKey는 null이거나 빈 문자열이 될 수 없습니다.");
     }
   }
 
