@@ -46,7 +46,7 @@ class LogViewServiceTest {
         given(logService.findLogsByAppKey(any(String.class), any(Long.class),
             any(Integer.class))).willReturn(Flux.just(expectedLog));
         // Act & Assert
-        logViewService.findLogs(expectedAppKey.toString())
+        logViewService.findLogs(expectedAppKey.toString(), -1L, 10)
             .as(StepVerifier::create)
             .expectNextMatches(response -> {
                 assertThat(response)

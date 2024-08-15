@@ -14,8 +14,8 @@ public class LogService {
 
     public Flux<Log> findLogsByAppKey(String appKey, Long id, Integer size) {
         return logDataRepository.findByAppKeyAndLogIdGreaterThanOrderByLogId(appKey, id)
-            .map(Log::from)
-            .take(size);
+            .take(size)
+            .map(Log::from);
     }
 
 }

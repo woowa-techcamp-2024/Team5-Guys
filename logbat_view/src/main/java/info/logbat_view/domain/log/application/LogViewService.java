@@ -12,8 +12,8 @@ public class LogViewService {
 
     private final LogService logService;
 
-    public Flux<LogCommonResponse> findLogs(String appKey) {
-        return logService.findLogsByAppKey(appKey, -1L, 10).map(LogCommonResponse::from);
+    public Flux<LogCommonResponse> findLogs(String appKey, Long id, Integer size) {
+        return logService.findLogsByAppKey(appKey, id, size).map(LogCommonResponse::from);
     }
 
 }
