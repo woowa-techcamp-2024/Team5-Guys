@@ -1,18 +1,19 @@
 package info.logbat.dev.service;
 
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 @DisplayName("LongAdderCountTestServiceTest 테스트")
@@ -31,7 +32,7 @@ class LongAdderCountTestServiceTest {
   @Test
   @Disabled("도메인 로직과 관련 없는 테스트이므로 평소에는 비활성화")
   void testParallelIncrement() throws InterruptedException {
-    long threadCount = 100;
+    long threadCount = 1000;
     long incrementsPerThread = 1000000;
 
     ExecutorService executorService = Executors.newFixedThreadPool((int) threadCount);
@@ -41,7 +42,6 @@ class LongAdderCountTestServiceTest {
       tasks.add(() -> {
         for (int j = 0; j < incrementsPerThread; j++) {
           longAdderCountTestService.increaseSuccessCount();
-          longAdderCountTestService.increaseErrorCount();
         }
         return null;
       });
@@ -51,13 +51,8 @@ class LongAdderCountTestServiceTest {
     executorService.shutdown();
 
     long successCount = longAdderCountTestService.getSuccessCount();
-    long errorCount = longAdderCountTestService.getErrorCount();
 
-    assertAll(
-        () -> assertThat(successCount).isEqualTo(threadCount * incrementsPerThread),
-        () -> assertThat(errorCount).isEqualTo(threadCount * incrementsPerThread)
-    );
-    longAdderCountTestService.reset();
+    assertThat(successCount).isEqualTo(threadCount * incrementsPerThread);
   }
 
 

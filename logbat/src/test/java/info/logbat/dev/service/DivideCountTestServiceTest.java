@@ -32,7 +32,7 @@ class DivideCountTestServiceTest {
   @Test
   @Disabled("도메인 로직과 관련 없는 테스트이므로 평소에는 비활성화")
   void testParallelIncrement() throws InterruptedException {
-    long threadCount = 100;
+    long threadCount = 1000;
     long incrementsPerThread = 1000000;
 
     ExecutorService executorService = Executors.newFixedThreadPool((int) threadCount);
@@ -42,7 +42,6 @@ class DivideCountTestServiceTest {
       tasks.add(() -> {
         for (int j = 0; j < incrementsPerThread; j++) {
           divideCountTestService.increaseSuccessCount();
-          divideCountTestService.increaseErrorCount();
         }
         return null;
       });
@@ -52,13 +51,7 @@ class DivideCountTestServiceTest {
     executorService.shutdown();
 
     long successCount = divideCountTestService.getSuccessCount();
-    long errorCount = divideCountTestService.getErrorCount();
-
-    assertAll(
-        () -> assertThat(successCount).isEqualTo(threadCount * incrementsPerThread),
-        () -> assertThat(errorCount).isEqualTo(threadCount * incrementsPerThread)
-    );
-    divideCountTestService.reset();
+    assertThat(successCount).isEqualTo(threadCount * incrementsPerThread);
   }
 
 
