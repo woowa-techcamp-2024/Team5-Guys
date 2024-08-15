@@ -1,7 +1,7 @@
 server {
     listen 80;
     listen [::]:80;
-    server_name www.logbat.info logbat.info api.logbat.info sdk.logbat.info view.logbat.info;
+    server_name www.logbat.info logbat.info api.logbat.info sdk.logbat.info view.logbat.info nginx.logbat.info;
 
     return 301 https://$host$request_uri; # HTTP 요청을 HTTPS로 리디렉션
     # managed by Certbot
@@ -98,5 +98,44 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name nginx.logbat.info;
+
+    # managed by Certbot
+    include /etc/nginx/snippets/managed-by-Certbot.conf;
+
+    location /count {
+        content_by_lua_block {
+            -- access.log의 라인 수를 세어 successCount로 사용
+            local handle_access = io.popen("wc -l /var/log/nginx/access.log")
+            local successCount = handle_access:read("*a")
+            handle_access:close()
+
+            -- error.log의 라인 수를 세어 errorCount로 사용
+            local handle_error = io.popen("wc -l /var/log/nginx/error.log")
+            local errorCount = handle_error:read("*a")
+            handle_error:close()
+
+            -- JSON 형식으로 응답
+            ngx.header.content_type = 'application/json';
+            ngx.say('{"successCount":'..successCount:gsub("%s+", "")..', "errorCount":'..errorCount:gsub("%s+", "")..'}')
+        }
+    }
+
+    location /count/reset {
+        content_by_lua_block {
+            -- 로그 파일 지우기
+            os.execute("sudo truncate -s 0 /var/log/nginx/access.log")
+            os.execute("sudo truncate -s 0 /var/log/nginx/error.log")
+            
+            -- 204 상태 코드 반환
+            ngx.status = ngx.HTTP_NO_CONTENT
+            ngx.exit(ngx.HTTP_NO_CONTENT)
+        }
     }
 }
