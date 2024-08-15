@@ -45,10 +45,11 @@ class LogServiceTest {
         @DisplayName("조회된 LogData들을 Log로 매핑해서 반환한다.")
         void shouldReturnApps() {
             // Arrange
-            given(logDataRepository.findByAppKey(any(String.class))).willReturn(
+            given(logDataRepository.findByAppKeyAndLogIdGreaterThanOrderByLogId(any(String.class),
+                any(Long.class))).willReturn(
                 Flux.just(expectedLogData));
             // Act & Assert
-            StepVerifier.create(logService.findLogsByAppKey(expectedAppKey))
+            StepVerifier.create(logService.findLogsByAppKey(expectedAppKey, 0L, 2))
                 .expectNextMatches(log -> {
                     assertThat(log).extracting("id", "appKey", "level", "data", "timestamp")
                         .containsExactly(expectedLogDataId, expectedAppKey, expectedLogLevel,

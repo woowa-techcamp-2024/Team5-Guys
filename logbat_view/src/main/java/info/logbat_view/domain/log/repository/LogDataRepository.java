@@ -8,6 +8,6 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public interface LogDataRepository extends ReactiveCrudRepository<LogData, Long> {
-
-    Flux<LogData> findByAppKey(@NonNull String appKey);
+    
+    Flux<LogData> findByAppKeyAndLogIdGreaterThanOrderByLogId(@NonNull String appKey, Long id);
 }

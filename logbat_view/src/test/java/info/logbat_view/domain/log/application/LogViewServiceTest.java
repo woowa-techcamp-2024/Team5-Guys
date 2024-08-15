@@ -43,7 +43,8 @@ class LogViewServiceTest {
     @DisplayName("appkey로 로그를 조회한다.")
     void findLogsByAppKey() {
         // Arrange
-        given(logService.findLogsByAppKey(any(String.class))).willReturn(Flux.just(expectedLog));
+        given(logService.findLogsByAppKey(any(String.class), any(Long.class),
+            any(Integer.class))).willReturn(Flux.just(expectedLog));
         // Act & Assert
         logViewService.findLogs(expectedAppKey.toString())
             .as(StepVerifier::create)
