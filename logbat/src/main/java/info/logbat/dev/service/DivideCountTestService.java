@@ -15,8 +15,6 @@ public class DivideCountTestService implements CountTestService {
 
   private final ThreadLocal<Counter> localCounter = ThreadLocal.withInitial(Counter::new);
 
-  private static final Long BUFFER_SIZE = 1000L;
-
   private final AtomicLong successCount = new AtomicLong(0L);
   private final AtomicLong errorCount = new AtomicLong(0L);
 
@@ -34,11 +32,6 @@ public class DivideCountTestService implements CountTestService {
     // Thread 내의 Counter에 증가연산을 수행하여, 경쟁상태가 발생하지 않음
     counter.increaseSuccessCount();
     activeThreads.putIfAbsent(Thread.currentThread(), counter);
-
-    if (counter.getSuccessCount() >= BUFFER_SIZE) {
-      successCount.addAndGet(counter.getSuccessCount());
-      counter.resetIncreaseCount();
-    }
   }
 
   public void increaseErrorCount() {
@@ -47,11 +40,6 @@ public class DivideCountTestService implements CountTestService {
     // Thread 내의 Counter에 증가연산을 수행하여, 경쟁상태가 발생하지 않음
     counter.increaseErrorCount();
     activeThreads.putIfAbsent(Thread.currentThread(), counter);
-
-    if (counter.getErrorCount() >= BUFFER_SIZE) {
-      errorCount.addAndGet(counter.getErrorCount());
-      counter.resetErrorCount();
-    }
   }
 
   public long getSuccessCount() {
@@ -71,14 +59,12 @@ public class DivideCountTestService implements CountTestService {
   }
 
   // 중복 집계되는 경우를 방지하기 위해, flush 시 Counter 객체에 대해서 동기화 처리
-  private void flushAllThreadLocals() {
+  private synchronized void flushAllThreadLocals() {
     activeThreads.values().forEach(counter -> {
-      synchronized (counter) {
-        successCount.addAndGet(counter.getSuccessCount());
-        errorCount.addAndGet(counter.getErrorCount());
-        counter.resetIncreaseCount();
-        counter.resetErrorCount();
-      }
+      successCount.addAndGet(counter.getSuccessCount());
+      errorCount.addAndGet(counter.getErrorCount());
+      counter.resetIncreaseCount();
+      counter.resetErrorCount();
     });
   }
 
