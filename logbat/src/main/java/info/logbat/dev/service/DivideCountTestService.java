@@ -59,13 +59,15 @@ public class DivideCountTestService implements CountTestService {
   }
 
   // 중복 집계되는 경우를 방지하기 위해, flush 시 Counter 객체에 대해서 동기화 처리
-  private synchronized void flushAllThreadLocals() {
-    activeThreads.values().forEach(counter -> {
-      successCount.addAndGet(counter.getSuccessCount());
-      errorCount.addAndGet(counter.getErrorCount());
-      counter.resetIncreaseCount();
-      counter.resetErrorCount();
-    });
+  private void flushAllThreadLocals() {
+    synchronized (activeThreads) {
+      activeThreads.values().forEach(counter -> {
+        successCount.addAndGet(counter.getSuccessCount());
+        errorCount.addAndGet(counter.getErrorCount());
+        counter.resetIncreaseCount();
+        counter.resetErrorCount();
+      });
+    }
   }
 
   private void resetAllThreadLocals() {
