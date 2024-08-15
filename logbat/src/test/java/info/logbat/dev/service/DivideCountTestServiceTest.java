@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@DisplayName("CountTestService 테스트")
+@DisplayName("DivideCountTestService 테스트")
 class DivideCountTestServiceTest {
 
   @Autowired
