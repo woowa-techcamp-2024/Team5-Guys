@@ -1,7 +1,7 @@
 server {
     listen 80;
     listen [::]:80;
-    server_name www.logbat.info logbat.info;
+    server_name www.logbat.info logbat.info api.logbat.info sdk.logbat.info view.logbat.info;
 
     return 301 https://$host$request_uri; # HTTP 요청을 HTTPS로 리디렉션
     # managed by Certbot
@@ -21,15 +21,6 @@ server {
     location / {
         try_files $uri $uri/ =404;
     }
-}
-
-server {
-    listen 80;
-    listen [::]:80;
-    server_name api.logbat.info;
-
-    return 301 https://$host$request_uri; # HTTP 요청을 HTTPS로 리디렉션
-    # managed by Certbot
 }
 
 server {
@@ -77,15 +68,6 @@ server {
 }
 
 server {
-    listen 80;
-    listen [::]:80;
-    server_name sdk.logbat.info;
-
-    return 301 https://$host$request_uri; # HTTP 요청을 HTTPS로 리디렉션
-    # managed by Certbot
-}
-
-server {
     listen 443 ssl;
     listen [::]:443 ssl;
     server_name sdk.logbat.info;
@@ -98,16 +80,6 @@ server {
     location / {
         try_files $uri $uri/ =404;
     }
-}
-
-
-server {
-    listen 80;
-    listen [::]:80;
-    server_name view.logbat.info;
-
-    return 301 https://$host$request_uri; # HTTP 요청을 HTTPS로 리디렉션
-    # managed by Certbot
 }
 
 server {
