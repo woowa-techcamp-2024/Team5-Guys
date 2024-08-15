@@ -35,7 +35,7 @@ class LogViewServiceTest {
     private final String expectedData = "data";
     private final LocalDateTime expectedTimestamp = LocalDateTime.of(2024, 8, 15, 12, 0, 0, 0);
     private final Log expectedLog = Log.from(
-        new LogData(expectedId, expectedAppKey.toString(), expectedLevel.name(), expectedData,
+        new LogData(expectedId, expectedAppKey, expectedLevel.name(), expectedData,
             expectedTimestamp));
 
 
@@ -43,7 +43,7 @@ class LogViewServiceTest {
     @DisplayName("appkey로 로그를 조회한다.")
     void findLogsByAppKey() {
         // Arrange
-        given(logService.findLogsByAppKey(any(String.class), any(Long.class),
+        given(logService.findLogsByAppKey(any(UUID.class), any(Long.class),
             any(Integer.class))).willReturn(Flux.just(expectedLog));
         // Act & Assert
         logViewService.findLogs(expectedAppKey.toString(), -1L, 10)
