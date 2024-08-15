@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 @DisplayName("카운트 조회 API 테스트")
 class CountTestControllerTest extends ControllerTestSupport {
 
-  @DisplayName("카운트 조회 API 테스트")
+  @DisplayName("[GET] /test/count 성공")
   @Test
   void testGetCount() throws Exception {
     when(countTestService.getSuccessCount()).thenReturn(10L);
@@ -32,7 +32,7 @@ class CountTestControllerTest extends ControllerTestSupport {
   }
 
   @Test
-  @DisplayName("카운트 리셋 API 테스트")
+  @DisplayName("[PUT] /test/count/reset reset api 호출 성공")
   void testResetCount() throws Exception {
     mockMvc.perform(put("/test/count/reset")
             .contentType(MediaType.APPLICATION_JSON))
