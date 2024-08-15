@@ -18,7 +18,7 @@ public class Log {
 
     public static Log from(LogData logData) {
         return new Log(logData.getLogId(),
-            logData.getAppKey(),
+            logData.getAppKey().toString(),
             LogLevel.valueOf(logData.getLevel()),
             logData.getData(),
             logData.getTimestamp());
