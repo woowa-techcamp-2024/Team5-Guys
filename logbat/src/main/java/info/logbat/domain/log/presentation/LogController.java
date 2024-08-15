@@ -1,5 +1,6 @@
 package info.logbat.domain.log.presentation;
 
+import info.logbat.dev.aop.CountTest;
 import info.logbat.domain.log.application.LogService;
 import info.logbat.domain.log.application.payload.request.CreateLogServiceRequest;
 import info.logbat.domain.log.presentation.payload.request.CreateLogRequest;
@@ -21,6 +22,7 @@ public class LogController {
 
   private final LogService logService;
 
+  @CountTest
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public void saveLog(
