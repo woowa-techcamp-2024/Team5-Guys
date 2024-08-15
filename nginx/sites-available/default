@@ -109,6 +109,18 @@ server {
     # managed by Certbot
     include /etc/nginx/snippets/managed-by-Certbot.conf;
 
+    include /etc/nginx/snippets/auth-value.conf;
+
+    set $auth_allowed 0;
+
+    if ($http_auth = $auth_secret_value) {
+        set $auth_allowed 1;    
+    }
+
+    if ($auth_allowed = 0) {
+        return 403;  # 인증 실패 시 403 Forbidden 반환
+    }
+
     location /count {
         content_by_lua_block {
             -- access.log의 라인 수를 세어 successCount로 사용
