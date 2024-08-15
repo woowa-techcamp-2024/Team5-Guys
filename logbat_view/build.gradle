@@ -18,9 +18,20 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	// SpringBoot WebFlux
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	// SpringBoot R2DBC
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	// MySQL
+	runtimeOnly 'io.asyncer:r2dbc-mysql'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// SpringBoot Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// Reactor Test
 	testImplementation 'io.projectreactor:reactor-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
