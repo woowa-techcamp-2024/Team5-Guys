@@ -7,11 +7,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,7 +22,8 @@ public class LogController {
   private final LogService logService;
 
   @PostMapping
-  public ResponseEntity<Void> saveLog(
+  @ResponseStatus(HttpStatus.CREATED)
+  public void saveLog(
       @RequestHeader("appKey")
       @NotBlank(message = "appKey가 비어있습니다.") String appKey,
 
@@ -30,9 +31,6 @@ public class LogController {
   ) {
 
     logService.saveLog(CreateLogServiceRequest.of(appKey, request));
-
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .build();
   }
 
 }
