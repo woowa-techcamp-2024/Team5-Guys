@@ -1,10 +1,8 @@
 package info.logbat.dev.service;
 
 import info.logbat.dev.util.ThreadLocalLongAdder;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-@Primary
 @Component
 public class DivideCountTestService implements CountTestService {
 

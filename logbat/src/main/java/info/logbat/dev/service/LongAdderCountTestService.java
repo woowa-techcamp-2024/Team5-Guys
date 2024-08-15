@@ -1,9 +1,10 @@
 package info.logbat.dev.service;
 
+import java.util.concurrent.atomic.LongAdder;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.atomic.LongAdder;
-
+@Primary
 @Component
 public class LongAdderCountTestService implements CountTestService {
 
