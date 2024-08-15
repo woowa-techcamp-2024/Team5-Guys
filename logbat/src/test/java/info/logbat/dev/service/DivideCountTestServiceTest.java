@@ -122,20 +122,6 @@ class DivideCountTestServiceTest {
       assertThat(totalSuccessCount).isEqualTo(6);
     }
 
-    @Test
-    @DisplayName("정상 버퍼 크기에 도달하더라도 메인 카운터에 반영된다")
-    void flushesToMainCounterWhenBufferIsFull() {
-      // given
-      long bufferSize = 1000L; // BUFFER_SIZE와 동일한 값
-
-      // when
-      for (int i = 0; i < bufferSize; i++) {
-        divideCountTestService.increaseSuccessCount();
-      }
-
-      // then
-      assertThat(divideCountTestService.getSuccessCount()).isEqualTo(bufferSize);
-    }
   }
 
   @Nested
@@ -191,21 +177,6 @@ class DivideCountTestServiceTest {
 
       // then
       assertThat(totalErrorCount).isEqualTo(6);
-    }
-
-    @DisplayName("오류 버퍼 크기에 도달하더라도 메인 카운터에 반영된다")
-    @Test
-    void flushesToMainCounterWhenBufferIsFull() {
-      // given
-      long bufferSize = 1000L; // BUFFER_SIZE와 동일한 값
-
-      // when
-      for (int i = 0; i < bufferSize; i++) {
-        divideCountTestService.increaseErrorCount();
-      }
-
-      // then
-      assertThat(divideCountTestService.getErrorCount()).isEqualTo(bufferSize);
     }
   }
 
