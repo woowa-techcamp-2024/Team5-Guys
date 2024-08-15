@@ -3,14 +3,11 @@ package info.logbat.dev.service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Primary
 @Component
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DivideCountTestService implements CountTestService {
 
   private final ThreadLocal<Counter> localCounter = ThreadLocal.withInitial(Counter::new);

@@ -7,11 +7,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
 @ActiveProfiles("test")
 @DisplayName("SimpleCountTestService 테스트")
 class SimpleCountTestServiceTest {
@@ -21,8 +18,7 @@ class SimpleCountTestServiceTest {
     simpleCountTestService.reset();
   }
 
-  @Autowired
-  private SimpleCountTestService simpleCountTestService;
+  private SimpleCountTestService simpleCountTestService = new SimpleCountTestService();
 
   @Nested
   @DisplayName("성공 카운트 테스트")

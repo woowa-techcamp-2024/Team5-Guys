@@ -1,12 +1,9 @@
 package info.logbat.dev.service;
 
 import java.util.concurrent.atomic.AtomicLong;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SimpleCountTestService implements CountTestService {
 
   private final AtomicLong successCount = new AtomicLong(0L);
