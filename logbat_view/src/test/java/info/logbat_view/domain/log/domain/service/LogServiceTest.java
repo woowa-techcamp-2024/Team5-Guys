@@ -30,7 +30,7 @@ class LogServiceTest {
     private LogDataRepository logDataRepository;
 
     private final Long expectedLogDataId = 1L;
-    private final String expectedAppKey = UUID.randomUUID().toString();
+    private final UUID expectedAppKey = UUID.randomUUID();
     private final LogLevel expectedLogLevel = LogLevel.ERROR;
     private final String expectedData = "data";
     private final LocalDateTime expectedTimestamp = LocalDateTime.of(2024, 8, 15, 12, 0, 0, 0);
@@ -45,14 +45,15 @@ class LogServiceTest {
         @DisplayName("조회된 LogData들을 Log로 매핑해서 반환한다.")
         void shouldReturnApps() {
             // Arrange
-            given(logDataRepository.findByAppKey(any(String.class))).willReturn(
+            given(logDataRepository.findByAppKeyAndLogIdGreaterThanOrderByLogId(any(UUID.class),
+                any(Long.class))).willReturn(
                 Flux.just(expectedLogData));
             // Act & Assert
-            StepVerifier.create(logService.findLogsByAppKey(expectedAppKey))
+            StepVerifier.create(logService.findLogsByAppKey(expectedAppKey, 0L, 2))
                 .expectNextMatches(log -> {
                     assertThat(log).extracting("id", "appKey", "level", "data", "timestamp")
-                        .containsExactly(expectedLogDataId, expectedAppKey, expectedLogLevel,
-                            expectedData, expectedTimestamp);
+                        .containsExactly(expectedLogDataId, expectedAppKey.toString(),
+                            expectedLogLevel, expectedData, expectedTimestamp);
                     return true;
                 })
                 .verifyComplete();
