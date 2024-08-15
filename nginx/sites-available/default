@@ -112,12 +112,12 @@ server {
     location /count {
         content_by_lua_block {
             -- access.log의 라인 수를 세어 successCount로 사용
-            local handle_access = io.popen("wc -l /var/log/nginx/access.log")
+            local handle_access = io.popen("wc -l /var/log/nginx/access.log | cut -d' ' -f1")
             local successCount = handle_access:read("*a")
             handle_access:close()
 
             -- error.log의 라인 수를 세어 errorCount로 사용
-            local handle_error = io.popen("wc -l /var/log/nginx/error.log")
+            local handle_error = io.popen("wc -l /var/log/nginx/error.log | cut -d' ' -f1")
             local errorCount = handle_error:read("*a")
             handle_error:close()
 
