@@ -11,4 +11,5 @@ public interface LogDataRepository extends ReactiveCrudRepository<LogData, Long>
 
     Flux<LogData> findByAppKeyAndLogIdGreaterThanOrderByLogId(@NonNull byte[] appKey,
         @NonNull Long id);
+
 }

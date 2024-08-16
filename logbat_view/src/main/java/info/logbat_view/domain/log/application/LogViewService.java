@@ -19,5 +19,4 @@ public class LogViewService {
         return logService.findLogsByAppKey(appKeyUUID, id, size).map(LogCommonResponse::from);
     }
 
-
 }
