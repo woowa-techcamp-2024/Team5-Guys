@@ -30,10 +30,10 @@ class LogBat {
     private static async sendLog(level: string, args: any[]): Promise<void> {
         const logData = {
             level: level,
-            created_at: new Date().toISOString(),
             data: args.map(arg =>
                 typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
-            ).join(' ')
+            ).join(' '),
+            timestamp: new Date().toISOString()
         };
 
         try {
