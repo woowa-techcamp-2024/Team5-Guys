@@ -1,0 +1,153 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name www.logbat.info logbat.info api.logbat.info sdk.logbat.info view.logbat.info nginx.logbat.info;
+
+    return 301 https://$host$request_uri; # HTTP 요청을 HTTPS로 리디렉션
+    # managed by Certbot
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name www.logbat.info logbat.info;
+
+    # managed by Certbot
+    include /etc/nginx/snippets/managed-by-Certbot.conf;
+
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name api.logbat.info;
+
+    # managed by Certbot
+    include /etc/nginx/snippets/managed-by-Certbot.conf;
+
+    include /etc/nginx/snippets/private-ip.conf;
+
+    location /logs {
+        proxy_pass $logbat_server;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+	# CORS 설정
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,app-id' always;
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain; charset=utf-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+        if ($request_method = 'POST') {
+            add_header 'Access-Control-Allow-Origin' '*' always;
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS' always;
+            add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,app-id' always;
+            add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range' always;
+        }
+    }
+
+    location / {
+        proxy_pass $logbat_server;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name sdk.logbat.info;
+
+    # managed by Certbot
+    include /etc/nginx/snippets/managed-by-Certbot.conf;
+
+    root /var/www/sdk;  # 정적 파일이 있는 경로로 설정하세요
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name view.logbat.info;
+
+    # managed by Certbot
+    include /etc/nginx/snippets/managed-by-Certbot.conf;
+
+    include /etc/nginx/snippets/private-ip.conf;
+
+    location / {
+        proxy_pass $logbat_view_server;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name nginx.logbat.info;
+
+    # managed by Certbot
+    include /etc/nginx/snippets/managed-by-Certbot.conf;
+
+    include /etc/nginx/snippets/auth-value.conf;
+
+    set $auth_allowed 0;
+
+    if ($http_auth = $auth_secret_value) {
+        set $auth_allowed 1;    
+    }
+
+    if ($auth_allowed = 0) {
+        return 403;  # 인증 실패 시 403 Forbidden 반환
+    }
+
+    location /count {
+        content_by_lua_block {
+            -- access.log의 라인 수를 세어 successCount로 사용
+            local handle_access = io.popen("wc -l /var/log/nginx/access.log | cut -d' ' -f1")
+            local successCount = handle_access:read("*a")
+            handle_access:close()
+
+            -- error.log의 라인 수를 세어 errorCount로 사용
+            local handle_error = io.popen("wc -l /var/log/nginx/error.log | cut -d' ' -f1")
+            local errorCount = handle_error:read("*a")
+            handle_error:close()
+
+            -- JSON 형식으로 응답
+            ngx.header.content_type = 'application/json';
+            ngx.say('{"successCount":'..successCount:gsub("%s+", "")..', "errorCount":'..errorCount:gsub("%s+", "")..'}')
+        }
+    }
+
+    location /count/reset {
+        content_by_lua_block {
+            -- 로그 파일 지우기
+            os.execute("sudo truncate -s 0 /var/log/nginx/access.log")
+            os.execute("sudo truncate -s 0 /var/log/nginx/error.log")
+            
+            -- 204 상태 코드 반환
+            ngx.status = ngx.HTTP_NO_CONTENT
+            ngx.exit(ngx.HTTP_NO_CONTENT)
+        }
+    }
+}
