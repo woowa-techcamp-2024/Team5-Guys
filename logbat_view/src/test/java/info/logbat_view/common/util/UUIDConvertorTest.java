@@ -59,4 +59,65 @@ class UUIDConvertorTest {
             );
         }
     }
+
+    @Nested
+    @DisplayName("바이트 배열을 UUID로 변환할 때")
+    class whenConvertBytesToUUID {
+
+        @Test
+        @DisplayName("정상적으로 변환한다.")
+        void willReturnSuccess() {
+            // Arrange
+            UUID expectedUUID = UUID.randomUUID();
+            byte[] bytes = UUIDConvertor.convertUUIDToBytes(expectedUUID);
+            // Act
+            UUID actualUUID = UUIDConvertor.convertBytesToUUID(bytes);
+            // Assert
+            assertThat(actualUUID).isEqualTo(expectedUUID);
+        }
+
+        @ParameterizedTest
+        @MethodSource("exceptionValues")
+        @DisplayName("바이트 배열의 길이가 16이 아닐 경우 예외를 던진다.")
+        void willThrowExceptionWhenBytesLengthIsNot16(byte[] bytes) {
+            // Act & Assert
+            assertThatThrownBy(() -> UUIDConvertor.convertBytesToUUID(bytes))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("UUID 바이트 배열의 길이는 16이어야 합니다.");
+        }
+
+        private static Stream<Arguments> exceptionValues() {
+            return Stream.of(
+                Arguments.of(new byte[0]),
+                Arguments.of(new byte[1]),
+                Arguments.of(new byte[17])
+            );
+        }
+    }
+
+    @Nested
+    @DisplayName("UUID를 바이트 배열로 변환할 때")
+    class whenConvertUUIDToBytes {
+
+        @Test
+        @DisplayName("정상적으로 변환한다.")
+        void willReturnSuccess() {
+            // Arrange
+            UUID expectedUUID = UUID.randomUUID();
+            // Act
+            byte[] actualBytes = UUIDConvertor.convertUUIDToBytes(expectedUUID);
+            // Assert
+            UUID actualUUID = UUIDConvertor.convertBytesToUUID(actualBytes);
+            assertThat(actualUUID).isEqualTo(expectedUUID);
+        }
+
+        @Test
+        @DisplayName("UUID가 null일 경우 예외를 던진다.")
+        void willThrowExceptionWhenUUIDIsNull() {
+            // Act & Assert
+            assertThatThrownBy(() -> UUIDConvertor.convertUUIDToBytes(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("UUID는 필수 값 입니다.");
+        }
+    }
 }
