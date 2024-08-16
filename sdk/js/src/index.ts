@@ -1,16 +1,16 @@
 class LogBat {
-    private static appId: string = '';
+    private static appKey: string = '';
     private static apiEndpoint: string = 'https://api.logbat.info/logs';
     private static originalConsole: { log: typeof console.log; error: typeof console.error };
     private static isInitialized: boolean = false;
 
-    public static init(config: { appId: string }): void {
+    public static init(config: { appKey: string }): void {
         if (this.isInitialized) {
             console.warn('LogBat SDK is already initialized. Ignoring repeated initialization.');
             return;
         }
 
-        this.appId = config.appId;
+        this.appKey = config.appKey;
         this.overrideConsoleMethods();
         this.isInitialized = true;
     }
@@ -41,7 +41,7 @@ class LogBat {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'app-id': this.appId
+                    'appKey': this.appKey
                 },
                 body: JSON.stringify(logData),
             });
