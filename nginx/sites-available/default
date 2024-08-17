@@ -4,7 +4,6 @@ server {
     server_name www.logbat.info logbat.info api.logbat.info sdk.logbat.info view.logbat.info nginx.logbat.info;
 
     return 301 https://$host$request_uri; # HTTP 요청을 HTTPS로 리디렉션
-    # managed by Certbot
 }
 
 server {
@@ -32,6 +31,9 @@ server {
     include /etc/nginx/snippets/managed-by-Certbot.conf;
 
     include /etc/nginx/snippets/private-ip.conf;
+
+    access_log /var/log/nginx/api_access.log;  # api.logbat.info 전용 액세스 로그 파일
+    error_log /var/log/nginx/api_error.log;    # api.logbat.info 전용 에러 로그 파일
 
     location /logs {
         proxy_pass $logbat_server;
@@ -124,12 +126,12 @@ server {
     location /count {
         content_by_lua_block {
             -- access.log의 라인 수를 세어 successCount로 사용
-            local handle_access = io.popen("wc -l /var/log/nginx/access.log | cut -d' ' -f1")
+            local handle_access = io.popen("wc -l < /var/log/nginx/api_access.log")
             local successCount = handle_access:read("*a")
             handle_access:close()
 
             -- error.log의 라인 수를 세어 errorCount로 사용
-            local handle_error = io.popen("wc -l /var/log/nginx/error.log | cut -d' ' -f1")
+            local handle_error = io.popen("wc -l < /var/log/nginx/api_error.log")
             local errorCount = handle_error:read("*a")
             handle_error:close()
 
@@ -142,8 +144,8 @@ server {
     location /count/reset {
         content_by_lua_block {
             -- 로그 파일 지우기
-            os.execute("sudo truncate -s 0 /var/log/nginx/access.log")
-            os.execute("sudo truncate -s 0 /var/log/nginx/error.log")
+            os.execute("sudo truncate -s 0 /var/log/nginx/api_access.log")
+            os.execute("sudo truncate -s 0 /var/log/nginx/api_error.log")
             
             -- 204 상태 코드 반환
             ngx.status = ngx.HTTP_NO_CONTENT
