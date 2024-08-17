@@ -16,7 +16,8 @@ describe('LogBat SDK', () => {
         jest.clearAllMocks();
         consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
         consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-        LogBat.init({ appId: 'test-app' });
+        LogBat['isInitialized'] = false;
+        LogBat.init({ appKey: 'test-app' });
     });
 
     afterEach(() => {
@@ -25,7 +26,7 @@ describe('LogBat SDK', () => {
     });
 
     test('should initialize with appId', () => {
-        expect(LogBat['appId']).toBe('test-app');
+        expect(LogBat['appKey']).toBe('test-app');
     });
 
     test('should send log message', async () => {
@@ -34,12 +35,12 @@ describe('LogBat SDK', () => {
         expect(consoleLogSpy).toHaveBeenCalledWith('Test log message');
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledWith(
-            'https://api.logbat.info/log',
+            'https://api.logbat.info/logs',
             expect.objectContaining({
                 method: 'POST',
                 headers: expect.objectContaining({
                     'Content-Type': 'application/json',
-                    'app_id': 'test-app'
+                    'appKey': 'test-app'
                 }),
                 body: expect.stringContaining('Test log message')
             })
@@ -52,12 +53,12 @@ describe('LogBat SDK', () => {
         expect(consoleErrorSpy).toHaveBeenCalledWith('Test error message');
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledWith(
-            'https://api.logbat.info/log',
+            'https://api.logbat.info/logs',
             expect.objectContaining({
                 method: 'POST',
                 headers: expect.objectContaining({
                     'Content-Type': 'application/json',
-                    'app_id': 'test-app'
+                    'appKey': 'test-app'
                 }),
                 body: expect.stringContaining('Test error message')
             })
