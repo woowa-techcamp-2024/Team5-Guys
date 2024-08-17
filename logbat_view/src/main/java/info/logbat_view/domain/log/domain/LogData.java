@@ -1,7 +1,6 @@
 package info.logbat_view.domain.log.domain;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
@@ -14,7 +13,7 @@ public class LogData {
 
     @Id
     private final Long logId;
-    private final UUID appKey;
+    private final byte[] appKey;
     private final String level;
     private final String data;
     private final LocalDateTime timestamp;

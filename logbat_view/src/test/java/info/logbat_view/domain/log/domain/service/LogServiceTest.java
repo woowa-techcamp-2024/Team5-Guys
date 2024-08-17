@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import info.logbat_view.common.util.UUIDConvertor;
 import info.logbat_view.domain.log.domain.LogData;
 import info.logbat_view.domain.log.domain.enums.LogLevel;
 import info.logbat_view.domain.log.repository.LogDataRepository;
@@ -30,7 +31,8 @@ class LogServiceTest {
     private LogDataRepository logDataRepository;
 
     private final Long expectedLogDataId = 1L;
-    private final UUID expectedAppKey = UUID.randomUUID();
+    private final UUID expectedUUID = UUID.randomUUID();
+    private final byte[] expectedAppKey = UUIDConvertor.convertUUIDToBytes(expectedUUID);
     private final LogLevel expectedLogLevel = LogLevel.ERROR;
     private final String expectedData = "data";
     private final LocalDateTime expectedTimestamp = LocalDateTime.of(2024, 8, 15, 12, 0, 0, 0);
@@ -45,15 +47,15 @@ class LogServiceTest {
         @DisplayName("조회된 LogData들을 Log로 매핑해서 반환한다.")
         void shouldReturnApps() {
             // Arrange
-            given(logDataRepository.findByAppKeyAndLogIdGreaterThanOrderByLogId(any(UUID.class),
+            given(logDataRepository.findByAppKeyAndLogIdGreaterThanOrderByLogId(any(byte[].class),
                 any(Long.class))).willReturn(
                 Flux.just(expectedLogData));
             // Act & Assert
-            StepVerifier.create(logService.findLogsByAppKey(expectedAppKey, 0L, 2))
+            StepVerifier.create(logService.findLogsByAppKey(expectedUUID, 0L, 2))
                 .expectNextMatches(log -> {
-                    assertThat(log).extracting("id", "appKey", "level", "data", "timestamp")
-                        .containsExactly(expectedLogDataId, expectedAppKey.toString(),
-                            expectedLogLevel, expectedData, expectedTimestamp);
+                    assertThat(log).extracting("id", "level", "data", "timestamp")
+                        .containsExactly(expectedLogDataId, expectedLogLevel, expectedData,
+                            expectedTimestamp);
                     return true;
                 })
                 .verifyComplete();
