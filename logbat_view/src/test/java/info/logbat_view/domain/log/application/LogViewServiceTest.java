@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import info.logbat_view.common.util.UUIDConvertor;
 import info.logbat_view.domain.log.domain.Log;
 import info.logbat_view.domain.log.domain.LogData;
 import info.logbat_view.domain.log.domain.enums.LogLevel;
@@ -30,7 +31,8 @@ class LogViewServiceTest {
     private LogService logService;
 
     private final Long expectedId = 1L;
-    private final UUID expectedAppKey = UUID.randomUUID();
+    private final UUID expectedUUID = UUID.randomUUID();
+    private final byte[] expectedAppKey = UUIDConvertor.convertUUIDToBytes(expectedUUID);
     private final LogLevel expectedLevel = LogLevel.INFO;
     private final String expectedData = "data";
     private final LocalDateTime expectedTimestamp = LocalDateTime.of(2024, 8, 15, 12, 0, 0, 0);
@@ -46,7 +48,7 @@ class LogViewServiceTest {
         given(logService.findLogsByAppKey(any(UUID.class), any(Long.class),
             any(Integer.class))).willReturn(Flux.just(expectedLog));
         // Act & Assert
-        logViewService.findLogs(expectedAppKey.toString(), -1L, 10)
+        logViewService.findLogs(expectedUUID.toString(), -1L, 10)
             .as(StepVerifier::create)
             .expectNextMatches(response -> {
                 assertThat(response)
