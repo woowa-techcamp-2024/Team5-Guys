@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "es2020",                      // Node.js 20을 지원하는 ES2020으로 타겟 설정
+        "module": "esnext",                      // ECMAScript 모듈 형식으로 설정
+        "strict": true,                          // 엄격한 타입 검사를 활성화
+        "preserveConstEnums": true,              // const 열거형을 유지
+        "noEmitOnError": true,                   // 컴파일 오류 시 출력하지 않음
+        "sourceMap": false,                      // 소스 맵 생성을 비활성화
+        "moduleResolution": "node",              // Node.js 스타일의 모듈 해석을 사용
+        "esModuleInterop": true,                 // ES 모듈 호환성을 활성화
+        "skipLibCheck": true,                    // 라이브러리 타입 검사를 건너뜀
+        "forceConsistentCasingInFileNames": true,// 파일 이름 대소문자 일관성을 강제
+        "outDir": "./dist",                      // 출력 디렉토리 설정
+        "declaration": false,                    // 타입 선언 파일 생성 비활성화
+        "isolatedModules": true                  // 개별 모듈 컴파일을 강제
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "**/*.test.ts"]
+}
