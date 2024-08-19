@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@DisplayName("LogRepository 테스트")
-class LogRepositoryTest {
+@DisplayName("SynchoronousLogRepository 테스트")
+class SynchronousLogRepositoryTest {
 
   @Autowired
   private LogRepository logRepository;
