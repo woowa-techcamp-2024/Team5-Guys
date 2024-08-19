@@ -37,7 +37,7 @@ class LogViewServiceTest {
     private final String expectedData = "data";
     private final LocalDateTime expectedTimestamp = LocalDateTime.of(2024, 8, 15, 12, 0, 0, 0);
     private final Log expectedLog = Log.from(
-        new LogData(expectedId, expectedAppKey, expectedLevel.name(), expectedData,
+        new LogData(expectedId, expectedAppKey, expectedLevel.getValue(), expectedData,
             expectedTimestamp));
 
 

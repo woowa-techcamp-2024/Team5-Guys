@@ -21,7 +21,7 @@ public class Log {
     public static Log from(LogData logData) {
         return new Log(logData.getLogId(),
             UUIDConvertor.convertBytesToUUID(logData.getAppKey()),
-            LogLevel.valueOf(logData.getLevel()),
+            LogLevel.from(logData.getLevel()),
             logData.getData(),
             logData.getTimestamp());
     }

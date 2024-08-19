@@ -14,7 +14,7 @@ public class LogData {
     @Id
     private final Long logId;
     private final byte[] appKey;
-    private final String level;
+    private final Integer level;
     private final String data;
     private final LocalDateTime timestamp;
 }
