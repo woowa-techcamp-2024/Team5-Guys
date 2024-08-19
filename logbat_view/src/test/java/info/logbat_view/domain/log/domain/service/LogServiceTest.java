@@ -37,7 +37,7 @@ class LogServiceTest {
     private final String expectedData = "data";
     private final LocalDateTime expectedTimestamp = LocalDateTime.of(2024, 8, 15, 12, 0, 0, 0);
     private final LogData expectedLogData = new LogData(expectedLogDataId, expectedAppKey,
-        expectedLogLevel.name(), expectedData, expectedTimestamp);
+        expectedLogLevel.getValue(), expectedData, expectedTimestamp);
 
     @Nested
     @DisplayName("AppKey로 Log들을 조회할 때")
