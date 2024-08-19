@@ -23,15 +23,15 @@ import org.hibernate.annotations.SoftDelete;
 
 @Entity
 @Getter
-@Table(name = "entities", indexes = {
-    @Index(name = "idx_app_token", columnList = "token")
+@Table(name = "apps", indexes = {
+    @Index(name = "idx_app_token", columnList = "appKey")
 })
 @SoftDelete
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class App {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false)
@@ -42,18 +42,17 @@ public class App {
     @Column(name = "app_type", nullable = false)
     private AppType appType;
 
-    @Column(name = "token", nullable = false, unique = true)
-    private UUID token;
+    @Column(name = "app_key", nullable = false, unique = true)
+    private UUID appKey;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-
     private App(Project project, AppType appType) {
         this.project = Objects.requireNonNull(project, "프로젝트는 필수입니다.");
         this.appType = Objects.requireNonNull(appType, "앱 타입은 필수입니다.");
-        this.token = UUID.randomUUID();
+        this.appKey = UUID.randomUUID();
     }
 
     public static App of(Project project, AppType appType) {

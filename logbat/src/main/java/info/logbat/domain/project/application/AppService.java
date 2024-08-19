@@ -31,7 +31,7 @@ public class AppService {
     @Transactional(readOnly = true)
     public AppCommonResponse getAppByToken(String token) {
         UUID tokenUUID = UUID.fromString(token);
-        App app = appRepository.findByToken(tokenUUID)
+        App app = appRepository.findByAppKey(tokenUUID)
             .orElseThrow(() -> new IllegalArgumentException(APP_NOT_FOUND_MESSAGE));
         return AppCommonResponse.from(app);
     }
