@@ -35,7 +35,7 @@ class AppTest {
                     .isNotNull()
                     .extracting("project", "appType")
                     .containsExactly(EXPECTED_PROJECT, expectedAppType),
-                () -> assertThat(actualResult.getToken()).isNotNull()
+                () -> assertThat(actualResult.getAppKey()).isNotNull()
             );
         }
 

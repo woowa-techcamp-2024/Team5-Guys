@@ -11,11 +11,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AppJpaRepository extends JpaRepository<App, Long> {
 
-  Optional<App> findByToken(@NonNull UUID token);
+    Optional<App> findByAppKey(@NonNull UUID token);
 
-  Optional<App> findByProject_IdAndId(@NonNull Long id, @NonNull Long id1);
+    Optional<App> findByProject_IdAndId(@NonNull Long id, @NonNull Long id1);
 
-  List<App> findByProject_Id(@NonNull Long id);
+    List<App> findByProject_Id(@NonNull Long id);
 
-  boolean existsByToken(@NonNull UUID token);
+    boolean existsByAppKey(@NonNull UUID token);
 }

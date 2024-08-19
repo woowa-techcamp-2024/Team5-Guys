@@ -8,6 +8,6 @@ public record AppCommonResponse(Long id, Long projectId, String appType, String 
 
     public static AppCommonResponse from(App app) {
         return new AppCommonResponse(app.getId(), app.getProject().getId(), app.getAppType().name(),
-            app.getToken().toString(), app.getCreatedAt());
+            app.getAppKey().toString(), app.getCreatedAt());
     }
 }
