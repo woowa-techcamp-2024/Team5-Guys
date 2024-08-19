@@ -23,7 +23,7 @@ import org.hibernate.annotations.SoftDelete;
 
 @Entity
 @Getter
-@Table(name = "entities", indexes = {
+@Table(name = "apps", indexes = {
     @Index(name = "idx_app_token", columnList = "token")
 })
 @SoftDelete
@@ -31,7 +31,7 @@ import org.hibernate.annotations.SoftDelete;
 public class App {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false)
@@ -48,7 +48,6 @@ public class App {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-
 
     private App(Project project, AppType appType) {
         this.project = Objects.requireNonNull(project, "프로젝트는 필수입니다.");
