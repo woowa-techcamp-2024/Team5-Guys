@@ -17,27 +17,26 @@ public class LogService {
   private final AppJpaRepository appJpaRepository;
 
   public long saveLog(CreateLogServiceRequest request) {
-    String appKey = request.appKey();
     String level = request.level();
     String data = request.data();
     LocalDateTime timestamp = request.timestamp();
 
-    UUID appKeyUuid = getAppKey(appKey);
-
-    if (!appJpaRepository.existsByToken(appKeyUuid)) {
-      throw new IllegalArgumentException("존재하지 않는 Application Key 입니다.");
-    }
+    String appKey = getAppKey(request.appKey());
 
     Log log = Log.of(appKey, level, data, timestamp);
 
     return logRepository.save(log);
   }
 
-  private UUID getAppKey(String appKey) {
+  private String getAppKey(String appKey) {
     try {
-      return UUID.fromString(appKey);
+      UUID appKeyUuid = UUID.fromString(appKey);
+      if (appJpaRepository.existsByToken(appKeyUuid)) {
+        return appKeyUuid.toString();
+      }
     } catch (IllegalArgumentException e) {
       throw new IllegalArgumentException("잘못된 형식의 Application Key 입니다.");
     }
+    throw new IllegalArgumentException("존재하지 않는 Application Key 입니다.");
   }
 }
