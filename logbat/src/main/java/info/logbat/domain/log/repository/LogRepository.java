@@ -28,7 +28,7 @@ public class LogRepository {
     jdbcTemplate.update(connection -> {
       PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
       ps.setBytes(1, UUIDUtil.uuidStringToBytes(log.getAppKey()));
-      ps.setString(2, log.getLevel().name());
+      ps.setInt(2, log.getLevel().ordinal());
       ps.setString(3, log.getData().getValue());
       ps.setTimestamp(4, Timestamp.valueOf(log.getTimestamp()));
       return ps;
@@ -57,7 +57,7 @@ public class LogRepository {
   private static final RowMapper<Log> LOG_ROW_MAPPER = (rs, rowNum) -> new Log(
       rs.getLong("log_id"),
       UUIDUtil.bytesToUuidString(rs.getBytes("app_key")),
-      rs.getString("level"),
+      rs.getInt("level"),
       rs.getString("data"),
       rs.getTimestamp("timestamp").toLocalDateTime()
   );
