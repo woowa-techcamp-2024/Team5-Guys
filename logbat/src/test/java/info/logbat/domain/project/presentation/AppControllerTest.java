@@ -31,7 +31,7 @@ class AppControllerTest extends ControllerTestSupport {
     private final Long expectedProjectId = 1L;
     private final AppType expectedAppType = AppType.JAVA;
     private final UUID expectedToken = UUID.randomUUID();
-    private final LocalDateTime expectedCreatedAt = LocalDateTime.now();
+    private final LocalDateTime expectedCreatedAt = LocalDateTime.of(2024, 8, 15, 12, 1, 2, 3);
 
     @BeforeEach
     void init() {
