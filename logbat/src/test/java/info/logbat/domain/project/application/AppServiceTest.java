@@ -113,8 +113,8 @@ class AppServiceTest {
         void canGetAppByToken() {
             // Arrange
             String expectedTokenString = expectedToken.toString();
-            given(appRepository.findByToken(expectedToken)).willReturn(Optional.of(expectedApp));
-            given(expectedApp.getToken()).willReturn(expectedToken);
+            given(appRepository.findByAppKey(expectedToken)).willReturn(Optional.of(expectedApp));
+            given(expectedApp.getAppKey()).willReturn(expectedToken);
             // Act
             AppCommonResponse actualResult = appService.getAppByToken(expectedTokenString);
             // Assert
@@ -167,7 +167,7 @@ class AppServiceTest {
             // Arrange
             String notExistToken = UUID.randomUUID().toString();
             // Arrange
-            given(appRepository.findByToken(any(UUID.class))).willReturn(Optional.empty());
+            given(appRepository.findByAppKey(any(UUID.class))).willReturn(Optional.empty());
             // Act & Assert
             assertThatThrownBy(() -> appService.getAppByToken(notExistToken))
                 .isInstanceOf(IllegalArgumentException.class)

@@ -27,6 +27,7 @@ class ProjectControllerTest extends ControllerTestSupport {
     private final Long expectedId = 1L;
     private final String expectedName = "projectName";
     private final ProjectCommonResponse projectCommonResponse = mock(ProjectCommonResponse.class);
+    private final LocalDateTime expectedCreatedAt = LocalDateTime.of(2024, 8, 15, 12, 1, 2, 3);
 
     @Nested
     @DisplayName("GET /v1/projects/{name}에 대해")
@@ -36,7 +37,6 @@ class ProjectControllerTest extends ControllerTestSupport {
         @DisplayName("프로젝트 이름으로 프로젝트를 조회할 수 있다.")
         void willReturnProjectInformation() throws Exception {
             // Arrange
-            LocalDateTime expectedCreatedAt = LocalDateTime.now();
             given(projectService.getProjectByName("projectName")).willReturn(projectCommonResponse);
             given(projectCommonResponse.id()).willReturn(expectedId);
             given(projectCommonResponse.name()).willReturn(expectedName);
@@ -64,7 +64,6 @@ class ProjectControllerTest extends ControllerTestSupport {
         @DisplayName("프로젝트를 생성할 수 있다.")
         void willCreateProject() throws Exception {
             // Arrange
-            LocalDateTime expectedCreatedAt = LocalDateTime.now();
             given(projectService.createProject(expectedName)).willReturn(projectCommonResponse);
             given(projectCommonResponse.id()).willReturn(expectedId);
             given(projectCommonResponse.name()).willReturn(expectedName);
@@ -94,7 +93,6 @@ class ProjectControllerTest extends ControllerTestSupport {
         @DisplayName("프로젝트를 수정할 수 있다.")
         void willUpdateProject() throws Exception {
             // Arrange
-            LocalDateTime expectedCreatedAt = LocalDateTime.now();
             given(projectService.updateProjectValues(expectedId, expectedName)).willReturn(
                 projectCommonResponse);
             given(projectCommonResponse.id()).willReturn(expectedId);
