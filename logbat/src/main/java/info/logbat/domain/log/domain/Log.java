@@ -22,8 +22,19 @@ public class Log {
     this(null, appKey, level, data, timestamp);
   }
 
-  public Log(Long logId, String appKey, String level, String data,
+  public Log(Long logId, String appKey, Integer level, String data,
       LocalDateTime timestamp) {
+    this.logId = logId;
+    validateAppKey(appKey);
+    this.appKey = appKey;
+    this.level = Level.from(level);
+    this.data = LogData.from(data);
+    validateTimestamp(timestamp);
+    this.timestamp = timestamp;
+  }
+
+  public Log(Long logId, String appKey, String level, String data,
+             LocalDateTime timestamp) {
     this.logId = logId;
     validateAppKey(appKey);
     this.appKey = appKey;
