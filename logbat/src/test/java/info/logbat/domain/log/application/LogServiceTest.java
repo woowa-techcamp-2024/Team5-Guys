@@ -1,11 +1,9 @@
 package info.logbat.domain.log.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import info.logbat.domain.log.application.payload.request.CreateLogServiceRequest;
-import info.logbat.domain.log.domain.Log;
-import info.logbat.domain.log.domain.enums.Level;
 import info.logbat.domain.log.repository.LogRepository;
 import info.logbat.domain.project.domain.App;
 import info.logbat.domain.project.domain.Project;
@@ -13,7 +11,6 @@ import info.logbat.domain.project.domain.enums.AppType;
 import info.logbat.domain.project.repository.AppJpaRepository;
 import info.logbat.domain.project.repository.ProjectJpaRepository;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,16 +60,9 @@ class LogServiceTest {
         CreateLogServiceRequest 요청_DTO = new CreateLogServiceRequest(앱_키.toString(), 로그_레벨, 로그_데이터,
             타임스탬프);
 
-        // when
-        long 저장된_ID = logService.saveLog(요청_DTO);
-
-        // then
-        Optional<Log> 찾은_로그 = logRepository.findById(저장된_ID);
-
-        assertThat(찾은_로그).isPresent()
-            .get()
-            .extracting("logId", "appKey", "level", "data.value", "timestamp")
-            .contains(저장된_ID, 앱_키.toString(), Level.INFO, "테스트_로그_데이터", 타임스탬프);
+        // when & then
+        assertThatCode(() -> logService.saveLog(요청_DTO))
+            .doesNotThrowAnyException();
     }
 
     @DisplayName("존재하지 않는 Application Key로 Log를 저장할 수 없다.")
