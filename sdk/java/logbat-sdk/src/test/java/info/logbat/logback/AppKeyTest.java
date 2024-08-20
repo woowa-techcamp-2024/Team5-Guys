@@ -4,6 +4,7 @@ package info.logbat.logback;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,7 @@ class AppKeyTest {
     @Test
     void createAppKey() {
         // given
-        String appKeyStr = "testAppKey";
+        String appKeyStr = UUID.randomUUID().toString();
 
         // when
         AppKey appKey = new AppKey(appKeyStr);
@@ -59,6 +60,18 @@ class AppKeyTest {
         assertThatThrownBy(() -> new AppKey(appKeyStr))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("AppKey must not be null or empty.");
+    }
+
+    @DisplayName("AppKey 생성 시 UUID 형식이 아닌 경우 예외가 발생한다.")
+    @Test
+    void createAppKeyWithInvalidUuidString() {
+        // given
+        String appKeyStr = "invalidUuidString";
+
+        // when & then
+        assertThatThrownBy(() -> new AppKey(appKeyStr))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("AppKey must be a valid UUID string.");
     }
 
 }
