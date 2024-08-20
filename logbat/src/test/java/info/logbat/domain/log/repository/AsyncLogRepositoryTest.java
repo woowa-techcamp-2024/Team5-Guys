@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import info.logbat.domain.log.domain.Log;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ class AsyncLogRepositoryTest {
     @Test
     void testSave() {
         // given
-        Log log = new Log(1L, UUID.randomUUID().toString(), 0, "Test log data",
+        Log log = new Log(1L, 1L, 0, "Test log data",
             LocalDateTime.of(2021, 1, 1, 0, 0, 0));
 
         // When
@@ -53,7 +52,7 @@ class AsyncLogRepositoryTest {
     void testFindById_WhenLogExists() {
         // given
         Long logId = 1L;
-        Log expectedLog = new Log(logId, UUID.randomUUID().toString(), 0, "Test log data",
+        Log expectedLog = new Log(logId, 1L, 0, "Test log data",
             LocalDateTime.of(2021, 1, 1, 0, 0, 0));
         when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class), eq(logId)))
             .thenReturn(expectedLog);

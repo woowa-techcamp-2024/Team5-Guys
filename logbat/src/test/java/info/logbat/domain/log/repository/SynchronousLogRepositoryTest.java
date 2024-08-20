@@ -31,9 +31,10 @@ class SynchronousLogRepositoryTest {
         // given
         String 로그_레벨 = "INFO";
         String 로그_데이터 = "테스트_로그_데이터";
+        Long 앱_ID = 1L;
         LocalDateTime 타임스탬프 = LocalDateTime.of(2021, 1, 1, 0, 0, 0);
 
-        Log 로그 = new Log(앱_키_문자열, 로그_레벨, 로그_데이터, 타임스탬프);
+        Log 로그 = new Log(앱_ID, 로그_레벨, 로그_데이터, 타임스탬프);
 
         // when
         long 저장된_ID = synchronousLogRepository.save(로그);
@@ -49,9 +50,10 @@ class SynchronousLogRepositoryTest {
         // given
         String 로그_레벨 = "INFO";
         String 로그_데이터 = "테스트_로그_데이터";
+        Long 앱_ID = 1L;
         LocalDateTime 타임스탬프 = LocalDateTime.of(2021, 1, 1, 0, 0, 0);
 
-        long 로그_ID = synchronousLogRepository.save(new Log(앱_키_문자열, 로그_레벨, 로그_데이터, 타임스탬프));
+        long 로그_ID = synchronousLogRepository.save(new Log(앱_ID, 로그_레벨, 로그_데이터, 타임스탬프));
 
         // when
         Optional<Log> 저장된_로그 = synchronousLogRepository.findById(로그_ID);
@@ -59,8 +61,8 @@ class SynchronousLogRepositoryTest {
         // then
         assertThat(저장된_로그).isPresent()
             .get()
-            .extracting("logId", "appKey", "level", "data.value", "timestamp")
-            .containsExactly(로그_ID, 앱_키_문자열, Level.INFO, "테스트_로그_데이터",
+            .extracting("id", "appId", "level", "data.value", "timestamp")
+            .containsExactly(로그_ID, 앱_ID, Level.INFO, "테스트_로그_데이터",
                 LocalDateTime.of(2021, 1, 1, 0, 0, 0));
     }
 

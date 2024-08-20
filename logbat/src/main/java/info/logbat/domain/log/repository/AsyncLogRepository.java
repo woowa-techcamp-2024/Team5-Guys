@@ -1,6 +1,5 @@
 package info.logbat.domain.log.repository;
 
-import info.logbat.common.util.UUIDUtil;
 import info.logbat.domain.log.domain.Log;
 import jakarta.annotation.PostConstruct;
 import java.sql.Timestamp;
@@ -39,7 +38,7 @@ public class AsyncLogRepository implements LogRepository {
 
     @Override
     public Optional<Log> findById(Long logId) {
-        String sql = "SELECT * FROM logs WHERE log_id = ?";
+        String sql = "SELECT * FROM logs WHERE id = ?";
 
         try {
             return Optional.ofNullable(
@@ -59,7 +58,7 @@ public class AsyncLogRepository implements LogRepository {
         }
 
         StringBuilder sql = new StringBuilder(
-            "INSERT INTO logs (app_key, level, data, timestamp) VALUES ");
+            "INSERT INTO logs (app_id, level, data, timestamp) VALUES ");
 
         for (int i = 0; i < logs.size(); i++) {
             sql.append("(?, ?, ?, ?)");
@@ -71,7 +70,7 @@ public class AsyncLogRepository implements LogRepository {
         jdbcTemplate.update(sql.toString(), ps -> {
             int paramIndex = 1;
             for (Log log : logs) {
-                ps.setBytes(paramIndex++, UUIDUtil.uuidStringToBytes(log.getAppKey()));
+                ps.setLong(paramIndex++, log.getAppId());
                 ps.setInt(paramIndex++, log.getLevel().ordinal());
                 ps.setString(paramIndex++, log.getData().getValue());
                 ps.setTimestamp(paramIndex++, Timestamp.valueOf(log.getTimestamp()));
@@ -81,7 +80,7 @@ public class AsyncLogRepository implements LogRepository {
 
     private final RowMapper<Log> LOG_ROW_MAPPER = (rs, rowNum) -> new Log(
         rs.getLong("log_id"),
-        UUIDUtil.bytesToUuidString(rs.getBytes("app_key")),
+        rs.getLong("app_id"),
         rs.getInt("level"),
         rs.getString("data"),
         rs.getTimestamp("timestamp").toLocalDateTime()

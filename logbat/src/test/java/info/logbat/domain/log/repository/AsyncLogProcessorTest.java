@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import info.logbat.domain.log.domain.Log;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,8 +33,9 @@ class AsyncLogProcessorTest {
             processedLogCount.addAndGet(logs.size());
             latch.countDown();
         });
+        Long 앱_ID = 1L;
 
-        Log log = new Log(1L, UUID.randomUUID().toString(), 0, "Test log",
+        Log log = new Log(1L, 앱_ID, 0, "Test log",
             LocalDateTime.of(2021, 1, 1, 0, 0, 0));
 
         // when
@@ -58,10 +58,12 @@ class AsyncLogProcessorTest {
             latch.countDown();
         });
 
+        Long 앱_ID = 1L;
+
         // when
         for (int i = 0; i < logCount; i++) {
             asyncLogProcessor.submitLog(
-                new Log((long) i, UUID.randomUUID().toString(), 0, "Test log " + i,
+                new Log((long) i, 앱_ID, 0, "Test log " + i,
                     LocalDateTime.of(2021, 1, 1, 0, 0, 0)));
         }
 
