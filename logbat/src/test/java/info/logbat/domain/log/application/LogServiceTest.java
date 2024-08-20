@@ -80,7 +80,7 @@ class LogServiceTest {
         // when & then
         assertThatThrownBy(() -> logService.saveLog(요청_DTO))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("존재하지 않는 Application Key 입니다.");
+            .hasMessage("앱을 찾을 수 없습니다.");
     }
 
     @DisplayName("잘못된 형태의 Application Key로 Log를 저장할 수 없다.")
@@ -98,7 +98,7 @@ class LogServiceTest {
         // when & then
         assertThatThrownBy(() -> logService.saveLog(요청_DTO))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("잘못된 형식의 Application Key 입니다.");
+            .hasMessage("앱을 찾을 수 없습니다.");
     }
 
 }
