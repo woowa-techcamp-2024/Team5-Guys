@@ -16,6 +16,4 @@ public interface AppJpaRepository extends JpaRepository<App, Long> {
     Optional<App> findByProject_IdAndId(@NonNull Long id, @NonNull Long id1);
 
     List<App> findByProject_Id(@NonNull Long id);
-
-    boolean existsByAppKey(@NonNull UUID token);
 }

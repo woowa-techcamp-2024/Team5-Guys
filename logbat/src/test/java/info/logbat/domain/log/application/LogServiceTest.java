@@ -71,8 +71,8 @@ class LogServiceTest {
 
         assertThat(찾은_로그).isPresent()
             .get()
-            .extracting("logId", "appKey", "level", "data.value", "timestamp")
-            .contains(저장된_ID, 앱_키.toString(), Level.INFO, "테스트_로그_데이터", 타임스탬프);
+            .extracting("id", "appId", "level", "data.value", "timestamp")
+            .contains(저장된_ID, 앱.getId(), Level.INFO, "테스트_로그_데이터", 타임스탬프);
     }
 
     @DisplayName("존재하지 않는 Application Key로 Log를 저장할 수 없다.")
