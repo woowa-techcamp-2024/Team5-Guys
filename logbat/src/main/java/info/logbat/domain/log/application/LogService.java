@@ -21,22 +21,23 @@ public class LogService {
         String data = request.data();
         LocalDateTime timestamp = request.timestamp();
 
-        String appKey = getAppKey(request.appKey());
+        Long appId = getAppId(request.appKey());
 
-        Log log = Log.of(appKey, level, data, timestamp);
+        Log log = Log.of(appId, level, data, timestamp);
 
         return logRepository.save(log);
     }
 
-    private String getAppKey(String appKey) {
+    private Long getAppId(String appKey) {
+        UUID appKeyUuid;
+
         try {
-            UUID appKeyUuid = UUID.fromString(appKey);
-            if (appJpaRepository.existsByAppKey(appKeyUuid)) {
-                return appKeyUuid.toString();
-            }
+            appKeyUuid = UUID.fromString(appKey);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("잘못된 형식의 Application Key 입니다.");
         }
-        throw new IllegalArgumentException("존재하지 않는 Application Key 입니다.");
+        return appJpaRepository.findByAppKey(appKeyUuid)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Application Key 입니다."))
+            .getId();
     }
 }
