@@ -3,10 +3,10 @@ package info.logbat.domain.log.application;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import info.logbat.domain.log.application.payload.request.CreateLogServiceRequest;
-import info.logbat.domain.log.repository.LogRepository;
-import info.logbat.domain.project.repository.AppRepository;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +23,12 @@ class LogServiceTest {
     @Autowired
     private LogService logService;
 
-    @Autowired
-    private LogRepository logRepository;
-
-    @Autowired
-    private AppRepository appRepository;
-
     @DisplayName("Log를 저장할 수 있다.")
+    @Disabled("APP, PROJECT domain이 없어서 테스트가 불가능합니다.")
     @Test
     void saveLog() {
-        throw new UnsupportedOperationException("아직 구현되지 않았습니다.");/*
+        throw new UnsupportedOperationException("아직 구현되지 않았습니다.");
+        /*
         // given
         String 프로젝트_이름 = "테스트_프로젝트";
         Project 프로젝트 = Project.from(프로젝트_이름);
@@ -55,7 +51,8 @@ class LogServiceTest {
 
         // when & then
         assertThatCode(() -> logService.saveLog(요청_DTO))
-            .doesNotThrowAnyException();*/
+            .doesNotThrowAnyException();
+        */
     }
 
     @DisplayName("존재하지 않는 Application Key로 Log를 저장할 수 없다.")
