@@ -26,6 +26,12 @@ public class ProjectService {
         return ProjectCommonResponse.from(project);
     }
 
+    @Transactional(readOnly = true)
+    public ProjectCommonResponse getProjectById(Long id) {
+        Project project = getProject(id);
+        return ProjectCommonResponse.from(project);
+    }
+
     public ProjectCommonResponse updateProjectValues(Long id, String name) {
         Project project = getProject(id);
         project.updateName(name);

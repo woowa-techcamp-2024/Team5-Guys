@@ -7,7 +7,6 @@ import info.logbat_meta.domain.project.presentation.payload.request.ProjectUpdat
 import info.logbat_meta.domain.project.presentation.payload.response.ProjectCommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,30 +16,35 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    @GetMapping("/{name}")
-    public ApiCommonResponse<ProjectCommonResponse> get(@PathVariable String name) {
-        return ApiCommonResponse.createSuccessResponse(projectService.getProjectByName(name));
+    @GetMapping("/{projectId}")
+    public ApiCommonResponse<ProjectCommonResponse> get(@PathVariable Long projectId) {
+        ProjectCommonResponse project = projectService.getProjectById(projectId);
+
+        return ApiCommonResponse.createSuccessResponse(project);
     }
 
     @PostMapping
-    public ResponseEntity<ApiCommonResponse<ProjectCommonResponse>> create(
-        @RequestBody ProjectCreateRequest request) {
-        ApiCommonResponse<ProjectCommonResponse> response = ApiCommonResponse.createApiResponse(
-            HttpStatus.CREATED, "Success", projectService.createProject(request.name()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiCommonResponse<ProjectCommonResponse> create(@RequestBody ProjectCreateRequest request) {
+        ProjectCommonResponse project = projectService.createProject(request.name());
+
+        return ApiCommonResponse.createApiResponse(HttpStatus.CREATED, "Success", project);
     }
 
-    @PutMapping("/{id}")
-    public ApiCommonResponse<ProjectCommonResponse> update(@PathVariable Long id,
-        @RequestBody ProjectUpdateRequest request) {
-        return ApiCommonResponse.createSuccessResponse(
-            projectService.updateProjectValues(id, request.name()));
+    @PutMapping("/{projectId}")
+    public ApiCommonResponse<ProjectCommonResponse> update(
+            @PathVariable Long projectId,
+            @RequestBody ProjectUpdateRequest request
+    ) {
+        ProjectCommonResponse data = projectService.updateProjectValues(projectId, request.name());
+
+        return ApiCommonResponse.createSuccessResponse(data);
     }
 
-    @DeleteMapping("/{id}")
-    public ApiCommonResponse<Long> delete(@PathVariable Long id) {
-        Long expectedId = projectService.deleteProject(id);
-        return ApiCommonResponse.createSuccessResponse(expectedId);
+    @DeleteMapping("/{projectId}")
+    public ApiCommonResponse<Long> delete(@PathVariable Long projectId) {
+        Long deletedId = projectService.deleteProject(projectId);
+        return ApiCommonResponse.createSuccessResponse(deletedId);
     }
 
 }
