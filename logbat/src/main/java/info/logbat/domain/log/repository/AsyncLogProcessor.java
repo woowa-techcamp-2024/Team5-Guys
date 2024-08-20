@@ -35,7 +35,7 @@ public class AsyncLogProcessor {
     private void leaderTask(Consumer<List<Log>> saveFunction) {
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                final Log log = logQueue.poll(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+                final Log log = logQueue.poll(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS);
                 /**
                  * Log가 천천히 들어오는 경우 Timeout에 한 번씩 저장
                  *
