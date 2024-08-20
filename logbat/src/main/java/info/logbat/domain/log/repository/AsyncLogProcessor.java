@@ -46,9 +46,10 @@ public class AsyncLogProcessor {
             throw new IllegalArgumentException("DataSource is null");
         }
         int poolSize = ((HikariDataSource) dataSource).getMaximumPoolSize();
+        log.debug("Creating AsyncLogProcessor with pool size: {}", poolSize);
 
         // use 50% of the pool size for the follower thread pool
-        followerExecutor = Executors.newFixedThreadPool(poolSize * 5 / 10);
+        this.followerExecutor = Executors.newFixedThreadPool(poolSize * 5 / 10);
         this.defaultTimeout = Objects.requireNonNullElse(timeout, 2000L);
         this.defaultBulkSize = Objects.requireNonNullElse(bulkSize, 100);
     }
