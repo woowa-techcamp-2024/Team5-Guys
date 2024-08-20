@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -33,7 +32,7 @@ class AsyncLogProcessorTest {
         when(jdbcTemplate.getDataSource()).thenReturn(hikariDataSource);
         when(hikariDataSource.getMaximumPoolSize()).thenReturn(10); // 원하는 풀 사이즈 설정
 
-        asyncLogProcessor = new AsyncLogProcessor(jdbcTemplate);
+        asyncLogProcessor = new AsyncLogProcessor(2000L, 100, jdbcTemplate);
         processedLogCount = new AtomicInteger(0);
     }
 
