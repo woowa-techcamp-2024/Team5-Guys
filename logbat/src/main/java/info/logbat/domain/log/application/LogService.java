@@ -20,7 +20,7 @@ public class LogService {
         String data = request.data();
         LocalDateTime timestamp = request.timestamp();
 
-        Long appId = appService.getAppByToken(request.appKey()).id();
+        Long appId = appService.getAppIdByToken(request.appKey());
 
         Log log = Log.of(appId, level, data, timestamp);
 

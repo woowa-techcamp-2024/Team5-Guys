@@ -34,11 +34,11 @@ public class AppService {
 
     @Transactional(readOnly = true)
     @Cacheable(key = "#token")
-    public AppCommonResponse getAppByToken(String token) {
+    public Long getAppIdByToken(String token) {
         UUID tokenUUID = UUID.fromString(token);
         App app = appRepository.findByAppKey(tokenUUID)
             .orElseThrow(() -> new IllegalArgumentException(APP_NOT_FOUND_MESSAGE));
-        return AppCommonResponse.from(app);
+        return AppCommonResponse.from(app).id();
     }
 
     @Transactional(readOnly = true)

@@ -31,8 +31,10 @@ public class AppController {
     }
 
     @PostMapping
-    public ApiCommonResponse<AppCommonResponse> createApp(@RequestBody AppCreateRequest appCreateRequest) {
-        AppCommonResponse app = appService.createApp(appCreateRequest.projectId(), appCreateRequest.appType());
+    public ApiCommonResponse<AppCommonResponse> createApp(
+            @PathVariable Long projectId,
+            @RequestBody AppCreateRequest appCreateRequest) {
+        AppCommonResponse app = appService.createApp(projectId, appCreateRequest.appType());
 
         return ApiCommonResponse.createSuccessResponse(app);
     }

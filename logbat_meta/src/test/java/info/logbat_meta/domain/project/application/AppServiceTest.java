@@ -1,4 +1,22 @@
-package info.logbat.domain.project.application;
+package info.logbat_meta.domain.project.application;
+
+import info.logbat_meta.domain.project.domain.App;
+import info.logbat_meta.domain.project.domain.Project;
+import info.logbat_meta.domain.project.domain.enums.AppType;
+import info.logbat_meta.domain.project.presentation.payload.response.AppCommonResponse;
+import info.logbat_meta.domain.project.repository.AppJpaRepository;
+import info.logbat_meta.domain.project.repository.ProjectJpaRepository;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -7,24 +25,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-
-import info.logbat.domain.project.domain.App;
-import info.logbat.domain.project.domain.Project;
-import info.logbat.domain.project.domain.enums.AppType;
-import info.logbat.domain.project.presentation.payload.response.AppCommonResponse;
-import info.logbat.domain.project.repository.AppJpaRepository;
-import info.logbat.domain.project.repository.ProjectJpaRepository;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("AppService는")
@@ -40,6 +40,7 @@ class AppServiceTest {
 
     private final Project expectedProject = mock(Project.class);
     private final App expectedApp = spy(App.of(expectedProject, AppType.JAVA));
+
     private final Long expectedProjectId = 1L;
     private final Long expectedAppId = 1L;
 
@@ -104,24 +105,7 @@ class AppServiceTest {
     @Nested
     @DisplayName("App을 조회할 때")
     class whenGetApp {
-
-        private final UUID expectedToken = UUID.randomUUID();
         private final App expectedApp = spy(App.of(expectedProject, AppType.JAVA));
-
-        @Test
-        @DisplayName("토큰으로 조회할 수 있다.")
-        void canGetAppByToken() {
-            // Arrange
-            String expectedTokenString = expectedToken.toString();
-            given(appRepository.findByAppKey(expectedToken)).willReturn(Optional.of(expectedApp));
-            given(expectedApp.getAppKey()).willReturn(expectedToken);
-            // Act
-            AppCommonResponse actualResult = appService.getAppIdByToken(expectedTokenString);
-            // Assert
-            assertThat(actualResult)
-                .extracting("token")
-                .isEqualTo(expectedTokenString);
-        }
 
         @Test
         @DisplayName("ID로 조회할 수 있다.")
@@ -157,19 +141,6 @@ class AppServiceTest {
             given(appRepository.findById(expectedAppId)).willReturn(Optional.empty());
             // Act & Assert
             assertThatThrownBy(() -> appService.getAppById(expectedAppId))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("앱을 찾을 수 없습니다.");
-        }
-
-        @Test
-        @DisplayName("토큰 조회시 앱을 찾을 수 없으면 예외를 던진다.")
-        void willThrowExceptionWhenAppNotFoundByToken() {
-            // Arrange
-            String notExistToken = UUID.randomUUID().toString();
-            // Arrange
-            given(appRepository.findByAppKey(any(UUID.class))).willReturn(Optional.empty());
-            // Act & Assert
-            assertThatThrownBy(() -> appService.getAppIdByToken(notExistToken))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("앱을 찾을 수 없습니다.");
         }
