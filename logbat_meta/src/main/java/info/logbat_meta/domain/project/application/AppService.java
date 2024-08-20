@@ -9,12 +9,10 @@ import info.logbat_meta.domain.project.repository.ProjectJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -34,15 +32,6 @@ public class AppService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(key = "#token")
-    public AppCommonResponse getAppByToken(String token) {
-        UUID tokenUUID = UUID.fromString(token);
-        App app = appRepository.findByAppKey(tokenUUID)
-            .orElseThrow(() -> new IllegalArgumentException(APP_NOT_FOUND_MESSAGE));
-        return AppCommonResponse.from(app);
-    }
-
-    @Transactional(readOnly = true)
     public AppCommonResponse getAppById(Long id) {
         App app = appRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException(APP_NOT_FOUND_MESSAGE));
@@ -59,12 +48,7 @@ public class AppService {
         App app = appRepository.findByProject_IdAndId(projectId, appId)
             .orElseThrow(() -> new IllegalArgumentException(APP_NOT_FOUND_MESSAGE));
         appRepository.delete(app);
-        evictAppCache(app.getAppKey().toString());
         return app.getId();
-    }
-
-    @CacheEvict(key = "#token")
-    public void evictAppCache(String token) {
     }
 
     private Project getProject(Long id) {
