@@ -14,7 +14,7 @@ public class AppKey {
     }
 
     private void validateAppKey(String value) {
-        if (value == null || value.isEmpty()) {
+        if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("AppKey must not be null or empty.");
         }
     }

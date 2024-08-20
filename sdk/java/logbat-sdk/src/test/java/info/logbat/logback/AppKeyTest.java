@@ -48,4 +48,17 @@ class AppKeyTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("AppKey must not be null or empty.");
     }
+
+    @DisplayName("AppKey 생성 시 공백 문자열인 경우 예외가 발생한다.")
+    @Test
+    void createAppKeyWithBlank() {
+        // given
+        String appKeyStr = " ";
+
+        // when & then
+        assertThatThrownBy(() -> new AppKey(appKeyStr))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("AppKey must not be null or empty.");
+    }
+
 }
