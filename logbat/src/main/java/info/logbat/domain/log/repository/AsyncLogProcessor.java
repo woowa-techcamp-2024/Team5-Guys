@@ -18,7 +18,7 @@ public class AsyncLogProcessor {
     private final LinkedBlockingQueue<Log> logQueue = new LinkedBlockingQueue<>();
     private final ExecutorService leaderExecutor = Executors.newSingleThreadExecutor();
 
-    private final ExecutorService followerExecutor = Executors.newFixedThreadPool(8);
+    private final ExecutorService followerExecutor = Executors.newFixedThreadPool(10);
 
     private static final long DEFAULT_TIMEOUT = 2000L;
     private static final int DEFAULT_BULK_SIZE = 100;
