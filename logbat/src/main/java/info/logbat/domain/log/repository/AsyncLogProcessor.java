@@ -85,7 +85,6 @@ public class AsyncLogProcessor {
     private void leaderTask(Consumer<List<Log>> saveFunction) {
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                List<Log> logs = new ArrayList<>();
                 final Log log = logQueue.poll(defaultTimeout, TimeUnit.MILLISECONDS);
                 /*
                  * Log가 천천히 들어오는 경우 Timeout에 한 번씩 저장
@@ -97,6 +96,7 @@ public class AsyncLogProcessor {
                 if (log == null) {
                     continue;
                 }
+                List<Log> logs = new ArrayList<>();
                 logs.add(log);
                 //drainTo는 Queue에 있는 요소를 maxElements만큼 꺼내서 Collection에 담아준다.
                 logQueue.drainTo(logs, defaultBulkSize - 1);
