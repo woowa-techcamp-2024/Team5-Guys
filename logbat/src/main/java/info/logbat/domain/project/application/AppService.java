@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = {"app_key"})
+@CacheConfig(cacheNames = {"app"})
 public class AppService {
 
     private static final String APP_NOT_FOUND_MESSAGE = "앱을 찾을 수 없습니다.";
@@ -57,7 +58,12 @@ public class AppService {
         App app = appRepository.findByProject_IdAndId(projectId, appId)
             .orElseThrow(() -> new IllegalArgumentException(APP_NOT_FOUND_MESSAGE));
         appRepository.delete(app);
+        evictAppCache(app.getAppKey().toString());
         return app.getId();
+    }
+
+    @CacheEvict(key = "#token")
+    public void evictAppCache(String token) {
     }
 
     private Project getProject(Long id) {
