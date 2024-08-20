@@ -3,11 +3,15 @@ package info.logbat.domain.options;
 import info.logbat.config.LogbatConfig;
 import info.logbat.config.LogbatConfigLoader;
 import info.logbat.domain.logbat.AppKey;
-import org.apache.commons.configuration2.CompositeConfiguration;
+import java.util.Map;
 
 public class LogbatOptions {
 
     private final AppKey appKey;
+
+    public AppKey getAppKey() {
+        return appKey;
+    }
 
     public LogbatOptions() {
         this(getLogbatConfig());
@@ -22,8 +26,8 @@ public class LogbatOptions {
     }
 
     private static LogbatConfig parseLogbatConfig() {
-        final CompositeConfiguration configuration = LogbatConfigLoader.loadConfig();
+        final Map<String, String> configMap = LogbatConfigLoader.loadConfig();
 
-        return new LogbatConfig(configuration.getString("logbat.appKey"));
+        return new LogbatConfig(configMap.get("logbat.appKey"));
     }
 }

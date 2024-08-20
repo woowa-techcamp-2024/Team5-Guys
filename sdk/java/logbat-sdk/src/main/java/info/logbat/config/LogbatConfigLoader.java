@@ -1,61 +1,101 @@
 package info.logbat.config;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
-import org.apache.commons.configuration2.CompositeConfiguration;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.YAMLConfiguration;
-import org.apache.commons.configuration2.builder.fluent.Configurations;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public class LogbatConfigLoader {
 
-    public static CompositeConfiguration loadConfig() {
-        CompositeConfiguration config = new CompositeConfiguration();
+    public static Map<String, String> loadConfig() {
+        Map<String, String> config = new HashMap<>();
 
-        boolean yamlLoaded = addYamlConfigurations(config);
-        boolean propertiesLoaded = addPropertiesConfigurations(config);
+        if (!loadYaml(config, "application.yml") && !loadYaml(config, "application.yaml")) {
+            loadProperties(config, "application.properties");
+        }
 
-        if (!propertiesLoaded && !yamlLoaded) {
-            throw new RuntimeException("Could not load any configuration files.");
+        if (config.isEmpty()) {
+            System.err.println("Warning: No Logbat configuration loaded.");
         }
 
         return config;
     }
 
-    private static boolean addYamlConfigurations(CompositeConfiguration config) {
-        YAMLConfiguration yamlConfig = new YAMLConfiguration();
-        try (InputStream yamlStream = LogbatConfigLoader.class.getClassLoader().getResourceAsStream("application.yml")) {
-            if (yamlStream != null) {
-                yamlConfig.read(yamlStream);
-                config.addConfiguration(yamlConfig);
-                return true;
+    private static boolean loadYaml(Map<String, String> config, String filename) {
+        try (InputStream is = LogbatConfigLoader.class.getClassLoader()
+            .getResourceAsStream(filename);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+
+            String line;
+            boolean inLogbatSection = false;
+            int logbatIndentation = -1;
+
+            while ((line = reader.readLine()) != null) {
+                line = line.replaceAll("\\s+$", "");
+
+                if (line.isEmpty() || line.startsWith("#")) {
+                    continue;
+                }
+
+                if (line.startsWith("logbat:")) {
+                    inLogbatSection = true;
+                    logbatIndentation = line.indexOf("logbat:");
+                    continue;
+                }
+
+                if (inLogbatSection) {
+                    int currentIndentation = line.indexOf(line.trim());
+
+                    if (currentIndentation <= logbatIndentation) {
+                        break;
+                    }
+
+                    String[] parts = line.trim().split(":\\s*", 2);
+                    if (parts.length == 2) {
+                        String key = parts[0].trim();
+                        String value = parts[1].trim();
+
+                        if (value.startsWith("\"") && value.endsWith("\"")) {
+                            value = value.substring(1, value.length() - 1);
+                        }
+                        config.put("logbat." + key, value);
+                    }
+                }
             }
-        } catch (Exception e) {
-            System.err.println("Could not load application.yml: " + e.getMessage());
-        }
 
-        try (InputStream yamlStream = LogbatConfigLoader.class.getClassLoader().getResourceAsStream("application.yaml")) {
-            if (yamlStream != null) {
-                yamlConfig.read(yamlStream);
-                config.addConfiguration(yamlConfig);
-                return true;
+            if (!config.isEmpty()) {
+                System.out.println("Loaded YAML config: " + config);
             }
+            return !config.isEmpty();
         } catch (Exception e) {
-            System.err.println("Could not load application.yaml: " + e.getMessage());
-        }
-        return false;
-    }
-
-    private static boolean addPropertiesConfigurations(CompositeConfiguration config) {
-        Configurations configs = new Configurations();
-        try {
-            Configuration propertiesConfig = configs.properties("application.properties");
-            config.addConfiguration(propertiesConfig);
-
-            return true;
-        } catch (org.apache.commons.configuration2.ex.ConfigurationException e) {
-            System.err.println("Could not load application.properties: " + e.getMessage());
+            System.err.println("Could not load " + filename + ": " + e.getMessage());
             return false;
         }
     }
 
+    private static boolean loadProperties(Map<String, String> config, String filename) {
+        try (InputStream is = LogbatConfigLoader.class.getClassLoader()
+            .getResourceAsStream(filename)) {
+            if (is == null) {
+                System.err.println("Resource not found: " + filename);
+                return false;
+            }
+
+            Properties props = new Properties();
+            props.load(is);
+
+            for (String key : props.stringPropertyNames()) {
+                if (key.startsWith("logbat.")) {
+                    config.put(key, props.getProperty(key));
+                }
+            }
+            return !config.isEmpty();
+        } catch (IOException e) {
+            System.err.println("Could not load " + filename + ": " + e.getMessage());
+            return false;
+        }
+    }
 }

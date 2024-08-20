@@ -13,13 +13,6 @@ dependencies {
     // logback
     implementation 'ch.qos.logback:logback-classic:1.4.14'
 
-    // apache commons
-    implementation 'org.apache.commons:commons-configuration2:2.8.0'
-    implementation 'commons-beanutils:commons-beanutils:1.9.4'
-
-    // snakeyaml
-    implementation 'org.yaml:snakeyaml:1.32'
-
     // Junit5
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
     testImplementation 'org.assertj:assertj-core:3.24.2'
