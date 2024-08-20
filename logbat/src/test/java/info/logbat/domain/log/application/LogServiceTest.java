@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import info.logbat.domain.log.application.payload.request.CreateLogServiceRequest;
 import info.logbat.domain.log.repository.LogRepository;
-import info.logbat.domain.project.repository.AppJpaRepository;
+import info.logbat.domain.project.repository.AppRepository;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +27,7 @@ class LogServiceTest {
     private LogRepository logRepository;
 
     @Autowired
-    private AppJpaRepository appJpaRepository;
+    private AppRepository appRepository;
 
     @DisplayName("Log를 저장할 수 있다.")
     @Test
