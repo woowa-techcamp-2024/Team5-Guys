@@ -13,16 +13,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @DisplayName("AsyncLogProcessor 기능 테스트")
 class AsyncLogProcessorTest {
 
-    @Mock
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
 
-    @Mock
-    private HikariDataSource hikariDataSource;
+    private final HikariDataSource hikariDataSource = Mockito.mock(HikariDataSource.class);
 
     private AsyncLogProcessor asyncLogProcessor;
     private AtomicInteger processedLogCount;
