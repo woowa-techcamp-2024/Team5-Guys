@@ -6,9 +6,6 @@ import info.logbat.dev.service.CountTestService;
 import info.logbat.domain.log.application.LogService;
 import info.logbat.domain.log.presentation.LogController;
 import info.logbat.domain.project.application.AppService;
-import info.logbat.domain.project.application.ProjectService;
-import info.logbat.domain.project.presentation.AppController;
-import info.logbat.domain.project.presentation.ProjectController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,8 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 /*
  * 이후 테스트 하려면 Controller에 대해 controllers에 추가하고, ControllerTestSupport를 상속받아 테스트를 진행하시면 됩니다.
  */
-@WebMvcTest(controllers = {LogController.class, ProjectController.class, AppController.class,
-    CountTestController.class})
+@WebMvcTest(controllers = {LogController.class, CountTestController.class})
 @ActiveProfiles("test")
 public abstract class ControllerTestSupport {
 
@@ -31,9 +27,6 @@ public abstract class ControllerTestSupport {
 
   @MockBean
   protected LogService logService;
-
-  @MockBean
-  protected ProjectService projectService;
 
   @MockBean
   protected AppService appService;

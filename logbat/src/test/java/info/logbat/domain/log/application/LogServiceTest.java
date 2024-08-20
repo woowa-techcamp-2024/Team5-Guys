@@ -1,15 +1,10 @@
 package info.logbat.domain.log.application;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import info.logbat.domain.log.application.payload.request.CreateLogServiceRequest;
 import info.logbat.domain.log.repository.LogRepository;
-import info.logbat.domain.project.domain.App;
-import info.logbat.domain.project.domain.Project;
-import info.logbat.domain.project.domain.enums.AppType;
 import info.logbat.domain.project.repository.AppJpaRepository;
-import info.logbat.domain.project.repository.ProjectJpaRepository;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
@@ -32,14 +27,12 @@ class LogServiceTest {
     private LogRepository logRepository;
 
     @Autowired
-    private ProjectJpaRepository projectJpaRepository;
-
-    @Autowired
     private AppJpaRepository appJpaRepository;
 
     @DisplayName("Log를 저장할 수 있다.")
     @Test
     void saveLog() {
+        throw new UnsupportedOperationException("아직 구현되지 않았습니다.");/*
         // given
         String 프로젝트_이름 = "테스트_프로젝트";
         Project 프로젝트 = Project.from(프로젝트_이름);
@@ -62,7 +55,7 @@ class LogServiceTest {
 
         // when & then
         assertThatCode(() -> logService.saveLog(요청_DTO))
-            .doesNotThrowAnyException();
+            .doesNotThrowAnyException();*/
     }
 
     @DisplayName("존재하지 않는 Application Key로 Log를 저장할 수 없다.")
