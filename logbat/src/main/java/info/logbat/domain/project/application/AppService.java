@@ -9,12 +9,15 @@ import info.logbat.domain.project.repository.ProjectJpaRepository;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = {"app_key"})
 public class AppService {
 
     private static final String APP_NOT_FOUND_MESSAGE = "앱을 찾을 수 없습니다.";
@@ -29,6 +32,7 @@ public class AppService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(key = "#token")
     public AppCommonResponse getAppByToken(String token) {
         UUID tokenUUID = UUID.fromString(token);
         App app = appRepository.findByAppKey(tokenUUID)

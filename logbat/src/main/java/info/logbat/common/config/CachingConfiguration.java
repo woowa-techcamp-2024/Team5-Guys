@@ -17,8 +17,7 @@ public class CachingConfiguration {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(
             List.of(
-                new ConcurrentMapCache("app_key"),
-                new ConcurrentMapCache("app_id")
+                new ConcurrentMapCache("app_key")
             )
         );
         return cacheManager;
