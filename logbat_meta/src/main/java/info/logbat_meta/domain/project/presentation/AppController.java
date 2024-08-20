@@ -10,34 +10,41 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/projects/apps")
+@RequestMapping("/v1/projects/{projectId}/apps")
 @RequiredArgsConstructor
 public class AppController {
 
     private final AppService appService;
 
-    @GetMapping("/{projectId}")
-    public ApiCommonResponse<List<AppCommonResponse>> getAppsByProjectId(
-        @PathVariable Long projectId) {
-        return ApiCommonResponse.createSuccessResponse(appService.getAppsByProjectId(projectId));
+    @GetMapping
+    public ApiCommonResponse<List<AppCommonResponse>> getAppsByProjectId(@PathVariable Long projectId) {
+        List<AppCommonResponse> apps = appService.getAppsByProjectId(projectId);
+
+        return ApiCommonResponse.createSuccessResponse(apps);
     }
 
-    @GetMapping("/info/{id}")
-    public ApiCommonResponse<AppCommonResponse> getAppById(@PathVariable Long id) {
-        return ApiCommonResponse.createSuccessResponse(appService.getAppById(id));
+    @GetMapping("/{appId}")
+    public ApiCommonResponse<AppCommonResponse> getAppById(@PathVariable Long appId) {
+        AppCommonResponse app = appService.getAppById(appId);
+
+        return ApiCommonResponse.createSuccessResponse(app);
     }
 
     @PostMapping
-    public ApiCommonResponse<AppCommonResponse> createApp(
-        @RequestBody AppCreateRequest appCreateRequest) {
-        return ApiCommonResponse.createSuccessResponse(
-            appService.createApp(appCreateRequest.projectId(), appCreateRequest.appType()));
+    public ApiCommonResponse<AppCommonResponse> createApp(@RequestBody AppCreateRequest appCreateRequest) {
+        AppCommonResponse app = appService.createApp(appCreateRequest.projectId(), appCreateRequest.appType());
+
+        return ApiCommonResponse.createSuccessResponse(app);
     }
 
-    @DeleteMapping("/{projectId}/{appId}")
-    public ApiCommonResponse<Long> deleteApp(@PathVariable Long projectId,
-        @PathVariable Long appId) {
-        return ApiCommonResponse.createSuccessResponse(appService.deleteApp(projectId, appId));
+    @DeleteMapping("/{appId}")
+    public ApiCommonResponse<Long> deleteApp(
+            @PathVariable Long projectId,
+            @PathVariable Long appId
+    ) {
+        Long deletedId = appService.deleteApp(projectId, appId);
+
+        return ApiCommonResponse.createSuccessResponse(deletedId);
     }
 
 }
