@@ -1,4 +1,4 @@
-package info.logbat.logback;
+package info.logbat.logback.domain.logbat;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
