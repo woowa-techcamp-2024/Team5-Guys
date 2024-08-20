@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = {"app_key"})
+@CacheConfig(cacheNames = {"app"})
 public class AppService {
 
     private static final String APP_NOT_FOUND_MESSAGE = "앱을 찾을 수 없습니다.";

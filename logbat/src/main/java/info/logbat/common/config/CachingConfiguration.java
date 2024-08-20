@@ -1,10 +1,10 @@
 package info.logbat.common.config;
 
-import java.util.List;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import java.util.concurrent.TimeUnit;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.concurrent.ConcurrentMapCache;
-import org.springframework.cache.support.SimpleCacheManager;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,11 +14,10 @@ public class CachingConfiguration {
 
     @Bean
     public CacheManager cacheManager() {
-        SimpleCacheManager cacheManager = new SimpleCacheManager();
-        cacheManager.setCaches(
-            List.of(
-                new ConcurrentMapCache("app_key")
-            )
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager("app");
+        cacheManager.setCaffeine(Caffeine.newBuilder()
+            .maximumSize(100)
+            .expireAfterAccess(10, TimeUnit.MINUTES)
         );
         return cacheManager;
     }
