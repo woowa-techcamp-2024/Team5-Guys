@@ -2,6 +2,7 @@ package info.logbat.logback.domain.logbat;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +12,7 @@ class LogbatTest {
     @Test
     void createLogbat() {
         // given
-        String appKeyStr = "testAppKey";
+        String appKeyStr = UUID.randomUUID().toString();
 
         // when
         Logbat logbat = new Logbat(appKeyStr);
