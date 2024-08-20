@@ -1,5 +1,6 @@
 package info.logbat.domain.log.repository;
 
+import com.zaxxer.hikari.HikariDataSource;
 import info.logbat.domain.log.domain.Log;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
 
 @Slf4j
 @Component
@@ -18,10 +22,21 @@ public class AsyncLogProcessor {
     private final LinkedBlockingQueue<Log> logQueue = new LinkedBlockingQueue<>();
     private final ExecutorService leaderExecutor = Executors.newSingleThreadExecutor();
 
-    private final ExecutorService followerExecutor = Executors.newFixedThreadPool(10);
+    private final ExecutorService followerExecutor;
 
     private static final long DEFAULT_TIMEOUT = 2000L;
     private static final int DEFAULT_BULK_SIZE = 100;
+
+    public AsyncLogProcessor(JdbcTemplate jdbcTemplate) {
+        DataSource dataSource = jdbcTemplate.getDataSource();
+        if (dataSource == null || !(dataSource instanceof HikariDataSource)) {
+            throw new IllegalArgumentException("DataSource is null");
+        }
+        int poolSize = ((HikariDataSource) dataSource).getMaximumPoolSize();
+
+        // use 50% of the pool size for the follower thread pool
+        followerExecutor = Executors.newFixedThreadPool(poolSize * 5 / 10);
+    }
 
     public void init(Consumer<List<Log>> saveFunction) {
         leaderExecutor.execute(() -> leaderTask(saveFunction));

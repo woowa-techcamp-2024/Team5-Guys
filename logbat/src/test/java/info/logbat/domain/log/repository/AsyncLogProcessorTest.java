@@ -1,7 +1,9 @@
 package info.logbat.domain.log.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
+import com.zaxxer.hikari.HikariDataSource;
 import info.logbat.domain.log.domain.Log;
 import java.time.LocalDateTime;
 import java.util.concurrent.CountDownLatch;
@@ -10,9 +12,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @DisplayName("AsyncLogProcessor 기능 테스트")
 class AsyncLogProcessorTest {
+
+    @Mock
+    private JdbcTemplate jdbcTemplate;
+
+    @Mock
+    private HikariDataSource hikariDataSource;
 
     private AsyncLogProcessor asyncLogProcessor;
     private AtomicInteger processedLogCount;
@@ -20,7 +30,11 @@ class AsyncLogProcessorTest {
 
     @BeforeEach
     void setUp() {
-        asyncLogProcessor = new AsyncLogProcessor();
+        // HikariDataSource 모킹
+        when(jdbcTemplate.getDataSource()).thenReturn(hikariDataSource);
+        when(hikariDataSource.getMaximumPoolSize()).thenReturn(10); // 원하는 풀 사이즈 설정
+
+        asyncLogProcessor = new AsyncLogProcessor(jdbcTemplate);
         processedLogCount = new AtomicInteger(0);
     }
 
