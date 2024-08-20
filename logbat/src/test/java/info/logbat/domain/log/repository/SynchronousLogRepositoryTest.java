@@ -6,6 +6,7 @@ import info.logbat.domain.log.domain.Log;
 import info.logbat.domain.log.domain.enums.Level;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@DisplayName("LogRepository 테스트")
-class LogRepositoryTest {
+@DisplayName("SynchoronousLogRepository 테스트")
+class SynchronousLogRepositoryTest {
 
     @Autowired
-    private LogRepository logRepository;
+    private SynchronousLogRepository synchronousLogRepository;
+
+    private static final String 앱_키_문자열 = UUID.randomUUID().toString();
 
     @DisplayName("Log를 저장할 수 있다.")
     @Test
@@ -34,7 +37,7 @@ class LogRepositoryTest {
         Log 로그 = new Log(앱_ID, 로그_레벨, 로그_데이터, 타임스탬프);
 
         // when
-        long 저장된_ID = logRepository.save(로그);
+        long 저장된_ID = synchronousLogRepository.save(로그);
 
         // then
         assertThat(저장된_ID)
@@ -50,10 +53,10 @@ class LogRepositoryTest {
         Long 앱_ID = 1L;
         LocalDateTime 타임스탬프 = LocalDateTime.of(2021, 1, 1, 0, 0, 0);
 
-        long 로그_ID = logRepository.save(new Log(앱_ID, 로그_레벨, 로그_데이터, 타임스탬프));
+        long 로그_ID = synchronousLogRepository.save(new Log(앱_ID, 로그_레벨, 로그_데이터, 타임스탬프));
 
         // when
-        Optional<Log> 저장된_로그 = logRepository.findById(로그_ID);
+        Optional<Log> 저장된_로그 = synchronousLogRepository.findById(로그_ID);
 
         // then
         assertThat(저장된_로그).isPresent()
@@ -70,7 +73,7 @@ class LogRepositoryTest {
         long 없는_로그_ID = 1L;
 
         // when
-        Optional<Log> 저장된_로그 = logRepository.findById(없는_로그_ID);
+        Optional<Log> 저장된_로그 = synchronousLogRepository.findById(없는_로그_ID);
 
         // then
         assertThat(저장된_로그).isEmpty();
