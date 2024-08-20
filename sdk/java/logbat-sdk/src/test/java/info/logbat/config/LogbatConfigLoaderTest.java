@@ -1,7 +1,8 @@
-package info.logbat.logback.config;
+package info.logbat.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import info.logbat.config.LogbatConfigLoader;
 import org.apache.commons.configuration2.CompositeConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

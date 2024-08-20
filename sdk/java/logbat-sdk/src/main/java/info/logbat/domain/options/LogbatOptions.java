@@ -1,7 +1,8 @@
-package info.logbat.logback.domain.logbat;
+package info.logbat.domain.options;
 
-import info.logbat.logback.config.LogbatConfig;
-import info.logbat.logback.config.LogbatConfigLoader;
+import info.logbat.config.LogbatConfig;
+import info.logbat.config.LogbatConfigLoader;
+import info.logbat.domain.logbat.AppKey;
 import org.apache.commons.configuration2.CompositeConfiguration;
 
 public class LogbatOptions {

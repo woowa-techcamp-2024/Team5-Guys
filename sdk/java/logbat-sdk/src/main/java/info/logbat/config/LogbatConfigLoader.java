@@ -1,4 +1,4 @@
-package info.logbat.logback.config;
+package info.logbat.config;
 
 import java.io.InputStream;
 import org.apache.commons.configuration2.CompositeConfiguration;

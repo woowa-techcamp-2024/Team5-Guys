@@ -1,4 +1,4 @@
-package info.logbat.logback.config;
+package info.logbat.config;
 
 public class LogbatConfig {
 

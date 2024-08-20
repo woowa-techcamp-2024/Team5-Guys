@@ -1,4 +1,4 @@
-package info.logbat.logback.domain.logbat;
+package info.logbat.domain.logbat;
 
 import java.util.UUID;
 
