@@ -13,8 +13,13 @@ public class AppRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public Optional<Long> getAppIdByToken(String token) {
-        String sql = "SELECT id FROM apps WHERE app_key = UNHEX(REPLACE(?, '-', ''))";
-        Long l = jdbcTemplate.queryForObject(sql, Long.class, token);
-        return Optional.ofNullable(l);
+        try {
+            String sql = "SELECT id FROM apps WHERE app_key = UNHEX(REPLACE(?, '-', ''))";
+            Long l = jdbcTemplate.queryForObject(sql, Long.class, token);
+            return Optional.ofNullable(l);
+        }
+        catch (Exception e) {
+            return Optional.empty();
+        }
     }
 }
