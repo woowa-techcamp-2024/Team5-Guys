@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import info.logbat.domain.log.Log;
-import info.logbat.domain.log.enums.Level;
+import info.logbat.infrastructure.payload.LogSendRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,9 +35,9 @@ class LogBufferTest {
         // then
         assertThat(logBuffer.getLogs(1))
             .hasSize(1)
-            .extracting("level", "data.value", "timestamp")
+            .extracting("level", "data", "timestamp")
             .containsExactly(
-                tuple(Level.from(level), data, timestamp)
+                tuple(level, data, timestamp)
             );
     }
 
@@ -55,17 +55,17 @@ class LogBufferTest {
         }
 
         // when
-        final List<Log> logs = logBuffer.getLogs(5);
+        final List<LogSendRequest> logs = logBuffer.getLogs(5);
 
         // then
         assertThat(logs).hasSize(5)
-            .extracting("level", "data.value", "timestamp")
+            .extracting("level", "data", "timestamp")
             .containsExactly(
-                tuple(Level.from(level), "log data0", LocalDateTime.of(2021, 1, 1, 0, 0, 0)),
-                tuple(Level.from(level), "log data1", LocalDateTime.of(2021, 1, 1, 0, 0, 1)),
-                tuple(Level.from(level), "log data2", LocalDateTime.of(2021, 1, 1, 0, 0, 2)),
-                tuple(Level.from(level), "log data3", LocalDateTime.of(2021, 1, 1, 0, 0, 3)),
-                tuple(Level.from(level), "log data4", LocalDateTime.of(2021, 1, 1, 0, 0, 4))
+                tuple(level, "log data0", LocalDateTime.of(2021, 1, 1, 0, 0, 0)),
+                tuple(level, "log data1", LocalDateTime.of(2021, 1, 1, 0, 0, 1)),
+                tuple(level, "log data2", LocalDateTime.of(2021, 1, 1, 0, 0, 2)),
+                tuple(level, "log data3", LocalDateTime.of(2021, 1, 1, 0, 0, 3)),
+                tuple(level, "log data4", LocalDateTime.of(2021, 1, 1, 0, 0, 4))
             );
     }
 
