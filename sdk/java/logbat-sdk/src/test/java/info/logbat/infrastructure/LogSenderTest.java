@@ -48,7 +48,7 @@ class LogSenderTest {
     void sendLog() throws IOException, InterruptedException {
         // given
         LogSendRequest logSendRequest = new LogSendRequest("INFO", "test log data",
-            LocalDateTime.of(2021, 1, 1, 0, 0, 0));
+            LocalDateTime.of(2021, 1, 1, 0, 0, 0).toString());
 
         HttpResponse<String> httpResponse = mock(HttpResponse.class);
         when(httpResponse.statusCode()).thenReturn(201);
@@ -68,7 +68,7 @@ class LogSenderTest {
     void sendLogFailed() throws IOException, InterruptedException {
         // given
         LogSendRequest logSendRequest = new LogSendRequest("INFO", "test log data",
-            LocalDateTime.of(2021, 1, 1, 0, 0, 0));
+            LocalDateTime.of(2021, 1, 1, 0, 0, 0).toString());
 
         HttpResponse<String> httpResponse = mock(HttpResponse.class);
         when(httpResponse.statusCode()).thenReturn(400);
@@ -88,7 +88,7 @@ class LogSenderTest {
     void sendLogError() throws IOException, InterruptedException {
         // given
         LogSendRequest logSendRequest = new LogSendRequest("INFO", "test log data",
-            LocalDateTime.of(2021, 1, 1, 0, 0, 0));
+            LocalDateTime.of(2021, 1, 1, 0, 0, 0).toString());
 
         when(httpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
             .thenThrow(new IOException());

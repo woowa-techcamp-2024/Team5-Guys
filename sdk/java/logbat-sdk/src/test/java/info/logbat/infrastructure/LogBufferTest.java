@@ -25,7 +25,7 @@ class LogBufferTest {
         // given
         String level = "INFO";
         String data = "log data";
-        LocalDateTime timestamp = LocalDateTime.of(2021, 1, 1, 0, 0, 0);
+        String timestamp = LocalDateTime.of(2021, 1, 1, 0, 0, 0).toString();
         LogSendRequest logSendRequest = new LogSendRequest(level, data, timestamp);
 
         // when
@@ -48,8 +48,8 @@ class LogBufferTest {
 
         for (int i = 0; i < 5; i++) {
             String data = "log data" + i;
-            LocalDateTime timestamp = LocalDateTime.of(2021, 1, 1, 0, 0, i);
-            LogSendRequest logSendRequest = new LogSendRequest(level, data, timestamp);
+            String timestamp = LocalDateTime.of(2021, 1, 1, 0, 0, i).toString();
+            LogSendRequest logSendRequest = new LogSendRequest(level, data, timestamp.toString());
             logBuffer.addLog(logSendRequest);
         }
 
@@ -60,11 +60,11 @@ class LogBufferTest {
         assertThat(logs).hasSize(5)
             .extracting("level", "data", "timestamp")
             .containsExactly(
-                tuple(level, "log data0", LocalDateTime.of(2021, 1, 1, 0, 0, 0)),
-                tuple(level, "log data1", LocalDateTime.of(2021, 1, 1, 0, 0, 1)),
-                tuple(level, "log data2", LocalDateTime.of(2021, 1, 1, 0, 0, 2)),
-                tuple(level, "log data3", LocalDateTime.of(2021, 1, 1, 0, 0, 3)),
-                tuple(level, "log data4", LocalDateTime.of(2021, 1, 1, 0, 0, 4))
+                tuple(level, "log data0", LocalDateTime.of(2021, 1, 1, 0, 0, 0).toString()),
+                tuple(level, "log data1", LocalDateTime.of(2021, 1, 1, 0, 0, 1).toString()),
+                tuple(level, "log data2", LocalDateTime.of(2021, 1, 1, 0, 0, 2).toString()),
+                tuple(level, "log data3", LocalDateTime.of(2021, 1, 1, 0, 0, 3).toString()),
+                tuple(level, "log data4", LocalDateTime.of(2021, 1, 1, 0, 0, 4).toString())
             );
     }
 
