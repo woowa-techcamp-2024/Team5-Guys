@@ -2,7 +2,7 @@ package info.logbat.adapter.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
-import info.logbat.domain.options.LogbatOptions;
+import info.logbat.LogbatFactory;
 import info.logbat.application.Logbat;
 
 public class LogbatAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
@@ -12,13 +12,12 @@ public class LogbatAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
     @Override
     public void start() {
         super.start();
-        LogbatOptions logbatOptions = new LogbatOptions();
-        logbat = new Logbat(logbatOptions);
+        this.logbat = LogbatFactory.getInstance();
     }
 
     @Override
     protected void append(ILoggingEvent eventObject) {
-      String logMessage = eventObject.getFormattedMessage();
-      System.out.println("Logbat Appender: " + logMessage);
+        String logMessage = eventObject.getFormattedMessage();
+        System.out.println("Logbat Appender: " + logMessage);
     }
 }
