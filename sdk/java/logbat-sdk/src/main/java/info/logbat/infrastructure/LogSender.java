@@ -19,9 +19,9 @@ public class LogSender {
     private final ObjectMapper objectMapper;
     private final Builder requestBuilder;
 
-    public void sendLog(List<LogSendRequest> logSendRequests) throws JsonProcessingException {
+    public void sendLogs(List<LogSendRequest> logSendRequests) {
 
-        String requestBody = objectMapper.writeValueAsString(logSendRequests);
+        String requestBody = prepareRequestBody(logSendRequests);
 
         HttpRequest request = requestBuilder
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -36,6 +36,14 @@ public class LogSender {
             throw new IllegalArgumentException("Invalid log data");
         }
         throw new RuntimeException("Failed to send log data");
+    }
+
+    private String prepareRequestBody(List<LogSendRequest> logSendRequests) {
+        try {
+            return objectMapper.writeValueAsString(logSendRequests);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to serialize log data", e);
+        }
     }
 
     private HttpResponse<String> sendRequest(HttpRequest request) {

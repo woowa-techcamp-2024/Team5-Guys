@@ -56,7 +56,7 @@ class LogSenderTest {
             .thenReturn(httpResponse);
 
         // when
-        logSender.sendLog(List.of(logSendRequest));
+        logSender.sendLogs(List.of(logSendRequest));
 
         // then
         verify(httpClient)
@@ -76,7 +76,7 @@ class LogSenderTest {
             .thenReturn(httpResponse);
 
         // when & then
-        assertThatThrownBy(() -> logSender.sendLog(List.of(logSendRequest)))
+        assertThatThrownBy(() -> logSender.sendLogs(List.of(logSendRequest)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("Invalid log data");
         verify(httpClient)
@@ -94,7 +94,7 @@ class LogSenderTest {
             .thenThrow(new IOException());
 
         // when & then
-        assertThatThrownBy(() -> logSender.sendLog(List.of(logSendRequest)))
+        assertThatThrownBy(() -> logSender.sendLogs(List.of(logSendRequest)))
             .isInstanceOf(RuntimeException.class)
             .hasMessage("Failed to send log data");
         verify(httpClient)
