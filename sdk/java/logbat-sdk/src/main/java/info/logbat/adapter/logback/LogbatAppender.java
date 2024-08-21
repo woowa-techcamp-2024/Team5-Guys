@@ -4,6 +4,10 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import info.logbat.LogbatFactory;
 import info.logbat.application.Logbat;
+import info.logbat.infrastructure.payload.LogSendRequest;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class LogbatAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
@@ -17,7 +21,12 @@ public class LogbatAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
     @Override
     protected void append(ILoggingEvent eventObject) {
-        String logMessage = eventObject.getFormattedMessage();
-        System.out.println("Logbat Appender: " + logMessage);
+        String level = eventObject.getLevel().toString();
+        String message = eventObject.getFormattedMessage();
+        LocalDateTime timestamp = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli(eventObject.getTimeStamp()),
+            ZoneId.systemDefault()
+        );
+        logbat.writeLog(new LogSendRequest(level, message, timestamp));
     }
 }
