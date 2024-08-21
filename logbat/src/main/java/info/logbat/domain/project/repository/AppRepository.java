@@ -15,8 +15,8 @@ public class AppRepository {
     public Optional<Long> getAppIdByToken(String token) {
         try {
             String sql = "SELECT id FROM apps WHERE app_key = UNHEX(REPLACE(?, '-', ''))";
-            Long l = jdbcTemplate.queryForObject(sql, Long.class, token);
-            return Optional.ofNullable(l);
+            Long id = jdbcTemplate.queryForObject(sql, Long.class, token);
+            return Optional.ofNullable(id);
         }
         catch (Exception e) {
             return Optional.empty();
