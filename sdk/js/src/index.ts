@@ -14,6 +14,9 @@ class LogBat {
     private static batchInterval: number = 1000; // 1 second
     private static batchTimeoutId: number | null = null;
 
+    private static maxQueueSize: number = 100 * 1024; // 100 KB
+    private static currentQueueSize: number = 0;
+
     public static init(config: { appKey: string }): void {
         if (this.isInitialized) {
             console.warn('LogBat SDK is already initialized. Ignoring repeated initialization.');
@@ -44,6 +47,7 @@ class LogBat {
 
         const batchToSend = [...this.logQueue];
         this.logQueue = [];
+        this.currentQueueSize = 0;
 
         try {
             const response = await fetch(this.apiEndpoint, {
@@ -70,8 +74,16 @@ class LogBat {
             ).join(' '),
             timestamp: new Date().toISOString()
         };
+
+        const logSize = JSON.stringify(logData).length;
         this.logQueue.push(logData);
-        this.scheduleBatch();
+        this.currentQueueSize += logSize;
+        if (this.currentQueueSize > this.maxQueueSize) {
+            this.sendBatch();
+        }
+        else {
+            this.scheduleBatch();
+        }
     }
 
     public static log(...args: any[]): void {
