@@ -14,11 +14,14 @@ server {
     # managed by Certbot
     include /etc/nginx/snippets/managed-by-Certbot.conf;
 
-    root /var/www/html;
-    index index.html index.htm index.nginx-debian.html;
+    include /etc/nginx/snippets/private-ip.conf;
 
     location / {
-        try_files $uri $uri/ =404;
+        proxy_pass $logbat_server;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
 
@@ -60,7 +63,7 @@ server {
         }
     }
 
-    location / {
+    location /v1 {
         proxy_pass $logbat_server;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
