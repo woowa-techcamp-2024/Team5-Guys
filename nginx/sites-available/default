@@ -17,7 +17,7 @@ server {
     include /etc/nginx/snippets/private-ip.conf;
 
     location / {
-        proxy_pass $logbat_server;
+        proxy_pass $logbat_view_server;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -64,7 +64,7 @@ server {
     }
 
     location /v1 {
-        proxy_pass $logbat_server;
+        proxy_pass $logbat_view_server;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
