@@ -13,6 +13,9 @@ dependencies {
     // logback
     implementation 'ch.qos.logback:logback-classic:1.4.14'
 
+    // objectMapper
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+
     // Junit5
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
     testImplementation 'org.assertj:assertj-core:3.24.2'
