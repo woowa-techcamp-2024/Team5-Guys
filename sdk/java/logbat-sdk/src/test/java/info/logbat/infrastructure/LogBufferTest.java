@@ -3,7 +3,6 @@ package info.logbat.infrastructure;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
-import info.logbat.domain.log.Log;
 import info.logbat.infrastructure.payload.LogSendRequest;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,10 +26,10 @@ class LogBufferTest {
         String level = "INFO";
         String data = "log data";
         LocalDateTime timestamp = LocalDateTime.of(2021, 1, 1, 0, 0, 0);
-        Log log = new Log(level, data, timestamp);
+        LogSendRequest logSendRequest = new LogSendRequest(level, data, timestamp);
 
         // when
-        logBuffer.addLog(log);
+        logBuffer.addLog(logSendRequest);
 
         // then
         assertThat(logBuffer.getLogs(1))
@@ -50,8 +49,8 @@ class LogBufferTest {
         for (int i = 0; i < 5; i++) {
             String data = "log data" + i;
             LocalDateTime timestamp = LocalDateTime.of(2021, 1, 1, 0, 0, i);
-            Log log = new Log(level, data, timestamp);
-            logBuffer.addLog(log);
+            LogSendRequest logSendRequest = new LogSendRequest(level, data, timestamp);
+            logBuffer.addLog(logSendRequest);
         }
 
         // when
