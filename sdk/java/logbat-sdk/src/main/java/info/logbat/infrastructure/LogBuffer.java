@@ -19,6 +19,10 @@ public class LogBuffer {
         return logs;
     }
 
+    public boolean isEmpty() {
+        return logQueue.isEmpty();
+    }
+
     public LogBuffer() {
         this.logQueue = new LinkedBlockingQueue<>();
     }
