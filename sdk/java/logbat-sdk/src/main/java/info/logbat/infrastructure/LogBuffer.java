@@ -19,7 +19,7 @@ public class LogBuffer {
         return logs;
     }
 
-    public LogBuffer(LinkedBlockingQueue<Log> logQueue) {
-        this.logQueue = logQueue;
+    public LogBuffer() {
+        this.logQueue = new LinkedBlockingQueue<>();
     }
 }
