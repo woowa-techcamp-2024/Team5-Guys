@@ -5,6 +5,7 @@ import info.logbat.domain.log.Log;
 public class AsyncLogWriter {
 
     private final LogBuffer logBuffer;
+    private final LogSender logSender;
     private final LogProcessScheduler logProcessScheduler;
 
     /**
@@ -16,8 +17,10 @@ public class AsyncLogWriter {
      * @param logSender
      */
     public AsyncLogWriter(LogBuffer logBuffer, LogSender logSender) {
-        this.logProcessScheduler = new LogProcessScheduler(logSender::sendLogs, logBuffer);
+        this.logSender = logSender;
         this.logBuffer = logBuffer;
+        this.logProcessScheduler =
+            new LogProcessScheduler(this.logSender::sendLogs, this.logBuffer);
     }
 
     /**
