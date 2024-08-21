@@ -1,13 +1,13 @@
 package info.logbat.application;
 
-import info.logbat.domain.log.Log;
 import info.logbat.infrastructure.AsyncLogWriter;
+import info.logbat.infrastructure.payload.LogSendRequest;
 
 public class Logbat {
 
     private final AsyncLogWriter asyncLogWriter;
 
-    public void writeLog(Log log) {
+    public void writeLog(LogSendRequest log) {
         asyncLogWriter.sendLog(log);
     }
 

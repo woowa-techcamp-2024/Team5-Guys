@@ -1,6 +1,6 @@
 package info.logbat.infrastructure;
 
-import info.logbat.domain.log.Log;
+import info.logbat.infrastructure.payload.LogSendRequest;
 
 public class AsyncLogWriter {
 
@@ -26,9 +26,9 @@ public class AsyncLogWriter {
     /**
      * LogBuffer는 내부적으로 동기화된 LinkedBlockingQueue를 사용하여 로그를 저장합니다.
      *
-     * @param log
+     * @param logSendRequest
      */
-    public void sendLog(Log log) {
-        logBuffer.addLog(log);
+    public void sendLog(LogSendRequest logSendRequest) {
+        logBuffer.addLog(logSendRequest);
     }
 }

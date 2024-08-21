@@ -1,6 +1,5 @@
 package info.logbat.infrastructure;
 
-import info.logbat.domain.log.Log;
 import info.logbat.infrastructure.payload.LogSendRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +9,8 @@ public class LogBuffer {
 
     private final LinkedBlockingQueue<LogSendRequest> logQueue;
 
-    public void addLog(Log log) {
-        logQueue.add(new LogSendRequest(log.getLevel().name(), log.getData().getValue(),
-            log.getTimestamp()));
+    public void addLog(LogSendRequest logSendRequest) {
+        logQueue.add(logSendRequest);
     }
 
     public List<LogSendRequest> getLogs(int count) {
