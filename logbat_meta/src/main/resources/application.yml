@@ -4,8 +4,7 @@ spring:
 
   profiles:
     active: local
-server:
-  port: 8081
+
 jdbc:
   async:
     timeout: 2000
