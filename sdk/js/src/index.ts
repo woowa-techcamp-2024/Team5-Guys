@@ -86,19 +86,14 @@ class LogBat {
         }
     }
 
-    public static log(...args: any[]): void {
-        this.originalConsole.log(...args);
-        this.queueLog('log', args);
+    public static trace(...args: any[]): void {
+        this.originalConsole.trace(...args);
+        this.queueLog('trace', args);
     }
 
-    public static error(...args: any[]): void {
-        this.originalConsole.error(...args);
-        this.queueLog('error', args);
-    }
-
-    public static warn(...args: any[]): void {
-        this.originalConsole.warn(...args);
-        this.queueLog('warn', args);
+    public static debug(...args: any[]): void {
+        this.originalConsole.debug(...args);
+        this.queueLog('debug', args);
     }
 
     public static info(...args: any[]): void {
@@ -106,9 +101,19 @@ class LogBat {
         this.queueLog('info', args);
     }
 
-    public static debug(...args: any[]): void {
-        this.originalConsole.debug(...args);
-        this.queueLog('debug', args);
+    public static log(...args: any[]): void {
+        this.originalConsole.log(...args);
+        this.queueLog('info', args);
+    }
+
+    public static warn(...args: any[]): void {
+        this.originalConsole.warn(...args);
+        this.queueLog('warn', args);
+    }
+
+    public static error(...args: any[]): void {
+        this.originalConsole.error(...args);
+        this.queueLog('error', args);
     }
 
     private static overrideConsoleMethods(): void {
@@ -121,11 +126,12 @@ class LogBat {
             error: console.error
         };
 
-        console.log = (...args: any[]): void => { this.log(...args); };
-        console.error = (...args: any[]): void => { this.error(...args); };
-        console.warn = (...args: any[]): void => { this.warn(...args); };
-        console.info = (...args: any[]): void => { this.info(...args); };
+        console.trace = (...args: any[]): void => { this.trace(...args); };
         console.debug = (...args: any[]): void => { this.debug(...args); };
+        console.info = (...args: any[]): void => { this.info(...args); };
+        console.log = (...args: any[]): void => { this.log(...args); };
+        console.warn = (...args: any[]): void => { this.warn(...args); };
+        console.error = (...args: any[]): void => { this.error(...args); };
     }
 }
 
