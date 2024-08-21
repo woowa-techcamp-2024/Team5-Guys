@@ -23,11 +23,15 @@ public class LogProcessScheduler {
     public LogProcessScheduler(Consumer<List<LogSendRequest>> sendFunction, LogBuffer logBuffer) {
         scheduler.scheduleAtFixedRate(
             () -> {
-                final List<LogSendRequest> logs = logBuffer.getLogs(DEFAULT_BULK_SIZE);
-                if (logs == null || logs.isEmpty()) {
-                    return;
+                try {
+                    final List<LogSendRequest> logs = logBuffer.getLogs(DEFAULT_BULK_SIZE);
+                    if (logs == null || logs.isEmpty()) {
+                        return;
+                    }
+                    sendFunction.accept(logs);
+                } catch (Throwable e) {
+                    e.printStackTrace();
                 }
-                sendFunction.accept(logs);
             },
             0,
             DEFAULT_INTERVAL,
