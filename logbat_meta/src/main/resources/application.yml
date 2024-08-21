@@ -1,9 +1,10 @@
 spring:
   application:
-    name: logbat
+    name: logbat_meta
 
   profiles:
     active: local
+
 jdbc:
   async:
     timeout: 2000
@@ -19,8 +20,10 @@ spring:
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    hikari:
-      maximum-pool-size: 10
+
+  jpa:
+    hibernate:
+      ddl-auto: create
 
 ---
 spring:
@@ -33,5 +36,7 @@ spring:
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    hikari:
-      maximum-pool-size: 10
+
+  jpa:
+    hibernate:
+      ddl-auto: none
