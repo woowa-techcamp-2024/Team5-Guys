@@ -19,7 +19,15 @@ public class LogSender {
     private final ObjectMapper objectMapper;
     private final Builder requestBuilder;
 
+    /**
+     * sendLogs는 파라미터로 들어온 로그 데이터를 전송합니다. 파라미터로 들어온 로그 데이터가 비어있을 경우 아무 동작도 하지 않습니다.
+     *
+     * @param logSendRequests
+     */
     public void sendLogs(List<LogSendRequest> logSendRequests) {
+        if (logSendRequests.isEmpty()) {
+            return;
+        }
 
         String requestBody = prepareRequestBody(logSendRequests);
 
