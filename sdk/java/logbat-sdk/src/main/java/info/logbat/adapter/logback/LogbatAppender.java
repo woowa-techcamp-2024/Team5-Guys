@@ -23,10 +23,10 @@ public class LogbatAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
     protected void append(ILoggingEvent eventObject) {
         String level = eventObject.getLevel().toString();
         String message = eventObject.getFormattedMessage();
-        LocalDateTime timestamp = LocalDateTime.ofInstant(
+        String timestamp = LocalDateTime.ofInstant(
             Instant.ofEpochMilli(eventObject.getTimeStamp()),
             ZoneId.systemDefault()
-        );
+        ).toString();
         logbat.writeLog(new LogSendRequest(level, message, timestamp));
     }
 }
