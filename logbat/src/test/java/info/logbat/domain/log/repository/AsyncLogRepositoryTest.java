@@ -1,16 +1,18 @@
 package info.logbat.domain.log.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import info.logbat.domain.log.domain.Log;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,8 +21,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-@DisplayName("AsyncLogRepository 테스트")
 @SpringBootTest
+@DisplayName("AsyncLogRepository는")
 class AsyncLogRepositoryTest {
 
     @MockBean
@@ -32,51 +34,51 @@ class AsyncLogRepositoryTest {
     @Autowired
     private AsyncLogRepository asyncLogRepository;
 
-    @DisplayName("AsyncLogProcessor에 로그가 전달되는지 확인")
+    private final Long expectedLogId = 1L;
+    private final Log expectedLog = new Log(expectedLogId, 1L, 0, "Test log data",
+        LocalDateTime.of(2021, 1, 1, 0, 0, 0));
+
+    @DisplayName("로그를 정상적으로 저장할 수 있다.")
     @Test
     void testSave() {
-        // given
-        Log log = new Log(1L, 1L, 0, "Test log data",
-            LocalDateTime.of(2021, 1, 1, 0, 0, 0));
+        // Act
+        long actualResult = asyncLogRepository.save(expectedLog);
 
-        // When
-        long result = asyncLogRepository.save(log);
-
-        // Then
-        assertThat(0L).isEqualTo(result);
-        verify(asyncLogProcessor).submitLog(log);
+        // Assert
+        assertThat(actualResult).isZero();
+        verify(asyncLogProcessor).submitLog(expectedLog);
     }
 
-    @DisplayName("존재하는 로그 ID인 경우 Optional에 로그 반환")
-    @Test
-    void testFindById_WhenLogExists() {
-        // given
-        Long logId = 1L;
-        Log expectedLog = new Log(logId, 1L, 0, "Test log data",
-            LocalDateTime.of(2021, 1, 1, 0, 0, 0));
-        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class), eq(logId)))
-            .thenReturn(expectedLog);
+    @Nested
+    @DisplayName("로그 ID로 로그를 조회할 때")
+    class whenFindLogById {
 
-        // When
-        Optional<Log> result = asyncLogRepository.findById(logId);
+        @Test
+        @DisplayName("로그가 존재하면 Optional에 로그를 반환한다.")
+        void willReturnLogWithOptionalWhenLogExists() {
+            // Arrange
+            given(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class),
+                eq(expectedLogId))).willReturn(expectedLog);
+            // Act
+            Optional<Log> actualResult = asyncLogRepository.findById(expectedLogId);
+            // Assert
+            assertAll(
+                () -> assertThat(actualResult).isPresent(),
+                () -> assertThat(actualResult).get().isEqualTo(expectedLog)
+            );
+        }
 
-        // Then
-        assertThat(result.isPresent()).isTrue();
-        assertThat(result.get()).isEqualTo(expectedLog);
+        @Test
+        @DisplayName("로그가 존재하지 않으면 빈 Optional을 반환한다.")
+        void willReturnEmptyOptionalWhenLogDoesNotExist() {
+            // Arrange
+            given(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class),
+                eq(expectedLogId))).willThrow(new EmptyResultDataAccessException(1));
+            // Act
+            Optional<Log> actualResult = asyncLogRepository.findById(expectedLogId);
+            // Assert
+            assertThat(actualResult).isEmpty();
+        }
     }
 
-    @DisplayName("존재하지 않는 로그 ID인 경우 빈 Optional 반환")
-    @Test
-    void testFindById_WhenLogDoesNotExist() {
-        // given
-        Long logId = 1L;
-        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class), eq(logId)))
-            .thenThrow(new EmptyResultDataAccessException(1));
-
-        // When
-        Optional<Log> result = asyncLogRepository.findById(logId);
-
-        // Then
-        assertThat(result.isPresent()).isFalse();
-    }
 }
