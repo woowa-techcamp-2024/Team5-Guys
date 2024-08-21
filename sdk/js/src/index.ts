@@ -54,7 +54,7 @@ class LogBat {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'appKey': this.appKey
+                    'App-Key': this.appKey
                 },
                 body: JSON.stringify(batchToSend),
             });
