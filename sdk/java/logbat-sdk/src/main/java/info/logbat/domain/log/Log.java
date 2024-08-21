@@ -10,6 +10,18 @@ public class Log {
     private final LogData data;
     private final LocalDateTime timestamp;
 
+    public Level getLevel() {
+        return level;
+    }
+
+    public LogData getData() {
+        return data;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
     public Log(String level, String data, LocalDateTime timestamp) {
         this.level = Level.from(level);
         this.data = LogData.from(data);
