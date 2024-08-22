@@ -3,6 +3,7 @@ package info.logbat.domain.options;
 import info.logbat.config.LogbatConfig;
 import info.logbat.config.LogbatConfigLoader;
 import info.logbat.domain.logbat.AppKey;
+import info.logbat.exception.InvalidAppKeyException;
 import java.util.Map;
 
 public class LogbatOptions {
@@ -13,11 +14,11 @@ public class LogbatOptions {
         return appKey;
     }
 
-    public LogbatOptions() {
+    public LogbatOptions() throws InvalidAppKeyException {
         this(getLogbatConfig());
     }
 
-    protected LogbatOptions(LogbatConfig logbatConfig) {
+    protected LogbatOptions(LogbatConfig logbatConfig) throws InvalidAppKeyException {
         this.appKey = new AppKey(logbatConfig.getAppKey());
     }
 

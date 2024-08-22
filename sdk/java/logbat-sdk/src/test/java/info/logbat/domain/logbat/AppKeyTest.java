@@ -14,7 +14,7 @@ class AppKeyTest {
 
     @DisplayName("AppKey를 생성할 수 있다.")
     @Test
-    void createAppKey() {
+    void createAppKey() throws InvalidAppKeyException {
         // given
         String appKeyStr = UUID.randomUUID().toString();
 

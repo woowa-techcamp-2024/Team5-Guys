@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import info.logbat.application.LogSendRequestFactory;
 import info.logbat.application.Logbat;
 import info.logbat.domain.options.LogbatOptions;
+import info.logbat.exception.InvalidAppKeyException;
 import info.logbat.infrastructure.AsyncLogWriter;
 import info.logbat.infrastructure.LogBuffer;
 import info.logbat.infrastructure.LogSender;
@@ -25,7 +26,13 @@ public final class LogbatFactory {
         if (logbat == null) {
             synchronized (LogbatFactory.class) {
                 if (logbat == null) {
-                    logbat = createLogbat();
+                    try {
+                        logbat = createLogbat();
+                    } catch (InvalidAppKeyException e) {
+                        System.err.println("Failed to create Logbat instance: " + e.getMessage());
+                        System.exit(100);
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }
@@ -37,7 +44,7 @@ public final class LogbatFactory {
      *
      * @return 초기화된 Logbat 인스턴스
      */
-    private static Logbat createLogbat() {
+    private static Logbat createLogbat() throws InvalidAppKeyException {
         LogbatOptions logbatOptions = new LogbatOptions();
         ObjectMapper objectMapper = new ObjectMapper();
         LogBuffer logBuffer = new LogBuffer();

@@ -7,7 +7,7 @@ public class AppKey {
 
     private final String value;
 
-    public AppKey(String value) {
+    public AppKey(String value) throws InvalidAppKeyException {
         validateAppKey(value);
         validateUuidString(value);
         this.value = value;
@@ -17,13 +17,13 @@ public class AppKey {
         return value;
     }
 
-    private void validateAppKey(String value) {
+    private void validateAppKey(String value) throws InvalidAppKeyException {
         if (value == null || value.isBlank()) {
             throw new InvalidAppKeyException("AppKey must not be null or empty.");
         }
     }
 
-    private void validateUuidString(String value) {
+    private void validateUuidString(String value) throws InvalidAppKeyException {
         try {
             UUID.fromString(value);
         } catch (IllegalArgumentException e) {
