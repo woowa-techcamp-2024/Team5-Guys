@@ -26,7 +26,7 @@ public class LogSender {
     /**
      * sendLogs는 파라미터로 들어온 로그 데이터를 전송합니다. 파라미터로 들어온 로그 데이터가 비어있을 경우 아무 동작도 하지 않습니다.
      *
-     * @param logSendRequests
+     * @param logSendRequests 로그 데이터가 담긴 요청 객체의 리스트입니다. 이 리스트가 비어있다면 메서드는 아무 동작도 하지 않습니다.
      */
     public void sendLogs(List<LogSendRequest> logSendRequests) {
         if (logSendRequests.isEmpty()) {
