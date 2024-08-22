@@ -47,7 +47,7 @@ public class LogSendRequestFactory {
         return String.format(
             "[%s] [%s] %s - %s%s%s",
             eventObject.getThreadName(),
-            eventObject.getLoggerName(),
+            Optional.ofNullable(eventObject.getLoggerName()).orElse("unknown"),
             getFormattedLevel(eventObject.getLevel()),
             eventObject.getFormattedMessage(),
             getMdcString(eventObject.getMDCPropertyMap()),
