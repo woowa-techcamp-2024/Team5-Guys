@@ -36,9 +36,9 @@ class ProjectControllerTest extends ControllerTestSupport {
         void willReturnProjectInformation() throws Exception {
             // Arrange
             given(projectService.getProjectById(expectedId)).willReturn(projectCommonResponse);
-            given(projectCommonResponse.id()).willReturn(expectedId);
-            given(projectCommonResponse.name()).willReturn(expectedName);
-            given(projectCommonResponse.createdAt()).willReturn(expectedCreatedAt);
+            given(projectCommonResponse.getId()).willReturn(expectedId);
+            given(projectCommonResponse.getName()).willReturn(expectedName);
+            given(projectCommonResponse.getCreatedAt()).willReturn(expectedCreatedAt);
             // Act
             MockHttpServletRequestBuilder get = get("/v1/projects/{id}", expectedId);
             // Assert
@@ -63,9 +63,9 @@ class ProjectControllerTest extends ControllerTestSupport {
         void willCreateProject() throws Exception {
             // Arrange
             given(projectService.createProject(expectedName)).willReturn(projectCommonResponse);
-            given(projectCommonResponse.id()).willReturn(expectedId);
-            given(projectCommonResponse.name()).willReturn(expectedName);
-            given(projectCommonResponse.createdAt()).willReturn(expectedCreatedAt);
+            given(projectCommonResponse.getId()).willReturn(expectedId);
+            given(projectCommonResponse.getName()).willReturn(expectedName);
+            given(projectCommonResponse.getCreatedAt()).willReturn(expectedCreatedAt);
             // Act
             MockHttpServletRequestBuilder post = post("/v1/projects")
                 .contentType("application/json")
@@ -93,9 +93,9 @@ class ProjectControllerTest extends ControllerTestSupport {
             // Arrange
             given(projectService.updateProjectValues(expectedId, expectedName)).willReturn(
                 projectCommonResponse);
-            given(projectCommonResponse.id()).willReturn(expectedId);
-            given(projectCommonResponse.name()).willReturn(expectedName);
-            given(projectCommonResponse.createdAt()).willReturn(expectedCreatedAt);
+            given(projectCommonResponse.getId()).willReturn(expectedId);
+            given(projectCommonResponse.getName()).willReturn(expectedName);
+            given(projectCommonResponse.getCreatedAt()).willReturn(expectedCreatedAt);
             // Act
             MockHttpServletRequestBuilder put = put("/v1/projects/{id}", expectedId)
                 .contentType("application/json")

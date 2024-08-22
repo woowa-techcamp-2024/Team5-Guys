@@ -39,7 +39,8 @@ class AppServiceTest {
     private ProjectJpaRepository projectRepository;
 
     private final Project expectedProject = mock(Project.class);
-    private final App expectedApp = spy(App.of(expectedProject, AppType.JAVA));
+    private final String expectedProjectName = "프로젝트 이름";
+    private final App expectedApp = spy(App.of(expectedProject, expectedProjectName, AppType.JAVA));
 
     private final Long expectedProjectId = 1L;
     private final Long expectedAppId = 1L;
@@ -57,7 +58,7 @@ class AppServiceTest {
             Long notExistProjectId = 2L;
             given(projectRepository.findById(notExistProjectId)).willReturn(Optional.empty());
             // Act & Assert
-            assertThatThrownBy(() -> appService.createApp(notExistProjectId, expectedAppType))
+            assertThatThrownBy(() -> appService.createApp(notExistProjectId, expectedProjectName, expectedAppType))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("프로젝트를 찾을 수 없습니다.");
         }
@@ -70,7 +71,7 @@ class AppServiceTest {
             given(projectRepository.findById(expectedProjectId)).willReturn(
                 Optional.of(expectedProject));
             // Act & Assert
-            assertThatThrownBy(() -> appService.createApp(expectedProjectId, invalidAppType))
+            assertThatThrownBy(() -> appService.createApp(expectedProjectId, expectedProjectName, invalidAppType))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("잘못된 앱 타입 요청입니다.");
         }
@@ -88,6 +89,7 @@ class AppServiceTest {
             given(expectedApp.getCreatedAt()).willReturn(expectedCreatedAt);
             // Act
             AppCommonResponse actualResult = appService.createApp(expectedProjectId,
+                expectedProjectName,
                 expectedAppType);
             // Assert
             assertAll(
@@ -95,7 +97,7 @@ class AppServiceTest {
                     .extracting("id", "projectId", "appType", "createdAt")
                     .containsExactly(expectedAppId, expectedProjectId, expectedAppType,
                         expectedCreatedAt),
-                () -> assertThat(actualResult.token()).isNotNull()
+                () -> assertThat(actualResult.getToken()).isNotNull()
             );
 
         }
@@ -105,7 +107,7 @@ class AppServiceTest {
     @Nested
     @DisplayName("App을 조회할 때")
     class whenGetApp {
-        private final App expectedApp = spy(App.of(expectedProject, AppType.JAVA));
+        private final App expectedApp = spy(App.of(expectedProject, expectedProjectName, AppType.JAVA));
 
         @Test
         @DisplayName("ID로 조회할 수 있다.")
