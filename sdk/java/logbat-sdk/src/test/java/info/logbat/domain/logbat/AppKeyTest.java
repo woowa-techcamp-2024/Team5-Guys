@@ -4,6 +4,7 @@ package info.logbat.domain.logbat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import info.logbat.exception.InvalidAppKeyException;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,7 @@ class AppKeyTest {
 
         // when & then
         assertThatThrownBy(() -> new AppKey(appKeyStr))
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(InvalidAppKeyException.class)
             .hasMessage("AppKey must not be null or empty.");
     }
 
@@ -46,7 +47,7 @@ class AppKeyTest {
 
         // when & then
         assertThatThrownBy(() -> new AppKey(appKeyStr))
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(InvalidAppKeyException.class)
             .hasMessage("AppKey must not be null or empty.");
     }
 
@@ -58,7 +59,7 @@ class AppKeyTest {
 
         // when & then
         assertThatThrownBy(() -> new AppKey(appKeyStr))
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(InvalidAppKeyException.class)
             .hasMessage("AppKey must not be null or empty.");
     }
 
@@ -70,7 +71,7 @@ class AppKeyTest {
 
         // when & then
         assertThatThrownBy(() -> new AppKey(appKeyStr))
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(InvalidAppKeyException.class)
             .hasMessage("AppKey must be a valid UUID string.");
     }
 
