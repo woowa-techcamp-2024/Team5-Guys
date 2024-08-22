@@ -8,7 +8,7 @@ import info.logbat.infrastructure.LogBuffer;
 import info.logbat.infrastructure.LogSender;
 import java.net.http.HttpClient;
 
-public class LogbatFactory {
+public final class LogbatFactory {
 
     private static volatile Logbat logbat;
 
