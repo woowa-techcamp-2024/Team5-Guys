@@ -53,5 +53,9 @@ public final class LogbatFactory {
      * LogbatFactory 클래스는 인스턴스화할 수 없도록 private 생성자를 가지고 있습니다.
      */
     private LogbatFactory() {
+        /**
+         * 리플렉션으로 호출될 수 없습니다.
+         */
+        throw new UnsupportedOperationException("LogbatFactory cannot be instantiated");
     }
 }
