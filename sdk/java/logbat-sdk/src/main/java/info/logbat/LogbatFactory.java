@@ -1,6 +1,7 @@
 package info.logbat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import info.logbat.application.LogSendRequestFactory;
 import info.logbat.application.Logbat;
 import info.logbat.domain.options.LogbatOptions;
 import info.logbat.infrastructure.AsyncLogWriter;
@@ -29,8 +30,9 @@ public final class LogbatFactory {
         LogBuffer logBuffer = new LogBuffer();
         LogSender logSender =
             new LogSender(HttpClient.newHttpClient(), objectMapper, logbatOptions);
+        LogSendRequestFactory logSendRequestFactory = new LogSendRequestFactory();
         AsyncLogWriter asyncLogWriter = new AsyncLogWriter(logBuffer, logSender);
-        logbat = new Logbat(asyncLogWriter);
+        logbat = new Logbat(asyncLogWriter, logSendRequestFactory);
         return logbat;
     }
 
