@@ -1,9 +1,10 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
 group = 'info.logbat'
-version = '1.0-SNAPSHOT'
+version = '0.1.1'
 
 repositories {
     mavenCentral()
@@ -15,9 +16,26 @@ java {
     }
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = "local-repo"
+            url = project.layout.buildDirectory.dir("java").get().asFile.toURI()
+        }
+    }
+}
+
 dependencies {
     // logback
     implementation 'ch.qos.logback:logback-classic:1.4.14'
+
+    // slf4j
+    implementation 'org.slf4j:slf4j-api:1.7.36'
 
     // objectMapper
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
@@ -42,5 +60,10 @@ jar {
                 'Implementation-Title': 'Logbat SDK',
                 'Implementation-Version': version
         )
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE // 중복된 파일 무시
+    
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
