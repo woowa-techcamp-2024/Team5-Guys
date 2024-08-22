@@ -31,7 +31,6 @@ public class AsyncLogProcessor {
     private final long defaultTimeout;
     private final int defaultBulkSize;
 
-
     /**
      * 지정된 시간 제한, 일괄 크기 및 JdbcTemplate을 사용하여 AsyncLogProcessor를 구축합니다.
      *
@@ -40,7 +39,8 @@ public class AsyncLogProcessor {
      * @param jdbcTemplate JdbcTemplate
      */
     public AsyncLogProcessor(@Value("${jdbc.async.timeout}") Long timeout,
-        @Value("${jdbc.async.bulk-size}") Integer bulkSize, JdbcTemplate jdbcTemplate) {
+        @Value("${jdbc.async.bulk-size}") Integer bulkSize,
+        JdbcTemplate jdbcTemplate) {
         DataSource dataSource = jdbcTemplate.getDataSource();
         if (!(dataSource instanceof HikariDataSource)) {
             throw new IllegalArgumentException("DataSource is null");
@@ -73,6 +73,15 @@ public class AsyncLogProcessor {
     public void submitLog(Log log) {
         // Queue 크기를 제한할 거면 offer 사용하도록 변경
         logQueue.add(log);
+    }
+
+    /**
+     * 로그 리스트를 제출합니다.
+     *
+     * @param logs 로그 리스트
+     */
+    public void submitLogs(List<Log> logs) {
+        logQueue.addAll(logs);
     }
 
     /**

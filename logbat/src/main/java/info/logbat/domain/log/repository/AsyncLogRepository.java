@@ -37,6 +37,12 @@ public class AsyncLogRepository implements LogRepository {
     }
 
     @Override
+    public List<Log> saveAll(List<Log> logs) {
+        asyncLogProcessor.submitLogs(logs);
+        return logs;
+    }
+
+    @Override
     public Optional<Log> findById(Long logId) {
         String sql = "SELECT * FROM logs WHERE id = ?";
 
@@ -44,7 +50,7 @@ public class AsyncLogRepository implements LogRepository {
             return Optional.ofNullable(
                 jdbcTemplate.queryForObject(
                     sql,
-                    LOG_ROW_MAPPER,
+                    logRowMapper,
                     logId
                 ));
         } catch (EmptyResultDataAccessException e) {
@@ -78,7 +84,7 @@ public class AsyncLogRepository implements LogRepository {
         });
     }
 
-    private final RowMapper<Log> LOG_ROW_MAPPER = (rs, rowNum) -> new Log(
+    private final RowMapper<Log> logRowMapper = (rs, rowNum) -> new Log(
         rs.getLong("log_id"),
         rs.getLong("app_id"),
         rs.getInt("level"),
