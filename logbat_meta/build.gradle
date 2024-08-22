@@ -36,6 +36,11 @@ dependencies {
     // MySQL Connector
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    // JSP 관련 종속성 추가
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.1'
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
+
     // SpringBoot Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

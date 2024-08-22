@@ -18,6 +18,7 @@ import java.util.UUID;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,11 +35,12 @@ class AppControllerTest extends ControllerTestSupport {
 
     @BeforeEach
     void init() {
-        given(expectedAppCommonResponse.id()).willReturn(expectedId);
-        given(expectedAppCommonResponse.projectId()).willReturn(expectedProjectId);
-        given(expectedAppCommonResponse.appType()).willReturn(expectedAppType.name());
-        given(expectedAppCommonResponse.token()).willReturn(expectedToken.toString());
-        given(expectedAppCommonResponse.createdAt()).willReturn(expectedCreatedAt);
+        given(expectedAppCommonResponse.getId()).willReturn(expectedId);
+        given(expectedAppCommonResponse.getProjectId()).willReturn(expectedProjectId);
+        given(expectedAppCommonResponse.getName()).willReturn("앱 이름");
+        given(expectedAppCommonResponse.getAppType()).willReturn(expectedAppType.name());
+        given(expectedAppCommonResponse.getToken()).willReturn(expectedToken.toString());
+        given(expectedAppCommonResponse.getCreatedAt()).willReturn(expectedCreatedAt);
     }
 
     @Nested
@@ -50,19 +52,19 @@ class AppControllerTest extends ControllerTestSupport {
         void willReturnAppList() throws Exception {
             // Arrange
             given(appService.getAppsByProjectId(expectedProjectId)).willReturn(
-                List.of(expectedAppCommonResponse));
+                    List.of(expectedAppCommonResponse));
             MockHttpServletRequestBuilder get = get("/v1/projects/{projectId}/apps",
-                expectedProjectId);
+                    expectedProjectId);
             // Act & Assert
             mockMvc.perform(get)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.statusCode").value(200))
-                .andExpect(jsonPath("$.message").value("Success"))
-                .andExpect(jsonPath("$.data[0].id").value(expectedId))
-                .andExpect(jsonPath("$.data[0].projectId").value(expectedProjectId))
-                .andExpect(jsonPath("$.data[0].appType").value(expectedAppType.name()))
-                .andExpect(jsonPath("$.data[0].token").value(expectedToken.toString()))
-                .andExpect(jsonPath("$.data[0].createdAt").value(expectedCreatedAt.toString()));
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.statusCode").value(200))
+                    .andExpect(jsonPath("$.message").value("Success"))
+                    .andExpect(jsonPath("$.data[0].id").value(expectedId))
+                    .andExpect(jsonPath("$.data[0].projectId").value(expectedProjectId))
+                    .andExpect(jsonPath("$.data[0].appType").value(expectedAppType.name()))
+                    .andExpect(jsonPath("$.data[0].token").value(expectedToken.toString()))
+                    .andExpect(jsonPath("$.data[0].createdAt").value(expectedCreatedAt.toString()));
         }
 
         @Test
@@ -70,17 +72,17 @@ class AppControllerTest extends ControllerTestSupport {
         void willReturnAppInformation() throws Exception {
             // Arrange
             given(appService.getAppById(expectedId)).willReturn(expectedAppCommonResponse);
-            MockHttpServletRequestBuilder get = get("/v1/projects/{projectId}/apps/{id}", expectedProjectId,expectedId);
+            MockHttpServletRequestBuilder get = get("/v1/projects/{projectId}/apps/{id}", expectedProjectId, expectedId);
             // Act & Assert
             mockMvc.perform(get)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.statusCode").value(200))
-                .andExpect(jsonPath("$.message").value("Success"))
-                .andExpect(jsonPath("$.data.id").value(expectedId))
-                .andExpect(jsonPath("$.data.projectId").value(expectedProjectId))
-                .andExpect(jsonPath("$.data.appType").value(expectedAppType.name()))
-                .andExpect(jsonPath("$.data.token").value(expectedToken.toString()))
-                .andExpect(jsonPath("$.data.createdAt").value(expectedCreatedAt.toString()));
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.statusCode").value(200))
+                    .andExpect(jsonPath("$.message").value("Success"))
+                    .andExpect(jsonPath("$.data.id").value(expectedId))
+                    .andExpect(jsonPath("$.data.projectId").value(expectedProjectId))
+                    .andExpect(jsonPath("$.data.appType").value(expectedAppType.name()))
+                    .andExpect(jsonPath("$.data.token").value(expectedToken.toString()))
+                    .andExpect(jsonPath("$.data.createdAt").value(expectedCreatedAt.toString()));
         }
 
     }
@@ -93,25 +95,27 @@ class AppControllerTest extends ControllerTestSupport {
         @DisplayName("/v1/projects/{projectId}/apps 요청시 앱을 생성할 수 있다.")
         void willCreateApp() throws Exception {
             // Arrange
-            given(appService.createApp(expectedProjectId, expectedAppType.name()))
-                .willReturn(expectedAppCommonResponse);
+            String EXPECTED_APP_NAME = "앱 이름";
+            given(appService.createApp(expectedProjectId, EXPECTED_APP_NAME, expectedAppType.name()))
+                    .willReturn(expectedAppCommonResponse);
             MockHttpServletRequestBuilder post = post("/v1/projects/{projectId}/apps", expectedProjectId)
-                .contentType("application/json")
-                .content("""
-                    {
-                        "appType": "JAVA"
-                    }
-                    """);
+                    .contentType("application/json")
+                    .content("""
+                            {
+                                "name": "앱 이름",
+                                "appType": "JAVA"
+                            }
+                            """);
             // Act & Assert
             mockMvc.perform(post)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.statusCode").value(200))
-                .andExpect(jsonPath("$.message").value("Success"))
-                .andExpect(jsonPath("$.data.id").value(expectedId))
-                .andExpect(jsonPath("$.data.projectId").value(expectedProjectId))
-                .andExpect(jsonPath("$.data.appType").value(expectedAppType.name()))
-                .andExpect(jsonPath("$.data.token").value(expectedToken.toString()))
-                .andExpect(jsonPath("$.data.createdAt").value(expectedCreatedAt.toString()));
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.statusCode").value(200))
+                    .andExpect(jsonPath("$.message").value("Success"))
+                    .andExpect(jsonPath("$.data.id").value(expectedId))
+                    .andExpect(jsonPath("$.data.projectId").value(expectedProjectId))
+                    .andExpect(jsonPath("$.data.appType").value(expectedAppType.name()))
+                    .andExpect(jsonPath("$.data.token").value(expectedToken.toString()))
+                    .andExpect(jsonPath("$.data.createdAt").value(expectedCreatedAt.toString()));
         }
 
     }
@@ -126,13 +130,13 @@ class AppControllerTest extends ControllerTestSupport {
             // Arrange
             given(appService.deleteApp(expectedProjectId, expectedId)).willReturn(expectedId);
             MockHttpServletRequestBuilder delete = delete("/v1/projects/{projectId}/apps/{appId}",
-                expectedProjectId, expectedId);
+                    expectedProjectId, expectedId);
             // Act & Assert
             mockMvc.perform(delete)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.statusCode").value(200))
-                .andExpect(jsonPath("$.message").value("Success"))
-                .andExpect(jsonPath("$.data").value(expectedId));
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.statusCode").value(200))
+                    .andExpect(jsonPath("$.message").value("Success"))
+                    .andExpect(jsonPath("$.data").value(expectedId));
         }
 
     }
