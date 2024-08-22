@@ -1,5 +1,6 @@
 package info.logbat.domain.logbat;
 
+import info.logbat.exception.InvalidAppKeyException;
 import java.util.UUID;
 
 public class AppKey {
@@ -18,7 +19,7 @@ public class AppKey {
 
     private void validateAppKey(String value) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("AppKey must not be null or empty.");
+            throw new InvalidAppKeyException("AppKey must not be null or empty.");
         }
     }
 
@@ -26,7 +27,7 @@ public class AppKey {
         try {
             UUID.fromString(value);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("AppKey must be a valid UUID string.");
+            throw new InvalidAppKeyException("AppKey must be a valid UUID string.");
         }
     }
 }
