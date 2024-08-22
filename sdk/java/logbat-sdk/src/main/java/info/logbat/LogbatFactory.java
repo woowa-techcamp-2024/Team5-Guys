@@ -13,7 +13,7 @@ public final class LogbatFactory {
 
     private static volatile Logbat logbat;
 
-    public synchronized static Logbat getInstance() {
+    public static synchronized Logbat getInstance() {
         if (logbat == null) {
             synchronized (LogbatFactory.class) {
                 if (logbat == null) {
