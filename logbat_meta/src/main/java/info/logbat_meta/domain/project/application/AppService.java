@@ -25,10 +25,10 @@ public class AppService {
     private final AppJpaRepository appRepository;
     private final ProjectJpaRepository projectRepository;
 
-    public AppCommonResponse createApp(Long projectId, String appTypeStr) {
+    public AppCommonResponse createApp(Long projectId, String name, String appTypeStr) {
         Project project = getProject(projectId);
         AppType appType = AppType.from(appTypeStr);
-        return AppCommonResponse.from(appRepository.save(App.of(project, appType)));
+        return AppCommonResponse.from(appRepository.save(App.of(project, name, appType)));
     }
 
     @Transactional(readOnly = true)

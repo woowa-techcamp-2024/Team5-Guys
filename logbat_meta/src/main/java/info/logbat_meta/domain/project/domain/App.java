@@ -29,6 +29,9 @@ public class App {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "app_type", nullable = false)
     private AppType appType;
@@ -40,14 +43,15 @@ public class App {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    private App(Project project, AppType appType) {
+    private App(Project project, String name, AppType appType) {
         this.project = Objects.requireNonNull(project, "프로젝트는 필수입니다.");
+        this.name = Objects.requireNonNull(name, "앱 이름은 필수입니다.");
         this.appType = Objects.requireNonNull(appType, "앱 타입은 필수입니다.");
         this.appKey = UUID.randomUUID();
     }
 
-    public static App of(Project project, AppType appType) {
-        return new App(project, appType);
+    public static App of(Project project, String name, AppType appType) {
+        return new App(project, name, appType);
     }
 
 }

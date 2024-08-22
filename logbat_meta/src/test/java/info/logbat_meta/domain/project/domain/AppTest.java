@@ -22,6 +22,7 @@ class AppTest {
     class whenCreated {
 
         private static final Project EXPECTED_PROJECT = Project.from("프로젝트");
+        private static final String EXPECTED_APP_NAME = "앱 이름";
 
         @Test
         @DisplayName("정상적으로 생성된다.")
@@ -29,7 +30,7 @@ class AppTest {
             // Arrange
             AppType expectedAppType = AppType.JS;
             // Act
-            App actualResult = App.of(EXPECTED_PROJECT, expectedAppType);
+            App actualResult = App.of(EXPECTED_PROJECT, EXPECTED_APP_NAME, expectedAppType);
             // Assert
             assertAll(
                 () -> assertThat(actualResult)
@@ -45,7 +46,7 @@ class AppTest {
         @DisplayName("인자가 없으면 예외가 발생한다.")
         void createFail(Project project, AppType appType, String expectedMessage) {
             // Act & Assert
-            assertThatThrownBy(() -> App.of(project, appType))
+            assertThatThrownBy(() -> App.of(project, EXPECTED_APP_NAME, appType))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage(expectedMessage);
         }

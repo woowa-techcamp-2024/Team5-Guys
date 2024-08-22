@@ -51,7 +51,7 @@ class ProjectServiceTest {
             () -> assertThat(actualResult)
                 .extracting("id", "name", "createdAt")
                 .containsExactly(expectedProjectId, expectedProjectName, expectedCreatedAt),
-            () -> assertThat(actualResult.updatedAt()).isNull()
+            () -> assertThat(actualResult.getUpdatedAt()).isNull()
         );
     }
 
@@ -76,7 +76,7 @@ class ProjectServiceTest {
                 () -> assertThat(actualResult)
                     .extracting("id", "name", "createdAt")
                     .containsExactly(expectedProjectId, expectedProjectName, expectedCreatedAt),
-                () -> assertThat(actualResult.updatedAt()).isNull()
+                () -> assertThat(actualResult.getUpdatedAt()).isNull()
             );
         }
 

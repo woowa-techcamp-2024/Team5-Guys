@@ -34,7 +34,7 @@ public class AppController {
     public ApiCommonResponse<AppCommonResponse> createApp(
             @PathVariable Long projectId,
             @RequestBody AppCreateRequest appCreateRequest) {
-        AppCommonResponse app = appService.createApp(projectId, appCreateRequest.appType());
+        AppCommonResponse app = appService.createApp(projectId, appCreateRequest.name(), appCreateRequest.appType());
 
         return ApiCommonResponse.createSuccessResponse(app);
     }
