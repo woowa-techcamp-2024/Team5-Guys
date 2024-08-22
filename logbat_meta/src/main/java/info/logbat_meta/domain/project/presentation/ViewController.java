@@ -41,7 +41,7 @@ public class ViewController {
 
         model.addAttribute("project", project);
 
-        List<AppCommonResponse> apps = appService.getAppsByProjectId(project.id());
+        List<AppCommonResponse> apps = appService.getAppsByProjectId(project.getId());
         model.addAttribute("apps", apps);
 
         return "project_detail";
