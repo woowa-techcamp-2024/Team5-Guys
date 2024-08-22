@@ -11,9 +11,17 @@ import java.net.http.HttpClient;
 
 public final class LogbatFactory {
 
+    /**
+     * Logbat의 싱글톤 인스턴스입니다.
+     */
     private static volatile Logbat logbat;
 
-    public static synchronized Logbat getInstance() {
+    /**
+     * 싱글톤 패턴을 사용하여 Logbat 인스턴스를 반환합니다. 생성합니다.
+     *
+     * @return Logbat의 싱글톤 인스턴스
+     */
+    public static Logbat getInstance() {
         if (logbat == null) {
             synchronized (LogbatFactory.class) {
                 if (logbat == null) {
@@ -24,6 +32,11 @@ public final class LogbatFactory {
         return logbat;
     }
 
+    /**
+     * Logbat 인스턴스를 생성합니다. 이 메서드는 Logbat의 생성에 필요한 모든 종속 객체들을 초기화합니다.
+     *
+     * @return 초기화된 Logbat 인스턴스
+     */
     private static Logbat createLogbat() {
         LogbatOptions logbatOptions = new LogbatOptions();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -37,7 +50,7 @@ public final class LogbatFactory {
     }
 
     /**
-     * LogbatFactory는 인스턴스화할 수 없습니다.
+     * LogbatFactory 클래스는 인스턴스화할 수 없도록 private 생성자를 가지고 있습니다.
      */
     private LogbatFactory() {
     }
