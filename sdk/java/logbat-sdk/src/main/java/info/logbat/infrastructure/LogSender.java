@@ -14,7 +14,8 @@ import java.util.List;
 public class LogSender {
 
     private static final String LOGBAT_HEADER = "App-Key";
-    private static final Integer SUCCESS_STATUS_CODE = 201;
+    private static final Integer CREATED_STATUS_CODE = 201;
+    private static final Integer BAD_REQUEST_STATUS_CODE = 400;
 
     private final LogbatOptions logbatOptions;
     private final HttpClient httpClient;
@@ -40,10 +41,10 @@ public class LogSender {
 
         HttpResponse<String> response = sendRequest(request);
 
-        if (response.statusCode() == SUCCESS_STATUS_CODE) {
+        if (response.statusCode() == CREATED_STATUS_CODE) {
             return;
         }
-        if (response.statusCode() == 400) {
+        if (response.statusCode() == BAD_REQUEST_STATUS_CODE) {
             throw new IllegalArgumentException("Invalid log data");
         }
         throw new RuntimeException("Failed to send log data");
