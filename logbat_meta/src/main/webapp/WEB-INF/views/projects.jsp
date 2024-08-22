@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Find Project</title>
-</head>
+<%@ include file="/WEB-INF/views/common_head.jsp" %>
 <body>
 <h1>Find Project</h1>
 <form action="projects/search" method="get">

@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Project Details</title>
-</head>
+<%@ include file="/WEB-INF/views/common_head.jsp" %>
 <body>
 <h1>Project Details: ${project.name}</h1>
 
@@ -16,8 +11,8 @@
     </tr>
     <c:forEach var="app" items="${apps}">
         <tr>
+            <td>${app}</td>
             <td>${app.id}</td>
-            <td>${app.name}</td>
             <td>
                 <a href="v1/projects/apps/info/${app.id}">View</a>
                 <a href="v1/projects/apps/update/${app.id}">Edit</a>
