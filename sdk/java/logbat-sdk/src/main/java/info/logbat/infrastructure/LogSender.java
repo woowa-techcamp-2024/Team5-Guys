@@ -16,6 +16,7 @@ public class LogSender {
     private static final String LOGBAT_HEADER = "App-Key";
     private static final Integer CREATED_STATUS_CODE = 201;
     private static final Integer BAD_REQUEST_STATUS_CODE = 400;
+    private static final String LOGBAT_API_URL = "https://api.logbat.info/logs";
 
     private final LogbatOptions logbatOptions;
     private final HttpClient httpClient;
@@ -72,7 +73,7 @@ public class LogSender {
         this.httpClient = httpClient;
         this.objectMapper = objectMapper;
         this.requestBuilder = HttpRequest.newBuilder()
-            .uri(URI.create("https://api.logbat.info/logs"))
+            .uri(URI.create(LOGBAT_API_URL))
             .header("Content-Type", "application/json")
             .header(LOGBAT_HEADER, this.logbatOptions.getAppKey().getValue());
     }
