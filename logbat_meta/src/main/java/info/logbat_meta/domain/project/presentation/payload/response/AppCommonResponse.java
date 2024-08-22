@@ -11,12 +11,13 @@ import java.time.LocalDateTime;
 public class AppCommonResponse {
     private final Long id;
     private final Long projectId;
+    private final String name;
     private final String appType;
     private final String token;
     private final LocalDateTime createdAt;
 
     public static AppCommonResponse from(App app) {
-        return new AppCommonResponse(app.getId(), app.getProject().getId(), app.getAppType().name(),
+        return new AppCommonResponse(app.getId(), app.getProject().getId(), app.getName(), app.getAppType().name(),
                 app.getAppKey().toString(), app.getCreatedAt());
     }
 }
