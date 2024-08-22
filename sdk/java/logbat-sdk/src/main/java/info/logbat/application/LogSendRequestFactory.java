@@ -60,6 +60,9 @@ public class LogSendRequestFactory {
     }
 
     private String formatTimestamp(long timestamp) {
+        if (timestamp <= 0) {
+            return LocalDateTime.now().format(CUSTOM_FORMATTER);
+        }
         return LocalDateTime.ofInstant(
             Instant.ofEpochMilli(timestamp),
             ZoneId.systemDefault()
