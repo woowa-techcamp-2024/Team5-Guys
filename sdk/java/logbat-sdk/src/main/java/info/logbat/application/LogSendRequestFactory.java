@@ -44,6 +44,13 @@ public class LogSendRequestFactory {
             throwableString = " EXCEPTION: " + eventObject.getThrowableProxy().getMessage();
         }
 
+        /**
+         * 로그 메시지를 형식화하여 생성합니다.
+         * 형식: [ThreadName] [LoggerName] Level - Message (MDC 정보) (예외 정보)
+         *
+         * MDC 정보와 예외 정보는 각각 존재하는 경우에만 메시지에 추가됩니다.
+         * 예시: [main] [com.example.MyClass] INFO - This is a test message MDC: {userId=12345} EXCEPTION: NullPointerException
+         */
         String message = String.format(
             "[%s] [%s] %s - %s%s%s",
             threadName, loggerName, formattedLevel, eventObject.getFormattedMessage(),
