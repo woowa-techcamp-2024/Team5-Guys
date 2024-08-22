@@ -1,6 +1,10 @@
 spring:
   application:
     name: logbat_meta
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
 
   profiles:
     active: local
