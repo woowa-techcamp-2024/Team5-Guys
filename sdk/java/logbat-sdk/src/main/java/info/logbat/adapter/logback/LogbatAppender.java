@@ -2,7 +2,7 @@ package info.logbat.adapter.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
-import info.logbat.LogbatFactory;
+import info.logbat.LogBatFactory;
 import info.logbat.application.Logbat;
 
 public class LogbatAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
@@ -12,7 +12,7 @@ public class LogbatAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
     @Override
     public void start() {
         super.start();
-        this.logbat = LogbatFactory.getInstance();
+        this.logbat = LogBatFactory.getInstance();
     }
 
     @Override
