@@ -45,7 +45,7 @@ public final class LogbatFactory {
      * @return 초기화된 Logbat 인스턴스
      */
     private static Logbat createLogbat() throws InvalidAppKeyException {
-        LogBatOptions logbatOptions = new LogBatOptions();
+        LogBatOptions logbatOptions = new LogBatOptions(null);
         ObjectMapper objectMapper = new ObjectMapper();
         LogBuffer logBuffer = new LogBuffer();
         LogSender logSender =

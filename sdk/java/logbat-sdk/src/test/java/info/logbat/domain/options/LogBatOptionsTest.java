@@ -2,28 +2,28 @@ package info.logbat.domain.options;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import info.logbat.config.LogbatConfig;
+import info.logbat.config.LogBatConfig;
 import info.logbat.exception.InvalidAppKeyException;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@DisplayName("LogBatOptions는")
 class LogBatOptionsTest {
 
-    @DisplayName("LogbatOption을 생성할 수 있다.")
     @Test
-    void createLogbatOptions() throws InvalidAppKeyException {
-        // given
-        String appKeyStr = UUID.randomUUID().toString();
-        LogbatConfig logbatConfig = new LogbatConfig(appKeyStr);
-
-        // when
-        LogBatOptions logbatOptions = new LogBatOptions(logbatConfig);
-
-        // then
-        assertThat(logbatOptions)
-            .extracting("appKey.value")
-            .isEqualTo(appKeyStr);
+    @DisplayName("Config을 전달받아 값을 저장한다.")
+    void saveOptionValuesByConfig() throws InvalidAppKeyException {
+        // Arrange
+        String expectedAppKey = UUID.randomUUID().toString();
+        LogBatConfig logbatConfig = new LogBatConfig(expectedAppKey);
+        // Act
+        LogBatOptions actualResult = new LogBatOptions(logbatConfig);
+        // Assert
+        assertThat(actualResult)
+            .extracting("appKey")
+            .extracting("value")
+            .isEqualTo(expectedAppKey);
     }
 
 }

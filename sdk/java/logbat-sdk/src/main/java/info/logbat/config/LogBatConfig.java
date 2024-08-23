@@ -1,10 +1,10 @@
 package info.logbat.config;
 
-public class LogbatConfig {
+public class LogBatConfig {
 
     private final String appKey;
 
-    public LogbatConfig(String appKey) {
+    public LogBatConfig(String appKey) {
         this.appKey = appKey;
     }
 
