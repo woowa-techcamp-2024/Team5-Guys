@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import info.logbat.config.LogBatConfig;
 import info.logbat.exception.InvalidAppKeyException;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ class LogBatOptionsTest {
     void saveOptionValuesByConfig() throws InvalidAppKeyException {
         // Arrange
         String expectedAppKey = UUID.randomUUID().toString();
-        LogBatConfig logbatConfig = new LogBatConfig(expectedAppKey);
+        LogBatConfig logbatConfig = new LogBatConfig(Map.of("appKey", expectedAppKey));
         // Act
         LogBatOptions actualResult = new LogBatOptions(logbatConfig);
         // Assert

@@ -13,7 +13,7 @@ public class LogBatOptions {
     }
 
     public LogBatOptions(LogBatConfig logbatConfig) throws InvalidAppKeyException {
-        this.appKey = new AppKey(logbatConfig.getAppKey());
+        this.appKey = new AppKey(logbatConfig.getValue("appKey"));
     }
 
 }
