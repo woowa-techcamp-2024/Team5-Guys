@@ -10,6 +10,7 @@ import java.util.UUID;
  * used to identify an application in the LogBat system.
  * </p>
  *
+ * @author KyungMin Lee <a href="https://github.com/tidavid1">GitHub</a>
  * @version 0.1.0
  * @since 0.1.0
  */

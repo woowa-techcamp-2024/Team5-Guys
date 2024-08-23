@@ -13,6 +13,7 @@ import java.util.Optional;
  * is not found, an {@link InvalidOptionException} is thrown.
  * </p>
  *
+ * @author KyungMin Lee <a href="https://github.com/tidavid1">GitHub</a>
  * @version 0.1.1
  * @see InvalidOptionException
  * @see info.logbat.config.LogBatConfig#getValue(String)

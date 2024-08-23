@@ -1,7 +1,7 @@
 package info.logbat;
 
+import info.logbat.application.LogBat;
 import info.logbat.application.LogSendRequestFactory;
-import info.logbat.application.Logbat;
 import info.logbat.domain.options.LogBatOptions;
 import info.logbat.exception.InvalidOptionException;
 import info.logbat.infrastructure.AsyncLogWriter;
@@ -11,13 +11,13 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 
 /**
- * LogBatFactory is a factory class that creates and manages a single instance of the Logbat class.
+ * LogBatFactory is a factory class that creates and manages a single instance of the LogBat class.
  * <p>
- * This class implements the singleton pattern to ensure that only one Logbat instance is created
+ * This class implements the singleton pattern to ensure that only one LogBat instance is created
  * and shared across the application. It uses VarHandle for thread-safe lazy initialization.
  * </p>
  * <p>
- * The Logbat instance is created with its required dependencies such as {@link LogBuffer},
+ * The LogBat instance is created with its required dependencies such as {@link LogBuffer},
  * {@link LogSender}, {@link LogSendRequestFactory}, and {@link AsyncLogWriter}.
  * </p>
  * <p>
@@ -25,24 +25,25 @@ import java.lang.invoke.VarHandle;
  * be set using the {@link LogBatOptions} class.
  * </p>
  *
+ * @author KyungMin Lee <a href="https://github.com/tidavid1">GitHub</a>
  * @version 0.1.0
  * @since 0.1.0
  */
 public final class LogBatFactory {
 
-    private static Logbat instance;
+    private static LogBat instance;
 
     /**
-     * Returns the singleton instance of Logbat.
+     * Returns the singleton instance of LogBat.
      * <p>
-     * This method provides thread-safe lazy initialization of the Logbat instance. If the instance
+     * This method provides thread-safe lazy initialization of the LogBat instance. If the instance
      * hasn't been created yet, it calls {@link #getDelayedInstance()} to create and initialize it.
      * </p>
      *
-     * @return the singleton Logbat instance
+     * @return the singleton LogBat instance
      */
-    public static Logbat getInstance() {
-        Logbat logbat = (Logbat) INSTANCES.getAcquire();
+    public static LogBat getInstance() {
+        LogBat logbat = (LogBat) INSTANCES.getAcquire();
         if (logbat != null) {
             return logbat;
         }
@@ -50,25 +51,25 @@ public final class LogBatFactory {
     }
 
     /**
-     * Creates and initializes the Logbat instance if it hasn't been created yet.
+     * Creates and initializes the LogBat instance if it hasn't been created yet.
      * <p>
      * This method is synchronized to ensure thread safety during the initialization process. It
      * double-checks if the instance has already been created to prevent unnecessary synchronization
      * after the first initialization.
      * </p>
      *
-     * @return the initialized Logbat instance
-     * @throws RuntimeException if the Logbat instance creation fails
+     * @return the initialized LogBat instance
+     * @throws RuntimeException if the LogBat instance creation fails
      */
-    private static synchronized Logbat getDelayedInstance() {
-        Logbat logbat = (Logbat) INSTANCES.getAcquire();
+    private static synchronized LogBat getDelayedInstance() {
+        LogBat logbat = (LogBat) INSTANCES.getAcquire();
         if (logbat != null) {
             return logbat;
         }
         try {
             logbat = createLogbat();
         } catch (InvalidOptionException e) {
-            System.err.println("Failed to create Logbat instance: " + e.getMessage());
+            System.err.println("Failed to create LogBat instance: " + e.getMessage());
             System.exit(100);
         }
         INSTANCES.setRelease(logbat);
@@ -76,22 +77,21 @@ public final class LogBatFactory {
     }
 
     /**
-     * Creates a new Logbat instance with all necessary dependencies.
+     * Creates a new LogBat instance with all necessary dependencies.
      * <p>
-     * This method initializes and configures all required components for the Logbat instance,
-     * including LogBatOptions, ObjectMapper, LogBuffer, LogSender, LogSendRequestFactory, and
-     * AsyncLogWriter.
+     * This method initializes and configures all required components for the LogBat instance,
+     * including LogBatOptions, LogSendRequestFactory, and AsyncLogWriter.
      * </p>
      *
-     * @return a new Logbat instance
+     * @return a new LogBat instance
      * @throws InvalidOptionException if there's an issue with the LogBatOptions configuration
      */
-    private static Logbat createLogbat() throws InvalidOptionException {
+    private static LogBat createLogbat() throws InvalidOptionException {
         LogBatOptions logbatOptions = new LogBatOptions(null);
         LogSendRequestFactory logSendRequestFactory = new LogSendRequestFactory();
         AsyncLogWriter asyncLogWriter = new AsyncLogWriter(new LogBuffer(),
             new LogSender(logbatOptions));
-        return new Logbat(asyncLogWriter, logSendRequestFactory);
+        return new LogBat(asyncLogWriter, logSendRequestFactory);
     }
 
     /**
@@ -104,14 +104,14 @@ public final class LogBatFactory {
     }
 
     /**
-     * VarHandle for the Logbat instance, used for thread-safe lazy initialization.
+     * VarHandle for the LogBat instance, used for thread-safe lazy initialization.
      */
     private static final VarHandle INSTANCES;
 
     static {
         try {
             INSTANCES = MethodHandles.lookup()
-                .findStaticVarHandle(LogBatFactory.class, "instance", Logbat.class);
+                .findStaticVarHandle(LogBatFactory.class, "instance", LogBat.class);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new ExceptionInInitializerError(e);
         }

@@ -16,6 +16,7 @@ import java.util.List;
  * LogSender is responsible for sending log data to the LogBat API. It handles the HTTP
  * communication, serialization of log data, and error handling.
  *
+ * @author KyungMin Lee <a href="https://github.com/tidavid1">GitHub</a>
  * @version 0.1.0
  * @since 0.1.0
  */

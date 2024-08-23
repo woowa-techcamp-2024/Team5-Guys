@@ -13,6 +13,7 @@ import org.yaml.snakeyaml.Yaml;
  * .yaml) and Properties (.properties) file formats. Configuration files are expected to be in the
  * classpath.
  *
+ * @author KyungMin Lee <a href="https://github.com/tidavid1">GitHub</a>
  * @version 0.1.2
  * @since 0.1.2
  */
