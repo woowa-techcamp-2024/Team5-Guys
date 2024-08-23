@@ -1,6 +1,5 @@
 package info.logbat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import info.logbat.application.LogSendRequestFactory;
 import info.logbat.application.Logbat;
 import info.logbat.domain.options.LogBatOptions;
@@ -10,7 +9,6 @@ import info.logbat.infrastructure.LogBuffer;
 import info.logbat.infrastructure.LogSender;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
-import java.net.http.HttpClient;
 
 /**
  * LogBatFactory is a factory class that creates and manages a single instance of the Logbat class.
@@ -91,12 +89,9 @@ public final class LogBatFactory {
     private static Logbat createLogbat() throws InvalidOptionException {
         // TODO: should remove null
         LogBatOptions logbatOptions = new LogBatOptions(null);
-        ObjectMapper objectMapper = new ObjectMapper();
-        LogBuffer logBuffer = new LogBuffer();
-        LogSender logSender = new LogSender(HttpClient.newHttpClient(), objectMapper,
-            logbatOptions);
         LogSendRequestFactory logSendRequestFactory = new LogSendRequestFactory();
-        AsyncLogWriter asyncLogWriter = new AsyncLogWriter(logBuffer, logSender);
+        AsyncLogWriter asyncLogWriter = new AsyncLogWriter(new LogBuffer(),
+            new LogSender(logbatOptions));
         return new Logbat(asyncLogWriter, logSendRequestFactory);
     }
 
