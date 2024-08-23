@@ -2,7 +2,7 @@ package info.logbat.infrastructure;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import info.logbat.domain.options.LogbatOptions;
+import info.logbat.domain.options.LogBatOptions;
 import info.logbat.infrastructure.payload.LogSendRequest;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -18,7 +18,7 @@ public class LogSender {
     private static final Integer BAD_REQUEST_STATUS_CODE = 400;
     private static final String LOGBAT_API_URL = "https://api.logbat.info/logs";
 
-    private final LogbatOptions logbatOptions;
+    private final LogBatOptions logbatOptions;
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
     private final Builder requestBuilder;
@@ -68,7 +68,7 @@ public class LogSender {
     }
 
     public LogSender(HttpClient httpClient, ObjectMapper objectMapper,
-        LogbatOptions logbatOptions) {
+        LogBatOptions logbatOptions) {
         this.logbatOptions = logbatOptions;
         this.httpClient = httpClient;
         this.objectMapper = objectMapper;

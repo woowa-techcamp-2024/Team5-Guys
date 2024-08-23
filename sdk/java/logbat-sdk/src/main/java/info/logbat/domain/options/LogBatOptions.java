@@ -6,7 +6,7 @@ import info.logbat.domain.logbat.AppKey;
 import info.logbat.exception.InvalidAppKeyException;
 import java.util.Map;
 
-public class LogbatOptions {
+public class LogBatOptions {
 
     private final AppKey appKey;
 
@@ -14,11 +14,11 @@ public class LogbatOptions {
         return appKey;
     }
 
-    public LogbatOptions() throws InvalidAppKeyException {
+    public LogBatOptions() throws InvalidAppKeyException {
         this(getLogbatConfig());
     }
 
-    protected LogbatOptions(LogbatConfig logbatConfig) throws InvalidAppKeyException {
+    protected LogBatOptions(LogbatConfig logbatConfig) throws InvalidAppKeyException {
         this.appKey = new AppKey(logbatConfig.getAppKey());
     }
 

@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class LogbatOptionsTest {
+class LogBatOptionsTest {
 
     @DisplayName("LogbatOption을 생성할 수 있다.")
     @Test
@@ -18,7 +18,7 @@ class LogbatOptionsTest {
         LogbatConfig logbatConfig = new LogbatConfig(appKeyStr);
 
         // when
-        LogbatOptions logbatOptions = new LogbatOptions(logbatConfig);
+        LogBatOptions logbatOptions = new LogBatOptions(logbatConfig);
 
         // then
         assertThat(logbatOptions)

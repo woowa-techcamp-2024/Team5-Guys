@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import info.logbat.domain.logbat.AppKey;
-import info.logbat.domain.options.LogbatOptions;
+import info.logbat.domain.options.LogBatOptions;
 import info.logbat.exception.InvalidAppKeyException;
 import info.logbat.infrastructure.payload.LogSendRequest;
 import java.io.IOException;
@@ -31,7 +31,7 @@ class LogSenderTest {
 
     @BeforeEach
     void setUp() throws InvalidAppKeyException {
-        LogbatOptions logbatOptions = mock(LogbatOptions.class);
+        LogBatOptions logbatOptions = mock(LogBatOptions.class);
         ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
