@@ -2,7 +2,7 @@ package info.logbat.domain.options;
 
 import info.logbat.config.LogBatConfig;
 import info.logbat.domain.logbat.AppKey;
-import info.logbat.exception.InvalidAppKeyException;
+import info.logbat.exception.InvalidOptionException;
 
 public class LogBatOptions {
 
@@ -12,7 +12,7 @@ public class LogBatOptions {
         return appKey;
     }
 
-    public LogBatOptions(LogBatConfig logbatConfig) throws InvalidAppKeyException {
+    public LogBatOptions(LogBatConfig logbatConfig) throws InvalidOptionException {
         this.appKey = new AppKey(logbatConfig.getValue("appKey"));
     }
 

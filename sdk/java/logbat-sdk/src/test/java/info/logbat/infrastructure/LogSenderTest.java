@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import info.logbat.domain.logbat.AppKey;
 import info.logbat.domain.options.LogBatOptions;
-import info.logbat.exception.InvalidAppKeyException;
+import info.logbat.exception.InvalidOptionException;
 import info.logbat.infrastructure.payload.LogSendRequest;
 import java.io.IOException;
 import java.net.http.HttpClient;
@@ -30,7 +30,7 @@ class LogSenderTest {
     private HttpClient httpClient;
 
     @BeforeEach
-    void setUp() throws InvalidAppKeyException {
+    void setUp() throws InvalidOptionException {
         LogBatOptions logbatOptions = mock(LogBatOptions.class);
         ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())

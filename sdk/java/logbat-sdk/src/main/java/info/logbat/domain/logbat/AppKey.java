@@ -1,13 +1,13 @@
 package info.logbat.domain.logbat;
 
-import info.logbat.exception.InvalidAppKeyException;
+import info.logbat.exception.InvalidOptionException;
 import java.util.UUID;
 
 public class AppKey {
 
     private final String value;
 
-    public AppKey(String value) throws InvalidAppKeyException {
+    public AppKey(String value) throws InvalidOptionException {
         validateAppKey(value);
         validateUUIDString(value);
         this.value = value;
@@ -17,17 +17,17 @@ public class AppKey {
         return value;
     }
 
-    private void validateAppKey(String value) throws InvalidAppKeyException {
+    private void validateAppKey(String value) throws InvalidOptionException {
         if (value == null || value.isBlank()) {
-            throw new InvalidAppKeyException("AppKey must not be null or empty.");
+            throw new InvalidOptionException("AppKey must not be null or empty.");
         }
     }
 
-    private void validateUUIDString(String value) throws InvalidAppKeyException {
+    private void validateUUIDString(String value) throws InvalidOptionException {
         try {
             UUID.fromString(value);
         } catch (IllegalArgumentException e) {
-            throw new InvalidAppKeyException("AppKey must be a valid UUID string.");
+            throw new InvalidOptionException("AppKey must be a valid UUID string.");
         }
     }
 }

@@ -4,7 +4,7 @@ package info.logbat.domain.logbat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import info.logbat.exception.InvalidAppKeyException;
+import info.logbat.exception.InvalidOptionException;
 import java.util.UUID;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +25,7 @@ class AppKeyTest {
 
         @Test
         @DisplayName("정상적으로 생성할 수 있다.")
-        void willCreateSuccess() throws InvalidAppKeyException {
+        void willCreateSuccess() throws InvalidOptionException {
             // Arrange
             String expectedAppKeyStr = expectedAppKey.toString();
             // Act
@@ -42,7 +42,7 @@ class AppKeyTest {
         void willThrowExceptionWhenNull(String appKey, String expectedMessage) {
             // Act & Assert
             assertThatThrownBy(() -> new AppKey(appKey))
-                .isInstanceOf(InvalidAppKeyException.class)
+                .isInstanceOf(InvalidOptionException.class)
                 .hasMessage(expectedMessage);
         }
 
