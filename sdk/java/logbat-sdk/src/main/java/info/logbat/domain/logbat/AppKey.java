@@ -9,7 +9,7 @@ public class AppKey {
 
     public AppKey(String value) throws InvalidAppKeyException {
         validateAppKey(value);
-        validateUuidString(value);
+        validateUUIDString(value);
         this.value = value;
     }
 
@@ -23,7 +23,7 @@ public class AppKey {
         }
     }
 
-    private void validateUuidString(String value) throws InvalidAppKeyException {
+    private void validateUUIDString(String value) throws InvalidAppKeyException {
         try {
             UUID.fromString(value);
         } catch (IllegalArgumentException e) {
