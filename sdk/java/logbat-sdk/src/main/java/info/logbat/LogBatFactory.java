@@ -2,6 +2,7 @@ package info.logbat;
 
 import info.logbat.application.LogBat;
 import info.logbat.application.LogSendRequestFactory;
+import info.logbat.config.LogBatConfigLoader;
 import info.logbat.domain.options.LogBatOptions;
 import info.logbat.exception.InvalidOptionException;
 import info.logbat.infrastructure.AsyncLogWriter;
@@ -87,7 +88,7 @@ public final class LogBatFactory {
      * @throws InvalidOptionException if there's an issue with the LogBatOptions configuration
      */
     private static LogBat createLogbat() throws InvalidOptionException {
-        LogBatOptions logbatOptions = new LogBatOptions(null);
+        LogBatOptions logbatOptions = new LogBatOptions(LogBatConfigLoader.loadConfig());
         LogSendRequestFactory logSendRequestFactory = new LogSendRequestFactory();
         AsyncLogWriter asyncLogWriter = new AsyncLogWriter(new LogBuffer(),
             new LogSender(logbatOptions));
