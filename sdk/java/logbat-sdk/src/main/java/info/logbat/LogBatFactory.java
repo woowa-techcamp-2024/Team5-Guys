@@ -87,7 +87,6 @@ public final class LogBatFactory {
      * @throws InvalidOptionException if there's an issue with the LogBatOptions configuration
      */
     private static Logbat createLogbat() throws InvalidOptionException {
-        // TODO: should remove null
         LogBatOptions logbatOptions = new LogBatOptions(null);
         LogSendRequestFactory logSendRequestFactory = new LogSendRequestFactory();
         AsyncLogWriter asyncLogWriter = new AsyncLogWriter(new LogBuffer(),
