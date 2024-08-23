@@ -5,7 +5,7 @@ import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import info.logbat.LogBatFactory;
 import info.logbat.application.Logbat;
 
-public class LogbatAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
+public class LogBatAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
     private Logbat logbat;
 
