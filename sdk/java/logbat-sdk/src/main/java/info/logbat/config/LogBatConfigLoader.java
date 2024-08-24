@@ -80,7 +80,11 @@ public class LogBatConfigLoader {
      */
     private abstract static class ConfigLoader {
 
-        protected String filename;
+        protected final String filename;
+
+        protected ConfigLoader(String filename) {
+            this.filename = filename;
+        }
 
         /**
          * Loads the configuration from the specified file.
@@ -102,7 +106,7 @@ public class LogBatConfigLoader {
          * @param filename the name of the YAML configuration file
          */
         YamlConfigLoader(String filename) {
-            this.filename = filename;
+            super(filename);
         }
 
         /**
@@ -146,7 +150,7 @@ public class LogBatConfigLoader {
          * @param filename the name of the Properties configuration file
          */
         PropertiesConfigLoader(String filename) {
-            this.filename = filename;
+            super(filename);
         }
 
         /**
