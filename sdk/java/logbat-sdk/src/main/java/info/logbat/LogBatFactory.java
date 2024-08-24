@@ -32,7 +32,7 @@ import java.lang.invoke.VarHandle;
  */
 public final class LogBatFactory {
 
-    private static LogBat instance;
+    private static volatile LogBat instance;
     /**
      * VarHandle for the LogBat instance, used for thread-safe lazy initialization.
      */
@@ -57,7 +57,7 @@ public final class LogBatFactory {
      * @return the singleton LogBat instance
      */
     public static LogBat getInstance() {
-        LogBat logbat = (LogBat) INSTANCE.getAcquire();
+        LogBat logbat = instance;
         if (logbat != null) {
             return logbat;
         }
