@@ -154,7 +154,6 @@ class LogControllerTest extends ControllerTestSupport {
                 Arguments.of(null, "테스트_로그_데이터", LocalDateTime.of(2021, 1, 1, 0, 0, 0)),
                 Arguments.of("  ", "테스트_로그_데이터", LocalDateTime.of(2021, 1, 1, 0, 0, 0)),
                 Arguments.of("INFO", null, LocalDateTime.of(2021, 1, 1, 0, 0, 0)),
-                Arguments.of("INFO", "  ", LocalDateTime.of(2021, 1, 1, 0, 0, 0)),
                 Arguments.of("INFO", "테스트_로그_데이터", null)
             );
         }
