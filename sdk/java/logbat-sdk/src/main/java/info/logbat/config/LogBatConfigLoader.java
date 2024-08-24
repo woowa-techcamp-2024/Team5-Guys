@@ -89,10 +89,9 @@ public class LogBatConfigLoader {
         /**
          * Loads the configuration from the specified file.
          *
-         * @param filename the name of the configuration file to load
          * @return true if the configuration was successfully loaded, false otherwise
          */
-        abstract boolean load(String filename);
+        abstract boolean load();
     }
 
     /**
@@ -112,11 +111,10 @@ public class LogBatConfigLoader {
         /**
          * Loads the configuration from a YAML file.
          *
-         * @param filename the name of the YAML configuration file to load
          * @return true if the configuration was successfully loaded, false otherwise
          */
         @Override
-        boolean load(String filename) {
+        boolean load() {
             try (InputStream inputStream = LogBatConfigLoader.class.getClassLoader()
                 .getResourceAsStream(filename)) {
                 if (inputStream == null) {
@@ -156,11 +154,10 @@ public class LogBatConfigLoader {
         /**
          * Loads the configuration from a Properties file.
          *
-         * @param filename the name of the Properties configuration file to load
          * @return true if the configuration was successfully loaded, false otherwise
          */
         @Override
-        boolean load(String filename) {
+        boolean load() {
             try (InputStream is = LogBatConfigLoader.class.getClassLoader()
                 .getResourceAsStream(filename)) {
                 if (is == null) {
