@@ -75,19 +75,19 @@ public final class LogBatFactory {
      * @return the initialized LogBat instance
      * @throws RuntimeException if the LogBat instance creation fails
      */
-    private static synchronized LogBat getDelayedInstance() {
-        LogBat logbat = (LogBat) INSTANCE.getAcquire();
-        if (logbat != null) {
-            return logbat;
-        }
+    private static LogBat getDelayedInstance() {
         try {
-            logbat = createLogbat();
+            LogBat logbat = createLogbat();
+            if (!INSTANCE.compareAndSet(null, logbat)) {
+                logbat = instance;
+            }
+            return logbat;
         } catch (InvalidOptionException e) {
             System.err.println("Failed to create LogBat instance: " + e.getMessage());
             System.exit(100);
         }
-        INSTANCE.setRelease(logbat);
-        return logbat;
+        // Should never reach this point
+        return null;
     }
 
     /**
