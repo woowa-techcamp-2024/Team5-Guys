@@ -20,7 +20,31 @@ import org.yaml.snakeyaml.Yaml;
 @SuppressWarnings("unchecked")
 public class LogBatConfigLoader {
 
-    private static final Map<String, String> CONFIG_MAP = new HashMap<>();
+    /**
+     * Map to store the configuration options.
+     * <p>
+     * This map does not allow duplicate keys with different values. If a duplicate key is found with
+     */
+    private static final Map<String, String> CONFIG_MAP = new HashMap<>(){
+        @Override
+        public String put(String key, String value) {
+            if (this.containsKey(key)) {
+                if (this.get(key).equals(value)) {
+                    return value;
+                } else {
+                    throw new IllegalArgumentException("Duplicate key: " + key + " with different values " + value + " and " + this.get(key));
+                }
+            }
+            return super.put(key, value);
+        }
+
+        @Override
+        public void putAll(Map<? extends String, ? extends String> m) {
+            for (Map.Entry<? extends String, ? extends String> entry : m.entrySet()) {
+                this.put(entry.getKey(), entry.getValue());
+            }
+        }
+    };
     private static final List<ConfigLoader> LOADERS = List.of(
         new YamlConfigLoader("application.yml"),
         new YamlConfigLoader("application.yaml"),
