@@ -67,11 +67,7 @@ public class LogBatConfigLoader {
      * @return {@link LogBatConfig} object containing the loaded configuration
      */
     public static LogBatConfig loadConfig() {
-        for (ConfigLoader loader : LOADERS) {
-            if (loader.load(loader.filename)) {
-                break;
-            }
-        }
+        LOADERS.forEach(ConfigLoader::load);
         return new LogBatConfig(CONFIG_MAP);
     }
 
