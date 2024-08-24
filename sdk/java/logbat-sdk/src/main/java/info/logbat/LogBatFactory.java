@@ -33,6 +33,19 @@ import java.lang.invoke.VarHandle;
 public final class LogBatFactory {
 
     private static LogBat instance;
+    /**
+     * VarHandle for the LogBat instance, used for thread-safe lazy initialization.
+     */
+    private static final VarHandle INSTANCE;
+
+    static {
+        try {
+            INSTANCE = MethodHandles.lookup()
+                    .findStaticVarHandle(LogBatFactory.class, "instance", LogBat.class);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
 
     /**
      * Returns the singleton instance of LogBat.
@@ -44,7 +57,7 @@ public final class LogBatFactory {
      * @return the singleton LogBat instance
      */
     public static LogBat getInstance() {
-        LogBat logbat = (LogBat) INSTANCES.getAcquire();
+        LogBat logbat = (LogBat) INSTANCE.getAcquire();
         if (logbat != null) {
             return logbat;
         }
@@ -63,7 +76,7 @@ public final class LogBatFactory {
      * @throws RuntimeException if the LogBat instance creation fails
      */
     private static synchronized LogBat getDelayedInstance() {
-        LogBat logbat = (LogBat) INSTANCES.getAcquire();
+        LogBat logbat = (LogBat) INSTANCE.getAcquire();
         if (logbat != null) {
             return logbat;
         }
@@ -73,7 +86,7 @@ public final class LogBatFactory {
             System.err.println("Failed to create LogBat instance: " + e.getMessage());
             System.exit(100);
         }
-        INSTANCES.setRelease(logbat);
+        INSTANCE.setRelease(logbat);
         return logbat;
     }
 
@@ -102,19 +115,5 @@ public final class LogBatFactory {
      */
     private LogBatFactory() {
         throw new UnsupportedOperationException("LogBatFactory cannot be instantiated");
-    }
-
-    /**
-     * VarHandle for the LogBat instance, used for thread-safe lazy initialization.
-     */
-    private static final VarHandle INSTANCES;
-
-    static {
-        try {
-            INSTANCES = MethodHandles.lookup()
-                .findStaticVarHandle(LogBatFactory.class, "instance", LogBat.class);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new ExceptionInInitializerError(e);
-        }
     }
 }
