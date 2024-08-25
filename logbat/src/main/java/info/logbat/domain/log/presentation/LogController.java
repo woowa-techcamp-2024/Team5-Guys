@@ -3,7 +3,7 @@ package info.logbat.domain.log.presentation;
 import info.logbat.dev.aop.CountTest;
 import info.logbat.domain.log.application.LogService;
 import info.logbat.domain.log.presentation.payload.request.CreateLogRequest;
-import jakarta.validation.Valid;
+import info.logbat.domain.log.presentation.validation.ValidLogRequests;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +27,10 @@ public class LogController {
     @ResponseStatus(HttpStatus.CREATED)
     public void saveLogs(
         @RequestHeader("App-Key") @NotBlank(message = "appKey가 비어있습니다.") String appKey,
-        @Valid @RequestBody List<CreateLogRequest> request) {
-        logService.saveLogs(appKey, request);
+        @RequestBody @ValidLogRequests List<CreateLogRequest> requests) {
+
+        logService.saveLogs(appKey, requests);
     }
 
 }
+
