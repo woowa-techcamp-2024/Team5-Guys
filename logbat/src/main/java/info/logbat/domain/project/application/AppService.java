@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 public class AppService {
 
     private static final String APP_NOT_FOUND_MESSAGE = "앱을 찾을 수 없습니다.";
-
+    public static final String APP_EXISTS_MESSAGE = "앱이 존재합니다.";
+    
     private final AppRepository appRepository;
 
     @Cacheable(key = "#token")
@@ -24,7 +25,8 @@ public class AppService {
 
     @CacheEvict(key = "#token")
     public void evictAppCache(String token) {
-        // TODO: Implement cache eviction
-
+        appRepository.getAppIdByToken(token).ifPresent(id -> {
+            throw new IllegalStateException(APP_EXISTS_MESSAGE);
+        });
     }
 }
