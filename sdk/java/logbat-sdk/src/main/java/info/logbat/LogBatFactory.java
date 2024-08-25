@@ -26,26 +26,14 @@ import java.lang.invoke.VarHandle;
  * be set using the {@link LogBatOptions} class.
  * </p>
  *
- * @author KyungMin Lee <a href="https://github.com/tidavid1">GitHub</a>
- * @version 0.1.0
+ * @author KyungMin Lee <a href="https://github.com/tidavid1">GitHub</a>, JungJae Park <a
+ * href="https://github.com/LuizyHub">GitHub</a>
+ * @version 0.1.2
  * @since 0.1.0
  */
 public final class LogBatFactory {
 
     private static volatile LogBat instance;
-    /**
-     * VarHandle for the LogBat instance, used for thread-safe lazy initialization.
-     */
-    private static final VarHandle INSTANCE;
-
-    static {
-        try {
-            INSTANCE = MethodHandles.lookup()
-                    .findStaticVarHandle(LogBatFactory.class, "instance", LogBat.class);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new ExceptionInInitializerError(e);
-        }
-    }
 
     /**
      * Returns the singleton instance of LogBat.
@@ -115,5 +103,19 @@ public final class LogBatFactory {
      */
     private LogBatFactory() {
         throw new UnsupportedOperationException("LogBatFactory cannot be instantiated");
+    }
+
+    /**
+     * VarHandle for the LogBat instance, used for thread-safe lazy initialization.
+     */
+    private static final VarHandle INSTANCE;
+
+    static {
+        try {
+            INSTANCE = MethodHandles.lookup()
+                .findStaticVarHandle(LogBatFactory.class, "instance", LogBat.class);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new ExceptionInInitializerError(e);
+        }
     }
 }
