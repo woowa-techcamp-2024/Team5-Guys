@@ -23,16 +23,19 @@ public class LogBatConfigLoader {
     /**
      * Map to store the configuration options.
      * <p>
-     * This map does not allow duplicate keys with different values. If a duplicate key is found with
+     * This map does not allow duplicate keys with different values. If a duplicate key is found
+     * with a different value, an {@link IllegalArgumentException} is thrown.
      */
-    private static final Map<String, String> CONFIG_MAP = new HashMap<>(){
+    private static final Map<String, String> CONFIG_MAP = new HashMap<>() {
         @Override
         public String put(String key, String value) {
             if (this.containsKey(key)) {
                 if (this.get(key).equals(value)) {
                     return value;
                 } else {
-                    throw new IllegalArgumentException("Duplicate key: " + key + " with different values " + value + " and " + this.get(key));
+                    throw new IllegalArgumentException(
+                        "Duplicate key: " + key + " with different values " + value + " and "
+                            + this.get(key));
                 }
             }
             return super.put(key, value);
@@ -40,8 +43,8 @@ public class LogBatConfigLoader {
 
         @Override
         public void putAll(Map<? extends String, ? extends String> m) {
-            for (Map.Entry<? extends String, ? extends String> entry : m.entrySet()) {
-                this.put(entry.getKey(), entry.getValue());
+            for (Map.Entry<?, ?> entry : m.entrySet()) {
+                this.put((String) entry.getKey(), (String) entry.getValue());
             }
         }
     };
@@ -84,10 +87,8 @@ public class LogBatConfigLoader {
 
         /**
          * Loads the configuration from the specified file.
-         *
-         * @return true if the configuration was successfully loaded, false otherwise
          */
-        abstract boolean load();
+        abstract void load();
     }
 
     /**
@@ -106,15 +107,13 @@ public class LogBatConfigLoader {
 
         /**
          * Loads the configuration from a YAML file.
-         *
-         * @return true if the configuration was successfully loaded, false otherwise
          */
         @Override
-        boolean load() {
+        void load() {
             try (InputStream inputStream = LogBatConfigLoader.class.getClassLoader()
                 .getResourceAsStream(filename)) {
                 if (inputStream == null) {
-                    return false;
+                    return;
                 }
                 Yaml yaml = new Yaml();
                 Map<String, Object> map = yaml.load(inputStream);
@@ -125,10 +124,8 @@ public class LogBatConfigLoader {
                         CONFIG_MAP.putAll(logBatConfigMap);
                     }
                 }
-                return !CONFIG_MAP.isEmpty();
             } catch (IOException e) {
                 System.err.println("Could not load " + filename + ": " + e.getMessage());
-                return false;
             }
         }
     }
@@ -149,15 +146,13 @@ public class LogBatConfigLoader {
 
         /**
          * Loads the configuration from a Properties file.
-         *
-         * @return true if the configuration was successfully loaded, false otherwise
          */
         @Override
-        boolean load() {
+        void load() {
             try (InputStream is = LogBatConfigLoader.class.getClassLoader()
                 .getResourceAsStream(filename)) {
                 if (is == null) {
-                    return false;
+                    return;
                 }
 
                 Properties props = new Properties();
@@ -168,10 +163,8 @@ public class LogBatConfigLoader {
                         CONFIG_MAP.put(key, props.getProperty(key));
                     }
                 }
-                return !CONFIG_MAP.isEmpty();
             } catch (IOException e) {
                 System.err.println("Could not load " + filename + ": " + e.getMessage());
-                return false;
             }
         }
     }
