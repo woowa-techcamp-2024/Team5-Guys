@@ -6,18 +6,15 @@ import info.logbat_meta.domain.project.domain.enums.AppType;
 import info.logbat_meta.domain.project.presentation.payload.response.AppCommonResponse;
 import info.logbat_meta.domain.project.repository.AppJpaRepository;
 import info.logbat_meta.domain.project.repository.ProjectJpaRepository;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = {"app"})
 public class AppService {
 
     private static final String APP_NOT_FOUND_MESSAGE = "앱을 찾을 수 없습니다.";
@@ -44,11 +41,11 @@ public class AppService {
         return apps.stream().map(AppCommonResponse::from).toList();
     }
 
-    public Long deleteApp(Long projectId, Long appId) {
+    public UUID deleteApp(Long projectId, Long appId) {
         App app = appRepository.findByProject_IdAndId(projectId, appId)
             .orElseThrow(() -> new IllegalArgumentException(APP_NOT_FOUND_MESSAGE));
         appRepository.delete(app);
-        return app.getId();
+        return app.getAppKey();
     }
 
     private Project getProject(Long id) {

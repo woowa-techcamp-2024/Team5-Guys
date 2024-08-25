@@ -6,6 +6,7 @@ import info.logbat_meta.domain.project.domain.enums.AppType;
 import info.logbat_meta.domain.project.presentation.payload.response.AppCommonResponse;
 import info.logbat_meta.domain.project.repository.AppJpaRepository;
 import info.logbat_meta.domain.project.repository.ProjectJpaRepository;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -58,7 +59,8 @@ class AppServiceTest {
             Long notExistProjectId = 2L;
             given(projectRepository.findById(notExistProjectId)).willReturn(Optional.empty());
             // Act & Assert
-            assertThatThrownBy(() -> appService.createApp(notExistProjectId, expectedProjectName, expectedAppType))
+            assertThatThrownBy(
+                () -> appService.createApp(notExistProjectId, expectedProjectName, expectedAppType))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("프로젝트를 찾을 수 없습니다.");
         }
@@ -71,7 +73,8 @@ class AppServiceTest {
             given(projectRepository.findById(expectedProjectId)).willReturn(
                 Optional.of(expectedProject));
             // Act & Assert
-            assertThatThrownBy(() -> appService.createApp(expectedProjectId, expectedProjectName, invalidAppType))
+            assertThatThrownBy(
+                () -> appService.createApp(expectedProjectId, expectedProjectName, invalidAppType))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("잘못된 앱 타입 요청입니다.");
         }
@@ -107,7 +110,9 @@ class AppServiceTest {
     @Nested
     @DisplayName("App을 조회할 때")
     class whenGetApp {
-        private final App expectedApp = spy(App.of(expectedProject, expectedProjectName, AppType.JAVA));
+
+        private final App expectedApp = spy(
+            App.of(expectedProject, expectedProjectName, AppType.JAVA));
 
         @Test
         @DisplayName("ID로 조회할 수 있다.")
@@ -156,13 +161,14 @@ class AppServiceTest {
         @DisplayName("프로젝트와 앱 ID로 삭제할 수 있다.")
         void canDeleteAppByProjectIdAndAppId() {
             // Arrange
+            UUID expectedAppKey = UUID.randomUUID();
             given(appRepository.findByProject_IdAndId(expectedProjectId, expectedAppId)).willReturn(
                 Optional.of(expectedApp));
-            given(expectedApp.getId()).willReturn(expectedAppId);
+            given(expectedApp.getAppKey()).willReturn(expectedAppKey);
             // Act
-            Long actualResult = appService.deleteApp(expectedProjectId, expectedAppId);
+            UUID actualResult = appService.deleteApp(expectedProjectId, expectedAppId);
             // Assert
-            assertThat(actualResult).isEqualTo(expectedAppId);
+            assertThat(actualResult).isEqualTo(expectedAppKey);
         }
 
         @Test
