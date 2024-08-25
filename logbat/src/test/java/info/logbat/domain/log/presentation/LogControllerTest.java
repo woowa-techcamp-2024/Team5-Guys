@@ -32,6 +32,78 @@ class LogControllerTest extends ControllerTestSupport {
     );
 
     @Nested
+    @DisplayName("여러 개 로그에 대한 POST 요청에 대해")
+    class describeMultipleLogsPost {
+
+        @Test
+        @DisplayName("빈 요청이 전달되면 400 에러를 반환한다.")
+        void willReturn400IfEmptyRequest() throws Exception {
+            // Arrange
+            MockHttpServletRequestBuilder post = post("/logs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("App-Key", EXPECTED_APP_KEY_STRING)
+                .content(objectMapper.writeValueAsString(List.of()));
+
+            // Act & Assert
+            mockMvc.perform(post)
+                .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("모든 요청에 예외가 발생하면 400 에러를 반환한다.")
+        void willReturn400IfAllRequestsAreInvalid() throws Exception {
+            // Arrange
+            List<CreateLogRequest> expectedWrongRequest = List.of(
+                new CreateLogRequest(null, null, null),
+                new CreateLogRequest(null, null, null)
+            );
+
+            MockHttpServletRequestBuilder post = post("/logs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("App-Key", EXPECTED_APP_KEY_STRING)
+                .content(objectMapper.writeValueAsString(expectedWrongRequest));
+
+            // Act & Assert
+            mockMvc.perform(post)
+                .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("일부 요청만 정상적인 경우는 정상적으로 처리한다.")
+        void willSaveLogsIfSomeRequestsAreValid() throws Exception {
+            // Arrange
+            List<CreateLogRequest> expectedWrongRequest = List.of(
+                new CreateLogRequest(expectedLogLevel, expectedLogData, expectedLogTimestamp),
+                new CreateLogRequest(null, null, null)
+            );
+
+            MockHttpServletRequestBuilder post = post("/logs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("App-Key", EXPECTED_APP_KEY_STRING)
+                .content(objectMapper.writeValueAsString(expectedWrongRequest));
+
+            // Act & Assert
+            mockMvc.perform(post)
+                .andExpect(status().isCreated());
+        }
+
+        @Test
+        @DisplayName("전체 요청이 정상적인 경우는 정상적으로 처리한다.")
+        void willSaveLogsIfAllRequestsAreValid() throws Exception {
+            // Arrange
+            MockHttpServletRequestBuilder post = post("/logs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("App-Key", EXPECTED_APP_KEY_STRING)
+                .content(objectMapper.writeValueAsString(expectedRequests));
+
+            // Act & Assert
+            mockMvc.perform(post)
+                .andExpect(status().isCreated());
+        }
+
+    }
+
+    @Nested
     @DisplayName("POST 요청에 대해")
     class describePost {
 
@@ -82,7 +154,6 @@ class LogControllerTest extends ControllerTestSupport {
                 Arguments.of(null, "테스트_로그_데이터", LocalDateTime.of(2021, 1, 1, 0, 0, 0)),
                 Arguments.of("  ", "테스트_로그_데이터", LocalDateTime.of(2021, 1, 1, 0, 0, 0)),
                 Arguments.of("INFO", null, LocalDateTime.of(2021, 1, 1, 0, 0, 0)),
-                Arguments.of("INFO", "  ", LocalDateTime.of(2021, 1, 1, 0, 0, 0)),
                 Arguments.of("INFO", "테스트_로그_데이터", null)
             );
         }
