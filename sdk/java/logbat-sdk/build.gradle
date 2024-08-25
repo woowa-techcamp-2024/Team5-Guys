@@ -31,23 +31,23 @@ publishing {
 }
 
 dependencies {
-    // logback
-    implementation 'ch.qos.logback:logback-classic:1.4.14'
-
-    // slf4j
-    implementation 'org.slf4j:slf4j-api:1.7.36'
-
-    // objectMapper
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
-
+    // Logback Classic
+    implementation 'ch.qos.logback:logback-classic:1.5.7'
+    // Slf4j API
+    implementation 'org.slf4j:slf4j-api:2.0.16'
+    // Jackson ObjectMapper
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
+    // SnakeYAML
+    implementation 'org.yaml:snakeyaml:2.2'
 
     // Junit5
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
-    testImplementation 'org.assertj:assertj-core:3.24.2'
-
-    // mockito
-    testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.3'
-    testImplementation 'org.mockito:mockito-core:5.6.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
+    // AssertJ
+    testImplementation 'org.assertj:assertj-core:3.26.3'
+    // Jackson JSR310
+    testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2'
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:5.12.0'
 }
 
 test {
@@ -62,7 +62,7 @@ jar {
         )
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE // 중복된 파일 무시
-    
+
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }

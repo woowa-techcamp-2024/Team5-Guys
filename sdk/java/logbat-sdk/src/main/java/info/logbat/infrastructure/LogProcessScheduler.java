@@ -10,26 +10,35 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+/**
+ * LogProcessScheduler is responsible for periodically reading and sending logs stored in a
+ * LogBuffer. It schedules log processing at fixed intervals and provides graceful shutdown
+ * capabilities. If the logBuffer is empty, no action is taken during scheduled executions.
+ * <p>
+ * This class registers a shutdown hook to ensure graceful shutdown when the JVM terminates.
+ *
+ * @author MinJu Kim <a href="https://github.com/miiiinju1">GitHub</a>
+ * @version 0.1.0
+ * @see LogBuffer
+ * @see LogSendRequest
+ * @since 0.1.0
+ */
 public class LogProcessScheduler {
 
     private static final Integer DEFAULT_BULK_SIZE = 100;
     private static final Integer DEFAULT_INTERVAL = 2000;
     private static final Integer TERMINATION_TIMEOUT = 60;
-    private static final Integer SHUTDOWN_THREAD_POOL_SIZE = 4; // 병렬 처리를 위한 스레드 풀 크기
+    private static final Integer SHUTDOWN_THREAD_POOL_SIZE = 4; // Thread pool size for parallel processing
 
     private final Consumer<List<LogSendRequest>> sendFunction;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final LogBuffer logBuffer;
 
-
     /**
-     * LogProcessScheduler는 주기적으로 LogBuffer에 저장된 로그를 읽어와 전송하는 스케줄러입니다. logBuffer에 로그가 없을 경우 아무 동작도
-     * 하지 않습니다.
-     * <p>
-     * Shutdown hook을 등록하여 JVM 종료 시 gracefulShutdown을 호출합니다.
+     * Constructs a new LogProcessScheduler.
      *
-     * @param sendFunction
-     * @param logBuffer
+     * @param sendFunction A consumer function that sends a list of LogSendRequests.
+     * @param logBuffer    The buffer containing logs to be processed.
      */
     public LogProcessScheduler(Consumer<List<LogSendRequest>> sendFunction, LogBuffer logBuffer) {
         this.sendFunction = sendFunction;
@@ -38,6 +47,9 @@ public class LogProcessScheduler {
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdownSafely));
     }
 
+    /**
+     * Starts the scheduling of log processing tasks.
+     */
     private void startScheduling() {
         scheduler.scheduleAtFixedRate(
             this::processLogs,
@@ -47,8 +59,12 @@ public class LogProcessScheduler {
         );
     }
 
+    /**
+     * Processes logs from the buffer. This method retrieves logs from the buffer and sends them
+     * using the provided send function. If an exception occurs, it will be printed (TODO: implement
+     * retry queue logic).
+     */
     private void processLogs() {
-        // catch block에서 logs를 잡아 retryQueue에 넣는 로직을 구현하기 위해 try catch block 이전에 선언했습니다.
         List<LogSendRequest> logs = new ArrayList<>();
         try {
             logs.addAll(logBuffer.getLogs(DEFAULT_BULK_SIZE));
@@ -57,32 +73,32 @@ public class LogProcessScheduler {
             }
             this.sendFunction.accept(logs);
         } catch (Throwable e) {
-            // TODO retryQueue에 저장하고 재처리 하도록 구현 필요함
+            // TODO: Implement storing in retry queue and reprocessing
             e.printStackTrace();
         }
     }
 
     /**
-     * 스케줄러와 남아있는 로그들을 안전하게 종료하고 처리합니다. 현재 버퍼에 남아 있는 모든 로그를 병렬로 전송한 후 종료합니다.
+     * Performs a graceful shutdown of the scheduler and processes remaining logs. This method stops
+     * the scheduler and sends all remaining logs in parallel before shutting down.
      *
-     * @throws InterruptedException 스레드가 인터럽트 될 경우 발생
+     * @throws InterruptedException if the thread is interrupted during shutdown
      */
     public void gracefulShutdown() throws InterruptedException {
-        // 스케줄러 종료
+        // Shutdown the scheduler
         scheduler.shutdown();
         if (!scheduler.awaitTermination(TERMINATION_TIMEOUT, TimeUnit.SECONDS)) {
             scheduler.shutdownNow();
         }
 
-        // 남아있는 로그를 처리할 스레드 풀 생성
+        // Create a thread pool for processing remaining logs
         ExecutorService shutdownExecutor = Executors.newFixedThreadPool(SHUTDOWN_THREAD_POOL_SIZE);
 
         List<Callable<Void>> tasks = new ArrayList<>();
         List<LogSendRequest> logs;
 
-        // 로그 버퍼가 비어있지 않을 때까지 반복하여 작업 생성
+        // Create tasks for remaining logs
         while (!(logs = logBuffer.getLogs(DEFAULT_BULK_SIZE)).isEmpty()) {
-            // 람다 캡처링 때문에 final 변수로 선언
             final List<LogSendRequest> finalLogs = logs;
             tasks.add(() -> {
                 try {
@@ -94,7 +110,7 @@ public class LogProcessScheduler {
             });
         }
         try {
-            // 남아 있는 모든 로그 전송 작업을 병렬로 실행하고 완료될 때까지 기다림
+            // Execute all remaining log sending tasks in parallel and wait for completion
             shutdownExecutor.invokeAll(tasks);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -108,7 +124,8 @@ public class LogProcessScheduler {
     }
 
     /**
-     * Shutdown hook을 받아 gracefulShutdown을 호출합니다.
+     * Safely shuts down the scheduler when called by the shutdown hook. This method catches and
+     * handles InterruptedException during graceful shutdown.
      */
     private void shutdownSafely() {
         try {
