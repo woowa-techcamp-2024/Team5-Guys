@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -73,8 +74,10 @@ public class LogRequestsValidator implements
      */
     private List<CreateLogRequest> filterValidRequests(List<CreateLogRequest> requests,
         List<String> errorMessages) {
-        return requests.stream()
-            .filter(request -> isValidRequest(request, requests.indexOf(request), errorMessages))
+
+        return IntStream.range(0, requests.size())
+            .filter(index -> isValidRequest(requests.get(index), index + 1, errorMessages))
+            .mapToObj(requests::get)
             .toList();
     }
 
@@ -93,7 +96,7 @@ public class LogRequestsValidator implements
             String message = violations.stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.joining(", "));
-            errorMessages.add("Request " + (index + 1) + ": " + message);
+            errorMessages.add("Request " + index + ": " + message);
             return false;
         }
         return true;
