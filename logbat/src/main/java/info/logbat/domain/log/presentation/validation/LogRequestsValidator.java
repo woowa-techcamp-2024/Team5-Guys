@@ -15,9 +15,12 @@ import org.springframework.stereotype.Component;
 
 /**
  * 로그 요청 목록의 유효성을 검사하는 밸리데이터 클래스입니다. 빈 요청, 개별 요청의 유효성, 전체 요청의 유효성을 검사합니다.
+ *
+ * @deprecated 사용되지 않는 클래스입니다.
  */
 @Component
 @RequiredArgsConstructor
+@Deprecated(forRemoval = true)
 public class LogRequestsValidator implements
     ConstraintValidator<ValidLogRequests, List<CreateLogRequest>> {
 
