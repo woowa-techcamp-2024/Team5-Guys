@@ -16,9 +16,7 @@ public class LogService {
 
     public void saveLogs(String appKey, List<CreateLogRequest> requests) {
         Long appId = appService.getAppIdByToken(appKey);
-        logRepository.saveAll(requests.stream()
-            .map(request -> request.toEntity(appId))
-            .toList());
+        requests.forEach(request -> logRepository.save(request.toEntity(appId)));
     }
 
 }
