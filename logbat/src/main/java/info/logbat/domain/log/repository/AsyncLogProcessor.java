@@ -1,6 +1,7 @@
 package info.logbat.domain.log.repository;
 
 import com.zaxxer.hikari.HikariDataSource;
+import info.logbat.common.event.EventConsumer;
 import info.logbat.domain.log.domain.Log;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -21,17 +22,17 @@ public class AsyncLogProcessor {
 
     // 로그 저장 작업을 수행하는 스레드 풀
     private final ExecutorService followerExecutor;
-    // 로그를 소비하는 Consumer 객체
-    private final info.logbat.domain.log.queue.Consumer<Log> consumer;
+    // 로그를 소비하는 EventConsumer 객체
+    private final EventConsumer<Log> eventConsumer;
 
     /**
      * 지정된 Consumer 객체와 JdbcTemplate을 사용하여 새 AsyncLogProcessor를 생성합니다. HikariDataSource의 최대 풀 크기의
      * 50%를 사용하여 스레드 풀을 초기화합니다.
      *
-     * @param consumer     로그를 소비하는 Consumer 객체
-     * @param jdbcTemplate JdbcTemplate 객체
+     * @param eventConsumer 로그를 소비하는 Consumer 객체
+     * @param jdbcTemplate  JdbcTemplate 객체
      */
-    public AsyncLogProcessor(info.logbat.domain.log.queue.Consumer<Log> consumer,
+    public AsyncLogProcessor(EventConsumer<Log> eventConsumer,
         JdbcTemplate jdbcTemplate) {
         DataSource dataSource = jdbcTemplate.getDataSource();
         if (!(dataSource instanceof HikariDataSource)) {
@@ -40,7 +41,7 @@ public class AsyncLogProcessor {
         int poolSize = ((HikariDataSource) dataSource).getMaximumPoolSize();
         log.debug("Creating AsyncLogProcessor with pool size: {}", poolSize);
 
-        this.consumer = consumer;
+        this.eventConsumer = eventConsumer;
         // use 50% of the pool size for the follower thread pool
         this.followerExecutor = Executors.newFixedThreadPool(poolSize * 5 / 10);
     }
@@ -61,7 +62,7 @@ public class AsyncLogProcessor {
      */
     private void leaderTask(Consumer<List<Log>> saveFunction) {
         while (!Thread.currentThread().isInterrupted()) {
-            List<Log> logs = consumer.consume();
+            List<Log> logs = eventConsumer.consume();
             followerExecutor.execute(() -> saveFunction.accept(logs));
         }
     }

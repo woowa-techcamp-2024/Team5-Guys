@@ -1,7 +1,7 @@
 package info.logbat.domain.log.flatter;
 
+import info.logbat.common.event.EventProducer;
 import info.logbat.domain.log.domain.Log;
-import info.logbat.domain.log.queue.Producer;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LogRequestFlatter {
 
-    private final Producer<Log> producer;
+    private final EventProducer<Log> eventProducer;
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     public void flatten(List<Log> logs) {
-        executor.submit(() -> producer.produce(logs));
+        executor.submit(() -> eventProducer.produce(logs));
     }
 }

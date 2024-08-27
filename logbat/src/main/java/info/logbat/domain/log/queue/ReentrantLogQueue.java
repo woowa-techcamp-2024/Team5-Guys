@@ -1,5 +1,7 @@
 package info.logbat.domain.log.queue;
 
+import info.logbat.common.event.EventConsumer;
+import info.logbat.common.event.EventProducer;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ReentrantLogQueue<T> implements Producer<T>, Consumer<T> {
+public class ReentrantLogQueue<T> implements EventProducer<T>, EventConsumer<T> {
 
     private final LinkedList<T> queue = new LinkedList<>();
     private final long timeout;

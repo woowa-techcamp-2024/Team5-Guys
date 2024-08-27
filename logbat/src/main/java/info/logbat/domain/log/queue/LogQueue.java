@@ -1,5 +1,7 @@
 package info.logbat.domain.log.queue;
 
+import info.logbat.common.event.EventConsumer;
+import info.logbat.common.event.EventProducer;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import org.springframework.stereotype.Component;
  */
 @Primary
 @Component
-public class LogQueue<T> implements Producer<T>, Consumer<T> {
+public class LogQueue<T> implements EventProducer<T>, EventConsumer<T> {
 
     //consumerThread 필드에 대한 원자적 연산을 위한 VarHandle
     private static final VarHandle CONSUMER_THREADS;
