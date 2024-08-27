@@ -18,7 +18,6 @@ public class ReentrantLogQueue<T> implements Producer<T>, Consumer<T> {
     private final long timeout;
     private final int bulkSize;
     private final ReentrantLock bulkLock = new ReentrantLock();
-    private final ReentrantLock processLock = new ReentrantLock();
     private final Condition bulkCondition = bulkLock.newCondition();
 
     public ReentrantLogQueue(@Value("${jdbc.async.timeout}") Long timeout,
@@ -69,12 +68,16 @@ public class ReentrantLogQueue<T> implements Producer<T>, Consumer<T> {
      */
     @Override
     public void produce(List<T> data) {
+        queue.addAll(data);
+        if (queue.size() >= bulkSize) {
+            signalBulk();
+        }
+    }
+
+    private void signalBulk() {
         bulkLock.lock();
         try {
-            queue.addAll(data);
-            if (queue.size() >= bulkSize) {
-                bulkCondition.signal();
-            }
+            bulkCondition.signal();
         } finally {
             bulkLock.unlock();
         }
