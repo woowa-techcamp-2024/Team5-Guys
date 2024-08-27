@@ -2,17 +2,13 @@ package info.logbat.domain.log.repository;
 
 import com.zaxxer.hikari.HikariDataSource;
 import info.logbat.domain.log.domain.Log;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -25,10 +21,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class AsyncLogProcessor {
 
-    private final LinkedBlockingQueue<Log> logQueue = new LinkedBlockingQueue<>();
     private final ExecutorService followerExecutor;
-    private final long defaultTimeout;
-    private final int defaultBulkSize;
+    private final info.logbat.domain.log.queue.Consumer<Log> consumer;
 
     /**
      * 지정된 시간 제한, 일괄 크기 및 JdbcTemplate을 사용하여 AsyncLogProcessor를 구축합니다.
@@ -37,8 +31,7 @@ public class AsyncLogProcessor {
      * @param bulkSize     팔로워 스레드가 한 번에 처리하는 로그 항목 수
      * @param jdbcTemplate JdbcTemplate
      */
-    public AsyncLogProcessor(@Value("${jdbc.async.timeout}") Long timeout,
-        @Value("${jdbc.async.bulk-size}") Integer bulkSize,
+    public AsyncLogProcessor(info.logbat.domain.log.queue.Consumer<Log> consumer,
         JdbcTemplate jdbcTemplate) {
         DataSource dataSource = jdbcTemplate.getDataSource();
         if (!(dataSource instanceof HikariDataSource)) {
@@ -47,10 +40,9 @@ public class AsyncLogProcessor {
         int poolSize = ((HikariDataSource) dataSource).getMaximumPoolSize();
         log.debug("Creating AsyncLogProcessor with pool size: {}", poolSize);
 
+        this.consumer = consumer;
         // use 50% of the pool size for the follower thread pool
         this.followerExecutor = Executors.newFixedThreadPool(poolSize * 5 / 10);
-        this.defaultTimeout = Objects.requireNonNullElse(timeout, 2000L);
-        this.defaultBulkSize = Objects.requireNonNullElse(bulkSize, 100);
     }
 
     /**
@@ -71,7 +63,7 @@ public class AsyncLogProcessor {
      */
     public void submitLog(Log log) {
         // Queue 크기를 제한할 거면 offer 사용하도록 변경
-        logQueue.add(log);
+//        logQueue.add(log);
     }
 
     /**
@@ -80,7 +72,7 @@ public class AsyncLogProcessor {
      * @param logs 로그 리스트
      */
     public void submitLogs(List<Log> logs) {
-        logQueue.addAll(logs);
+//        logQueue.addAll(logs);
     }
 
     /**
@@ -92,30 +84,9 @@ public class AsyncLogProcessor {
      * @param saveFunction 로그 저장 함수
      */
     private void leaderTask(Consumer<List<Log>> saveFunction) {
-        long lastFlushTime = System.currentTimeMillis();
-
         while (!Thread.currentThread().isInterrupted()) {
-            try {
-                int size = logQueue.size();
-
-                // 현재 시간 확인
-                long currentTime = System.currentTimeMillis();
-
-                // 2초가 지났거나, 큐의 크기가 defaultBulkSize 이상인 경우 flush
-                if ((currentTime - lastFlushTime > defaultTimeout) || size >= defaultBulkSize) {
-                    List<Log> logs = new ArrayList<>();
-
-                    // 로그를 최대 defaultBulkSize 개수만큼 큐에서 가져옴
-                    logQueue.drainTo(logs, defaultBulkSize);
-
-                    if (!logs.isEmpty()) {
-                        followerExecutor.execute(() -> saveFunction.accept(logs));
-                    }
-                    lastFlushTime = currentTime;
-                }
-            } catch (Exception e) {
-                log.error("Unexpected error in leader thread", e);
-            }
+            List<Log> logs = consumer.consume();
+            followerExecutor.execute(() -> saveFunction.accept(logs));
         }
     }
 }
