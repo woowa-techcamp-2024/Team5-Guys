@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -51,6 +53,7 @@ class LogControllerTest extends ControllerTestSupport {
 
         @Test
         @DisplayName("모든 요청에 예외가 발생하면 400 에러를 반환한다.")
+        @Disabled("Controller에서 더 이상 검증하지 않습니다.")
         void willReturn400IfAllRequestsAreInvalid() throws Exception {
             // Arrange
             List<CreateLogRequest> expectedWrongRequest = List.of(
@@ -132,6 +135,7 @@ class LogControllerTest extends ControllerTestSupport {
                 .andExpect(status().isBadRequest());
         }
 
+        @Disabled("Controller에서 더 이상 검증하지 않습니다.")
         @ParameterizedTest
         @DisplayName("잘못된 입력으로 로그 생성 시 400 에러를 반환한다.")
         @MethodSource("invalidLogCreationInputs")
