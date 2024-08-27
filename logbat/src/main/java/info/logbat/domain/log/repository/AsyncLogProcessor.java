@@ -9,7 +9,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
@@ -93,30 +92,27 @@ public class AsyncLogProcessor {
      * @param saveFunction 로그 저장 함수
      */
     private void leaderTask(Consumer<List<Log>> saveFunction) {
+        long lastFlushTime = System.currentTimeMillis();
+
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                final Log log = logQueue.poll(defaultTimeout, TimeUnit.MILLISECONDS);
-                /*
-                 * Log가 천천히 들어오는 경우 Timeout에 한 번씩 저장
-                 *
-                 * Log가 높은 부하로 들어오는 경우 Bulk Size만큼 한 번에 저장
-                 *
-                 * Timeout동안 들어온 Log가 없는 경우 다음 반복문 cycle 수행
-                 */
-                if (log == null) {
-                    continue;
-                }
-                List<Log> logs = new ArrayList<>();
-                logs.add(log);
-                //drainTo는 Queue에 있는 요소를 maxElements만큼 꺼내서 Collection에 담아준다.
-                logQueue.drainTo(logs, defaultBulkSize - 1);
-                // Follower Thread Pool에 저장 요청
-                followerExecutor.execute(() -> saveFunction.accept(logs));
+                int size = logQueue.size();
 
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                log.error("Leader thread was interrupted. Exiting.", e);
-                break;
+                // 현재 시간 확인
+                long currentTime = System.currentTimeMillis();
+
+                // 2초가 지났거나, 큐의 크기가 defaultBulkSize 이상인 경우 flush
+                if ((currentTime - lastFlushTime > defaultTimeout) || size >= defaultBulkSize) {
+                    List<Log> logs = new ArrayList<>();
+
+                    // 로그를 최대 defaultBulkSize 개수만큼 큐에서 가져옴
+                    logQueue.drainTo(logs, defaultBulkSize);
+
+                    if (!logs.isEmpty()) {
+                        followerExecutor.execute(() -> saveFunction.accept(logs));
+                    }
+                    lastFlushTime = currentTime;
+                }
             } catch (Exception e) {
                 log.error("Unexpected error in leader thread", e);
             }
