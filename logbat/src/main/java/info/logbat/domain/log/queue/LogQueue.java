@@ -2,14 +2,11 @@ package info.logbat.domain.log.queue;
 
 import info.logbat.common.event.EventConsumer;
 import info.logbat.common.event.EventProducer;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.VarHandle;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.LockSupport;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,7 +20,6 @@ import org.springframework.stereotype.Component;
  *
  * @param <T> 이 큐에 저장되는 요소의 타입
  */
-@Primary
 @Component
 public class LogQueue<T> implements EventProducer<T>, EventConsumer<T> {
 
