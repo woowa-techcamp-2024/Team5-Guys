@@ -68,18 +68,15 @@ public class ReentrantLogQueue<T> implements EventProducer<T>, EventConsumer<T> 
      */
     @Override
     public void produce(List<T> data) {
-        queue.addAll(data);
-        if (queue.size() >= bulkSize) {
-            signalBulk();
-        }
-    }
-
-    private void signalBulk() {
         bulkLock.lock();
         try {
-            bulkCondition.signal();
+            queue.addAll(data);
+            if (queue.size() >= bulkSize) {
+                bulkCondition.signal();
+            }
         } finally {
             bulkLock.unlock();
         }
     }
+
 }
