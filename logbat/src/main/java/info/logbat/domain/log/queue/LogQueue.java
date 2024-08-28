@@ -27,18 +27,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogQueue<T> implements EventProducer<T>, EventConsumer<T> {
 
-    //consumerThread 필드에 대한 원자적 연산을 위한 VarHandle
-    private static final VarHandle CONSUMER_THREADS;
-
-    static {
-        try {
-            CONSUMER_THREADS = MethodHandles.lookup()
-                .findVarHandle(LogQueue.class, "consumerThread", Thread.class);
-        } catch (ReflectiveOperationException e) {
-            throw new ExceptionInInitializerError(e);
-        }
-    }
-
     // T 타입의 요소를 저장하는 list
     private final LinkedList<T> queue;
     // 소비자 스레드가 대기하는 시간 (나노초 단위)
@@ -84,8 +72,7 @@ public class LogQueue<T> implements EventProducer<T>, EventConsumer<T> {
             return result;
         }
 
-        Thread current = Thread.currentThread();
-        CONSUMER_THREADS.set(this, current);
+        consumerThread = Thread.currentThread();
 
         do {
             LockSupport.parkNanos(timeoutNanos);
@@ -98,7 +85,7 @@ public class LogQueue<T> implements EventProducer<T>, EventConsumer<T> {
             }
         }
 
-        CONSUMER_THREADS.weakCompareAndSet(this, current, null);
+        consumerThread = null;
         return result;
     }
 
