@@ -28,7 +28,7 @@ public class MultiProcessor<Log> implements EventProducer<Log>, EventConsumer<Lo
     private Consumer<List<Log>> saveFunction;
     private final int queueCount;
 
-    public MultiProcessor(@Value("${queue.count:10}") int queueCount,
+    public MultiProcessor(@Value("${queue.count:5}") int queueCount,
         @Value("${jdbc.async.timeout}") Long timeout,
         @Value("${jdbc.async.bulk-size}") Integer bulkSize, JdbcTemplate jdbcTemplate) {
 
