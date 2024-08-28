@@ -1,7 +1,7 @@
 package info.logbat.domain.log.application;
 
+import info.logbat.common.event.EventProducer;
 import info.logbat.domain.log.domain.Log;
-import info.logbat.domain.log.flatter.LogRequestFlatter;
 import info.logbat.domain.log.presentation.payload.request.CreateLogRequest;
 import info.logbat.domain.project.application.AppService;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LogService {
 
-    private final LogRequestFlatter logRequestFlatter;
+    private final EventProducer<Log> producer;
     private final AppService appService;
 
     public void saveLogs(String appKey, List<CreateLogRequest> requests) {
@@ -28,7 +28,7 @@ public class LogService {
                 log.error("Failed to convert request to entity: {}", request, e);
             }
         });
-        logRequestFlatter.flatten(logs);
+        producer.produce(logs);
     }
 
 }
