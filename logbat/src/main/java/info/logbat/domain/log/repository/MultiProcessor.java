@@ -30,8 +30,8 @@ public class MultiProcessor<Log> implements EventProducer<Log>, EventConsumer<Lo
     private final int queueCount;
 
     public MultiProcessor(@Value("${queue.count:3}") int queueCount,
-        @Value("${jdbc.async.timeout}") Long timeout,
-        @Value("${jdbc.async.bulk-size}") Integer bulkSize, JdbcTemplate jdbcTemplate) {
+        @Value("${jdbc.async.timeout:5000}") Long timeout,
+        @Value("${jdbc.async.bulk-size:3000}") Integer bulkSize, JdbcTemplate jdbcTemplate) {
 
         this.queueCount = queueCount;
         this.queues = new ArrayList<>(queueCount);
