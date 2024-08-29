@@ -24,11 +24,12 @@ import org.springframework.stereotype.Component;
 public class MultiProcessor<Log> implements EventProducer<Log>, EventConsumer<Log> {
 
     private final List<ReentrantLogQueue<Log>> queues;
+    private final List<ExecutorService> flatterExecutors;
     private final List<ExecutorService> followerExecutors;
     private Consumer<List<Log>> saveFunction;
     private final int queueCount;
 
-    public MultiProcessor(@Value("${queue.count:5}") int queueCount,
+    public MultiProcessor(@Value("${queue.count:3}") int queueCount,
         @Value("${jdbc.async.timeout}") Long timeout,
         @Value("${jdbc.async.bulk-size}") Integer bulkSize, JdbcTemplate jdbcTemplate) {
 
@@ -43,10 +44,14 @@ public class MultiProcessor<Log> implements EventProducer<Log>, EventConsumer<Lo
         int poolSize = ((HikariDataSource) dataSource).getMaximumPoolSize();
         log.debug("Creating AsyncLogProcessor with pool size: {}", poolSize);
         ReentrantLogQueue<Log> queue = new ReentrantLogQueue<>(timeout, bulkSize);
+        this.flatterExecutors = new ArrayList<>(queueCount);
+
         ExecutorService followerExecutor = Executors.newFixedThreadPool(poolSize * 5 / 10);
         CompletableFuture.runAsync(() -> leaderTask(queue, followerExecutor));
         for (int i = 0; i < queueCount; i++) {
             queues.add(queue);
+            flatterExecutors.add(Executors.newFixedThreadPool(1));
+            followerExecutors.add(followerExecutor);
         }
     }
 
@@ -73,6 +78,6 @@ public class MultiProcessor<Log> implements EventProducer<Log>, EventConsumer<Lo
             return;
         }
         int selectedQueue = ThreadLocalRandom.current().nextInt(queueCount);
-        queues.get(selectedQueue).produce(data);
+        flatterExecutors.get(selectedQueue).execute(() -> queues.get(selectedQueue).produce(data));
     }
 }
