@@ -57,12 +57,14 @@ public class AsyncMultiProcessor<E> implements EventProducer<E> {
     }
 
     private void setup(int queueCount, Long timeout, Integer bulkSize, int poolSize) {
-        ReentrantLogQueue<E> queue = objectProvider.getObject(timeout, bulkSize);
         for (int i = 0; i < queueCount; i++) {
-            ExecutorService leaderExecutor = Executors.newFixedThreadPool(poolSize);
+            ReentrantLogQueue<E> queue = objectProvider.getObject(timeout, bulkSize);
             queues.add(queue);
+            
+            ExecutorService leaderExecutor = Executors.newFixedThreadPool(poolSize);
             leaderExecutors.add(leaderExecutor);
             flatterExecutors.add(Executors.newSingleThreadExecutor());
+
             CompletableFuture.runAsync(() -> leaderTask(queue, leaderExecutor));
         }
     }
