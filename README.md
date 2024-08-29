@@ -14,6 +14,8 @@
   &nbsp; | &nbsp;
   <a href="https://github.com/woowa-techcamp-2024/Team5-Guys/wiki/📝-Ground-Rules">🗺️ 그라운드 룰</a>
   &nbsp; | &nbsp;
+  <a href="https://github.com/woowa-techcamp-2024/Team5-Guys/wiki/%F0%9F%9B%A0%EF%B8%8F-How-To-Install-SDK">🛠️ How To Install?</a>
+  &nbsp; | &nbsp;
   <a href="https://github.com/Logbat">👑 New Organization</a>
 </p>
 
