@@ -10,7 +10,7 @@
   &nbsp; | &nbsp; 
   <a href="https://github.com/orgs/woowa-techcamp-2024/projects/4">📝 백로그</a>
   &nbsp; | &nbsp;
-  <a href="https://github.com/woowa-techcamp-2024/Team5-Guys/wiki/ℹ%EF%B8%8F-기능-명세서">🔍 기획서</a>
+  <a href="https://github.com/woowa-techcamp-2024/Team5-Guys/wiki/%F0%9F%93%9A-%EA%B8%B0%ED%9A%8D%EC%84%9C">🔍 기획서</a>
   &nbsp; | &nbsp;
   <a href="https://github.com/woowa-techcamp-2024/Team5-Guys/wiki/📝-Ground-Rules">🗺️ 그라운드 룰</a>
   &nbsp; | &nbsp;
