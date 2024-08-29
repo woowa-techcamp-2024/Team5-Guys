@@ -20,25 +20,25 @@ import org.springframework.stereotype.Repository;
 public class AsyncLogRepository implements LogRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final AsyncLogProcessor asyncLogProcessor;
+    private final AsyncMultiProcessor<Log> asyncMultiProcessor;
 
     private static final Long DEFAULT_RETURNS = 0L;
 
     @PostConstruct
     public void init() {
         log.info("AsyncLogRepository is initialized.");
-        asyncLogProcessor.init(this::saveLogsToDatabase);
+        asyncMultiProcessor.init(this::saveLogsToDatabase);
     }
 
+    @Deprecated
     @Override
     public long save(Log log) {
-        asyncLogProcessor.submitLog(log);
         return DEFAULT_RETURNS;
     }
 
+    @Deprecated
     @Override
     public List<Log> saveAll(List<Log> logs) {
-        asyncLogProcessor.submitLogs(logs);
         return logs;
     }
 

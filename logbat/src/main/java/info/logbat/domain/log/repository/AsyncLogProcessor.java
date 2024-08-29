@@ -11,13 +11,11 @@ import java.util.function.Consumer;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 
 /**
  * 비동기적으로 로그를 처리하는 클래스입니다. 이 클래스는 로그를 저장하는 비동기 작업을 수행하며, 이를 위해 별도의 스레드 풀을 사용합니다.
  */
 @Slf4j
-@Component
 public class AsyncLogProcessor {
 
     // 로그 저장 작업을 수행하는 스레드 풀
