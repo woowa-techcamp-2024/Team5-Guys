@@ -1,7 +1,6 @@
 package info.logbat.domain.log.repository;
 
 import com.zaxxer.hikari.HikariDataSource;
-import info.logbat.common.event.EventConsumer;
 import info.logbat.common.event.EventProducer;
 import info.logbat.domain.log.queue.ReentrantLogQueue;
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Primary
 @Component
-public class AsyncMultiProcessor<E> implements EventProducer<E>, EventConsumer<E> {
+public class AsyncMultiProcessor<E> implements EventProducer<E> {
 
     private final List<ReentrantLogQueue<E>> queues;
     private final List<ExecutorService> flatterExecutors;
@@ -40,12 +39,6 @@ public class AsyncMultiProcessor<E> implements EventProducer<E>, EventConsumer<E
 
     public void init(Consumer<List<E>> saveFunction) {
         this.saveFunction = saveFunction;
-    }
-
-    @Override
-    public List<E> consume() {
-        int selectedQueue = ThreadLocalRandom.current().nextInt(queueCount);
-        return queues.get(selectedQueue).consume();
     }
 
     @Override
