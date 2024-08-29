@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.LockSupport;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
 
 /**
  * 로깅 데이터 전달 목적의 Thread-Safe Queue 구현체로, 생산과 소비 작업을 모두 지원합니다. 이 클래스는 단일 스레드 환경에서 작동하도록 설계되었으며, 효율적인
@@ -21,8 +19,6 @@ import org.springframework.stereotype.Component;
  *
  * @param <T> 이 큐에 저장되는 요소의 타입
  */
-@Primary
-@Component
 public class LogQueue<T> implements EventProducer<T>, EventConsumer<T> {
 
     // T 타입의 요소를 저장하는 list

@@ -12,6 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,13 +27,16 @@ public class AsyncMultiProcessor<E> implements EventProducer<E> {
     private final List<ExecutorService> flatterExecutors;
     private Consumer<List<E>> saveFunction;
     private final int queueCount;
+    private final ObjectProvider<ReentrantLogQueue<E>> objectProvider;
 
     public AsyncMultiProcessor(@Value("${queue.count:3}") int queueCount,
         @Value("${jdbc.async.timeout:5000}") Long timeout,
-        @Value("${jdbc.async.bulk-size:3000}") Integer bulkSize, JdbcTemplate jdbcTemplate) {
+        @Value("${jdbc.async.bulk-size:3000}") Integer bulkSize, JdbcTemplate jdbcTemplate,
+        ObjectProvider<ReentrantLogQueue<E>> objectProvider) {
         this.queueCount = queueCount;
         this.queues = new ArrayList<>(queueCount);
         this.flatterExecutors = new ArrayList<>(queueCount);
+        this.objectProvider = objectProvider;
         int poolSize = getPoolSize(jdbcTemplate);
         setup(queueCount, timeout, bulkSize, poolSize);
     }
@@ -51,14 +55,12 @@ public class AsyncMultiProcessor<E> implements EventProducer<E> {
     }
 
     private void setup(int queueCount, Long timeout, Integer bulkSize, int poolSize) {
-        ExecutorService followerExecutor = Executors.newFixedThreadPool(poolSize);
-        ReentrantLogQueue<E> queue = new ReentrantLogQueue<>(timeout, bulkSize);
-
+        ReentrantLogQueue<E> queue = objectProvider.getObject(timeout, bulkSize);
         for (int i = 0; i < queueCount; i++) {
             queues.add(queue);
             flatterExecutors.add(Executors.newSingleThreadExecutor());
         }
-        CompletableFuture.runAsync(() -> leaderTask(queue, followerExecutor));
+        CompletableFuture.runAsync(() -> leaderTask(queue, Executors.newFixedThreadPool(poolSize)));
     }
 
     private void leaderTask(ReentrantLogQueue<E> queue, ExecutorService follower) {

@@ -2,13 +2,10 @@ package info.logbat.domain.log.queue;
 
 import info.logbat.common.event.EventConsumer;
 import info.logbat.common.event.EventProducer;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 
-@Component
 public class SingleLinkLogQueue<T> implements EventProducer<T>, EventConsumer<T> {
 
     private final SingleLinkedList<T> queue = new SingleLinkedList<>();
@@ -16,7 +13,7 @@ public class SingleLinkLogQueue<T> implements EventProducer<T>, EventConsumer<T>
     private final int bulkSize;
 
     public SingleLinkLogQueue(@Value("${jdbc.async.timeout}") Long timeout,
-                              @Value("${jdbc.async.bulk-size}") Integer bulkSize) {
+        @Value("${jdbc.async.bulk-size}") Integer bulkSize) {
         this.timeout = timeout;
         this.bulkSize = bulkSize;
     }
