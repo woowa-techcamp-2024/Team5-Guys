@@ -1,21 +1,96 @@
+<div align="center">
+  <h1>Log Bat</h1>
 
-![](https://github.com/user-attachments/assets/251084f6-1705-45d9-858f-045e0d21eefe)
+  
+![Log Bat](https://github.com/user-attachments/assets/251084f6-1705-45d9-858f-045e0d21eefe)
+</div>
+
+<p align=center>
+  <a href="https://github.com/woowa-techcamp-2024/Team5-Guys/wiki">📕 팀 위키</a>
+  &nbsp; | &nbsp; 
+  <a href="https://github.com/orgs/woowa-techcamp-2024/projects/4">📝 백로그</a>
+  &nbsp; | &nbsp;
+  <a href="https://github.com/woowa-techcamp-2024/Team5-Guys/wiki/ℹ%EF%B8%8F-기능-명세서">🔍 기획서</a>
+  &nbsp; | &nbsp;
+  <a href="https://github.com/woowa-techcamp-2024/Team5-Guys/wiki/📝-Ground-Rules">🗺️ 그라운드 룰</a>
+  &nbsp; | &nbsp;
+  <a href="https://github.com/Logbat">👑 New Organization</a>
+</p>
 
 ## ✍🏻 프로젝트 개요
 
-LogBat 프로젝트는 클라이언트와 서버의 로그를 실시간으로 통합 관리하고, 예외 로그에 대한 알림 기능을 제공하여 오류를 신속히 파악할 수 있도록 돕습니다. 다양한 포맷의 로그를 동적으로 처리하며, 사용자에게 직관적인 GUI를 통해 로그 필터링 및 모니터링 기능을 제공합니다. 높은 TPS를 처리할 수 있는 성능을 목표로 합니다.
+LogBat 프로젝트는 클라이언트와 서버의 로그를 실시간으로 통합 관리하고, 예외 로그에 대한 알림 기능을 제공하여 오류를 신속히 파악할 수 있도록 돕습니다. 다양한 포맷의 로그를 동적으로 처리하며, Grafana를 활용해 저장된 로그를 조회할 수 있도록 합니다. 높은 TPS를 처리할 수 있는 성능을 목표로 합니다.
 
 ![](https://github.com/user-attachments/assets/ad19e3e5-a6d5-4466-ac86-fec125e1f54b)
 
 ## ⚙️ 핵심 기능
 
-- 로그 수집: SDK를 통해 클라이언트와 서버에서 발생하는 로그를 실시간으로 수집합니다.
-- 로그 통합 및 저장: 다양한 포맷의 로그를 통합하여 동적으로 저장합니다.
-- 로그 필터링 및 알림: 저장된 로그에 대한 필터링 기능을 제공하고, 지정된 예외 로그 발생 시 알림을 발송합니다.
-- GUI를 통한 모니터링: 사용자가 GUI를 통해 손쉽게 로그를 조회하고 관리할 수 있습니다.
+### 프로젝트와 앱을 관리할 수 있어요
+
+> 로그를 저장할 프로젝트의 앱을 생성 및 관리해보세요!
+
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/79aec7c8-5136-4ed9-a510-c146173b0372"><img width="600" alt="image" src="https://github.com/user-attachments/assets/61f6f72a-29f0-4641-8b91-9511b565f805">
+
+### 시스템 로그를 저장할 수 있어요
+
+> 제공되는 Java, JavaScript SDK를 활용해 로그를 전송해보세요!
+> Java는 `Slf4j`를 통해, JavaScript는 `console.log()`를 통해 제공됩니다.
+
+<img width="1200" alt="image" src="https://github.com/user-attachments/assets/26df3623-7eb5-438c-a11e-83cf246457b1">
+
+### 저장한 로그를 조회할 수 있어요
+
+> SDK를 통해서 전송된 로그들을 조회해보세요!
+
+<img width="1200" alt="image" src="https://github.com/user-attachments/assets/ca664e61-a2b0-47f2-990b-c347875b3c01">
+
+
 
 ## 🤿 기술 스택
 
+<table>
+    <thead>
+        <tr>
+            <th>분류</th>
+            <th>기술 스택</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <p>BE</p>
+            </td>
+            <td>
+                <img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?logo=springboot&logoColor=fff"/>
+                <img src="https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=fff">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>SDK</p>
+            </td>
+            <td>
+              <img src="https://img.shields.io/badge/Java-%23ED8B00.svg?logo=openjdk&logoColor=white">
+              <img src="https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>협업</p>
+            </td>
+            <td>
+                <img src="https://img.shields.io/badge/Notion-000000?logo=Notion">
+                <img src="https://img.shields.io/badge/Discord-%235865F2.svg?&logo=discord&logoColor=white">
+                <img src="https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white">
+                <img src="https://img.shields.io/badge/Slack-4A154B?logo=slack&logoColor=fff">
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+## [🏛️ 서비스 아키텍처](https://github.com/woowa-techcamp-2024/Team5-Guys/wiki/🏭-Infra-Structures)
+
+![](https://private-user-images.githubusercontent.com/85854384/360354869-b8e5a2b8-20b6-4b24-a7dd-46c9d888820f.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjQ5MzI3MDksIm5iZiI6MTcyNDkzMjQwOSwicGF0aCI6Ii84NTg1NDM4NC8zNjAzNTQ4NjktYjhlNWEyYjgtMjBiNi00YjI0LWE3ZGQtNDZjOWQ4ODg4MjBmLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA4MjklMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwODI5VDExNTMyOVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTQ1YzEzNjFlMTY5OGZjMTE2NzkxOTYxNmQ5NDMzNmNmNWVjN2ZhN2E2YTQ5M2RkZjgzMGUwYzI2Y2YwOTIxZTAmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.PEdjI8bAwTxDykwvn_TtoXi0wMFsCfDwwJrz_kpT2_g)
 
 ## 👤 멤버 소개
 
