@@ -8,6 +8,7 @@ public interface LogRepository {
 
     long save(Log log);
 
+    @Deprecated(forRemoval = true)
     List<Log> saveAll(List<Log> logs);
 
     Optional<Log> findById(Long logId);
