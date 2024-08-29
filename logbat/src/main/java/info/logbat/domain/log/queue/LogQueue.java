@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.LockSupport;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
  *
  * @param <T> 이 큐에 저장되는 요소의 타입
  */
+@Primary
 @Component
 public class LogQueue<T> implements EventProducer<T>, EventConsumer<T> {
 
