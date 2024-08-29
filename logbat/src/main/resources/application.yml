@@ -6,8 +6,8 @@ spring:
     active: local
 jdbc:
   async:
-    timeout: 2000
-    bulk-size: 100
+    timeout: 5000
+    bulk-size: 3000
 ---
 spring:
   config:
