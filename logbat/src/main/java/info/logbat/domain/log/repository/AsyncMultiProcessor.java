@@ -25,6 +25,7 @@ public class AsyncMultiProcessor<E> implements EventProducer<E> {
 
     private final List<ReentrantLogQueue<E>> queues;
     private final List<ExecutorService> flatterExecutors;
+    private final List<ExecutorService> leaderExecutors;
     private Consumer<List<E>> saveFunction;
     private final int queueCount;
     private final ObjectProvider<ReentrantLogQueue<E>> objectProvider;
@@ -35,6 +36,7 @@ public class AsyncMultiProcessor<E> implements EventProducer<E> {
         ObjectProvider<ReentrantLogQueue<E>> objectProvider) {
         this.queueCount = queueCount;
         this.queues = new ArrayList<>(queueCount);
+        this.leaderExecutors = new ArrayList<>(queueCount);
         this.flatterExecutors = new ArrayList<>(queueCount);
         this.objectProvider = objectProvider;
         int poolSize = getPoolSize(jdbcTemplate);
@@ -57,10 +59,12 @@ public class AsyncMultiProcessor<E> implements EventProducer<E> {
     private void setup(int queueCount, Long timeout, Integer bulkSize, int poolSize) {
         ReentrantLogQueue<E> queue = objectProvider.getObject(timeout, bulkSize);
         for (int i = 0; i < queueCount; i++) {
+            ExecutorService leaderExecutor = Executors.newFixedThreadPool(poolSize);
             queues.add(queue);
+            leaderExecutors.add(leaderExecutor);
             flatterExecutors.add(Executors.newSingleThreadExecutor());
+            CompletableFuture.runAsync(() -> leaderTask(queue, leaderExecutor));
         }
-        CompletableFuture.runAsync(() -> leaderTask(queue, Executors.newFixedThreadPool(poolSize)));
     }
 
     private void leaderTask(ReentrantLogQueue<E> queue, ExecutorService follower) {
