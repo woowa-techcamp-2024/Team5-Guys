@@ -21,14 +21,14 @@ public class AsyncLogRepository implements LogRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final AsyncLogProcessor asyncLogProcessor;
-    private final MultiProcessor<Log> multiProcessor;
+    private final AsyncMultiProcessor<Log> asyncMultiProcessor;
 
     private static final Long DEFAULT_RETURNS = 0L;
 
     @PostConstruct
     public void init() {
         log.info("AsyncLogRepository is initialized.");
-        multiProcessor.init(this::saveLogsToDatabase);
+        asyncMultiProcessor.init(this::saveLogsToDatabase);
         asyncLogProcessor.init(this::saveLogsToDatabase);
     }
 
