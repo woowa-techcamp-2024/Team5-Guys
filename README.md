@@ -101,5 +101,6 @@ LogBat 프로젝트는 클라이언트와 서버의 로그를 실시간으로 �
   | <center>👑 박정제</center> | <center>김민주</center> | <center>이경민</center> |
   | :---: | :---: | :---: |
   | <div align="center"><a href="https://github.com/LuizyHub"><img width="100px" src="https://github.com/LuizyHub.png" /></a></div> | <div align="center"><a href="https://github.com/miiiinju1"><img width="100px" src="https://github.com/miiiinju1.png" /></a></div> | <div align="center"><a href="https://github.com/tidavid1"><img width="100px" src="https://github.com/tidavid1.png" /></a></div> |
+  | [@LuizyHub](https://github.com/LuizyHub) | [@miiiinju1](https://github.com/miiiinju1) | [@tidavid1](https://github.com/tidavid1) |
   
 </div>
